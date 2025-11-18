@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Models\Directory;
+use Gate;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
+
+class UpdateDirectoryRequest extends FormRequest
+{
+    public function authorize()
+    {
+        return Gate::allows('directory_edit');
+    }
+
+    public function rules()
+    {
+        return [
+            'last_name' => [
+                'string',
+                'required',
+            ],
+            'first_name' => [
+                'string',
+                'required',
+            ],
+            'middle_name' => [
+                'string',
+                'nullable',
+            ],
+            'suffix' => [
+                'string',
+                'nullable',
+            ],
+            'email' => [
+                'string',
+                'nullable',
+            ],
+            'contact_no' => [
+                'string',
+                'nullable',
+            ],
+            'birthday' => [
+                'date_format:' . config('panel.date_format'),
+                'nullable',
+            ],
+            'place_of_birth' => [
+                'string',
+                'nullable',
+            ],
+            'nationality' => [
+                'string',
+                'nullable',
+            ],
+            'street_no' => [
+                'string',
+                'nullable',
+            ],
+            'street' => [
+                'string',
+                'nullable',
+            ],
+            'city' => [
+                'string',
+                'nullable',
+            ],
+            'province' => [
+                'string',
+                'nullable',
+            ],
+            'ngos.*' => [
+                'integer',
+            ],
+            'ngos' => [
+                'array',
+            ],
+            'sectors.*' => [
+                'integer',
+            ],
+            'sectors' => [
+                'array',
+            ],
+            'comelec_status' => [
+                'string',
+                'nullable',
+            ],
+            'remarks' => [
+                'string',
+                'nullable',
+            ],
+        ];
+    }
+}
