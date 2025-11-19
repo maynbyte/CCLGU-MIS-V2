@@ -13,10 +13,6 @@
         </div>
     </div>
 @endcan
-<div class="card">
-    <div class="card-header">
-        {{ trans('cruds.directory.title_singular') }} {{ trans('global.list') }}
-    </div>
 
 <div class="card">
     <div class="card-header">
@@ -26,96 +22,19 @@
     <div class="card-body">
         <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-Directory">
             <thead>
-                <tr>
-                    <th width="10">
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.id') }}
-                    </th> 
-                      <th>
-                        {{ trans('cruds.directory.fields.profile_picture') }}
-                    </th>  
-                    <th>
-                        {{ trans('cruds.directory.fields.last_name') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.first_name') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.middle_name') }}
-                    </th>
-                   
-                    <th>
-                        {{ trans('cruds.directory.fields.suffix') }}
-                    </th>
-
-<!--Other
-                    <th>
-                        {{ trans('cruds.directory.fields.email') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.contact_no') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.birthday') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.place_of_birth') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.nationality') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.gender') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.highest_edu') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.civil_status') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.religion') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.street_no') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.street') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.city') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.province') }}
-                    </th>
-                   
-                    <th>
-                        {{ trans('cruds.directory.fields.ngo') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.sector') }}
-                    </th>       
-                    <th>
-                        {{ trans('cruds.directory.fields.description') }}
-                    </th>
-                  
-                    <th>
-                        {{ trans('cruds.directory.fields.remarks') }}
-                    </th>
-                      -->
-                     <th>
-                        {{ trans('cruds.directory.fields.barangay') }}
-                    </th>
-                        <th>
-                        {{ trans('cruds.directory.fields.comelec_status') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.directory.fields.life_status') }}
-                    </th>
-                    <th>
-                   Financial Assistance
-                    </th>
+                <tr>   
+                    <th>No.</th> {{-- Count column --}}
+                    <th>{{ trans('cruds.directory.fields.profile_picture') }}</th>
+                    <th>Last Name + Suffix</th>
+                    <th>{{ trans('cruds.directory.fields.first_name') }}</th>
+                    <th>{{ trans('cruds.directory.fields.middle_name') }}</th>
+                    <th>{{ trans('cruds.directory.fields.barangay') }}</th>
+                    <th>{{ trans('cruds.directory.fields.comelec_status') }}</th>
+                    {{-- NEW: Latest FA + Status --}}
+                    <th>Latest FA Record</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                    <th>Financial Assistance</th>
                 </tr>
             </thead>
         </table>
@@ -158,6 +77,54 @@ $(function () {
   dtButtons.push(deleteButton)
   @endcan
 
+
+  // Put this once (e.g., in your ccmis-directory.js)
+function formatDateTime12h(value) {
+  if (!value) return '<span class="text-muted">—</span>';
+
+  let d;
+  if (value instanceof Date) {
+    d = value;
+  } else if (typeof value === 'string') {
+    const s = value.trim();
+    // Handle "YYYY-MM-DD HH:mm:ss" (Safari-safe)
+    if (/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}(:\d{2})?$/.test(s)) {
+      d = new Date(s.replace(' ', 'T'));
+    } else {
+      d = new Date(s);
+    }
+  } else {
+    return '<span class="text-muted">—</span>';
+  }
+
+  if (isNaN(d)) return '<span class="text-muted">—</span>';
+
+  const datePart = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const timePart = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  return `${datePart} ${timePart}`; // e.g., "June 10, 1992 3:15 PM"
+}
+
+
+  function toTitleCase(str) {
+    if (!str) return '';
+    return str.toLowerCase().replace(/\b[\p{L}’']+/gu, function(w){
+      return w.charAt(0).toUpperCase() + w.slice(1);
+    });
+  }
+
+  function statusBadge(raw) {
+    if (!raw) return '<span class="text-muted">—</span>';
+    const val = String(raw).toLowerCase();
+    if (val === 'claimed') {
+      return '<span class="badge badge-success">Claimed</span>';
+    }
+    if (val === 'cancelled' || val === 'canceled') {
+      return '<span class="badge badge-danger">Cancelled</span>';
+    }
+    // Treat everything else (e.g. Pending) as Ongoing
+    return '<span class="badge badge-warning">Ongoing</span>';
+  }
+
   let dtOverrideGlobals = {
     buttons: dtButtons,
     processing: true,
@@ -166,30 +133,122 @@ $(function () {
     aaSorting: [],
     ajax: "{{ route('admin.directories.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-      { data: 'id', name: 'id' },
+  
+      // Count / Row number (continuous per page)
+      {
+        data: null,
+        name: '_row',
+        orderable: false,
+        searchable: false,
+        render: function (data, type, row, meta) {
+          return meta.row + meta.settings._iDisplayStart + 1;
+        }
+      },
+
       { data: 'profile_picture', name: 'profile_picture', orderable: false, searchable: false },
-      { data: 'last_name', name: 'last_name' },
-      { data: 'first_name', name: 'first_name' },
-      { data: 'middle_name', name: 'middle_name' },
-      { data: 'suffix', name: 'suffix' },
+
+    // 1) Last name + Suffix (display both, sort by last_name only)
+{
+  data: null,
+  name: 'last_name',              // server-side sort/search by last_name
+  render: function (data, type, row) {
+    if (type === 'display' || type === 'filter') {
+      var ln = (row.last_name || '').trim();
+      var sx = (row.suffix || '').trim();
+      var out = [ln, sx].filter(Boolean).join(' ').trim();  // e.g., "Dela Cruz Jr"
+      return toTitleCase(out);
+    }
+    // for sort/type !== 'display', return raw last_name so ordering works
+    return row.last_name || '';
+  },
+  defaultContent: ''
+},
+
+// 2) First name
+{
+  data: 'first_name',
+  name: 'first_name',
+  render: function (v, type) {
+    if (type === 'display' || type === 'filter') return toTitleCase(v || '');
+    return v || '';
+  },
+  defaultContent: ''
+},
+
+// 3) Middle name
+{
+  data: 'middle_name',
+  name: 'middle_name',
+  render: function (v, type) {
+    if (type === 'display' || type === 'filter') return toTitleCase(v || '');
+    return v || '';
+  },
+  defaultContent: ''
+},
+
       { data: 'barangay_barangay_name', name: 'barangay.barangay_name' },
       { data: 'comelec_status', name: 'comelec_status' },
-      { data: 'life_status', name: 'life_status' },
-       {
-    data: 'id', // use the Directory ID from server
-    name: 'fa_link',
-    orderable: false,
-    searchable: false,
-    render: function (data, type, row, meta) {
-      let url = "{{ route('admin.financial-assistances.create') }}?directory_id=" + data;
-      return '<a class="btn btn-sm btn-primary" href="' + url + '">Add</a>';
+
+    // NEW: Latest FA (created_at)
+{
+  data: 'created_at',
+  name: 'created_at',
+  render: function (data, type, row) {
+    if (type === 'display' || type === 'filter') {
+      return formatDateTime12h(data);
     }
+    // For sorting, return a numeric timestamp
+    const ts = Date.parse(typeof data === 'string' ? data.replace(' ', 'T') : data);
+    return isNaN(ts) ? '' : ts;
   }
+},
+
+  // Latest FA status as a colored badge
+{
+  data: 'latest_fa_status',
+  name: 'latest_fa_status',
+  orderable: false,       // set to true if you want to sort by raw status text
+  searchable: false,      // set to true if you want to search by status text
+  render: function (status, type) {
+    if (type !== 'display') return status || '';
+
+    var s = (status || '').toString().trim().toLowerCase();
+    var map = {
+      'pending':  { label: 'Pending',  cls: 'badge badge-warning',  // orange/yellow
+                    // uncomment to force orange shade:
+                    // style: 'style="background-color:#fd7e14;color:#fff;"'
+                  },
+      'cancelled':{ label: 'Cancelled',cls: 'badge badge-danger' }, // red
+      'claimed':  { label: 'Claimed',  cls: 'badge badge-success' } // green
+      // 'on-going': { label: 'On-going', cls: 'badge badge-warning' } // (optional)
+    };
+
+    var m = map[s] || { label: status || '—', cls: 'badge badge-secondary' };
+
+    // If you enabled the custom orange style above, include it here:
+    // return `<span class="${m.cls}" ${m.style || ''}>${m.label}</span>`;
+
+    return `<span class="${m.cls}">${m.label}</span>`;
+  }
+},
+
+ { data: 'remarks', name: 'remarks', orderable: true, searchable: true },
+      // FA Add link
+      {
+        data: 'id',
+        name: 'fa_link',
+        orderable: false,
+        searchable: false,
+        render: function (data, type, row, meta) {
+          let url = "{{ route('admin.financial-assistances.create') }}?directory_id=" + data;
+          return '<a class="btn btn-sm btn-primary" href="' + url + '">View</a>';
+        }
+      }
     ],
+    // Sort by Name (index 3) ascending
     orderCellsTop: true,
-    order: [[ 1, 'desc' ]], 
-    pageLength: 100,
+    order: [[ 7, 'desc' ]],
+    pageLength: 10,
   };
 
   let table = $('.datatable-Directory').DataTable(dtOverrideGlobals);

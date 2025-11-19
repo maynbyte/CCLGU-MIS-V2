@@ -17,6 +17,9 @@ class MedicalAssistanceController extends Controller
 {
     use CsvImportTrait;
 
+    /**
+     * Display a listing of medical assistance records. Handles DataTables AJAX requests.
+     */
     public function index(Request $request)
     {
         abort_if(Gate::denies('medical_assistance_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -58,6 +61,9 @@ class MedicalAssistanceController extends Controller
         return view('admin.medicalAssistances.index');
     }
 
+    /**
+     * Show form for creating a new medical assistance record.
+     */
     public function create()
     {
         abort_if(Gate::denies('medical_assistance_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -65,6 +71,9 @@ class MedicalAssistanceController extends Controller
         return view('admin.medicalAssistances.create');
     }
 
+    /**
+     * Store a newly created medical assistance record.
+     */
     public function store(StoreMedicalAssistanceRequest $request)
     {
         $medicalAssistance = MedicalAssistance::create($request->all());
@@ -72,6 +81,9 @@ class MedicalAssistanceController extends Controller
         return redirect()->route('admin.medical-assistances.index');
     }
 
+    /**
+     * Show form for editing an existing medical assistance record.
+     */
     public function edit(MedicalAssistance $medicalAssistance)
     {
         abort_if(Gate::denies('medical_assistance_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -79,6 +91,9 @@ class MedicalAssistanceController extends Controller
         return view('admin.medicalAssistances.edit', compact('medicalAssistance'));
     }
 
+    /**
+     * Update the specified medical assistance record.
+     */
     public function update(UpdateMedicalAssistanceRequest $request, MedicalAssistance $medicalAssistance)
     {
         $medicalAssistance->update($request->all());
@@ -86,6 +101,9 @@ class MedicalAssistanceController extends Controller
         return redirect()->route('admin.medical-assistances.index');
     }
 
+    /**
+     * Display details of a specific medical assistance record.
+     */
     public function show(MedicalAssistance $medicalAssistance)
     {
         abort_if(Gate::denies('medical_assistance_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -93,6 +111,9 @@ class MedicalAssistanceController extends Controller
         return view('admin.medicalAssistances.show', compact('medicalAssistance'));
     }
 
+    /**
+     * Delete a medical assistance record.
+     */
     public function destroy(MedicalAssistance $medicalAssistance)
     {
         abort_if(Gate::denies('medical_assistance_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -102,6 +123,9 @@ class MedicalAssistanceController extends Controller
         return back();
     }
 
+    /**
+     * Delete multiple medical assistance records at once.
+     */
     public function massDestroy(MassDestroyMedicalAssistanceRequest $request)
     {
         $medicalAssistances = MedicalAssistance::find(request('ids'));
