@@ -14,6 +14,16 @@ class StoreDirectoryRequest extends FormRequest
         return Gate::allows('directory_create');
     }
 
+    // app/Http/Requests/StoreDirectoryRequest.php (and UpdateDirectoryRequest.php)
+    public function prepareForValidation(): void
+    {
+        if ($this->input('barangay_id') === 'other') {
+            $this->merge(['barangay_id' => null]);
+        }
+    }
+
+
+
     public function rules()
     {
         return [
@@ -85,10 +95,14 @@ class StoreDirectoryRequest extends FormRequest
                 'string',
                 'nullable',
             ],
+            'maiden_surname' =>
+            ['nullable', 'string', 'max:191'],
             'remarks' => [
                 'string',
                 'nullable',
             ],
+            'barangay_id'    => ['nullable', 'integer', 'exists:barangays,id'],
+            'barangay_other' => ['required_without:barangay_id', 'nullable', 'string', 'max:191'],
 
             // child rows
             'family_name'           => ['array', 'max:6'],

@@ -99,13 +99,6 @@ class FinancialAssistanceController extends Controller
         return view('admin.financialAssistances.index');
     }
 
-  /*  public function create()
-    {
-        abort_if(Gate::denies('financial_assistance_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        return view('admin.financialAssistances.create');
-    }*/
-
 
     public function create(Request $request)
     {
@@ -131,50 +124,68 @@ class FinancialAssistanceController extends Controller
             'directory' => $directory,
             // 'directories' => $directories, // uncomment if you use the dropdown below
         ]);
+
+
+        // If you're fetching per Directory:
+        $list = \App\Models\FinancialAssistance::query()
+            ->where('directory_id', $directory->id)
+            ->orderByRaw('date_claimed IS NULL')   // puts NULLs last
+            ->orderByDesc('date_claimed')          // newest first
+            ->get();
+
+        // OR via relationship:
+        $directory->load(['financialAssistances' => function ($q) {
+            $q->orderByRaw('date_claimed IS NULL')->orderByDesc('date_claimed');
+        }]);
+        $list = $directory->financialAssistances;
     }
 
 
-   public function store(StoreFinancialAssistanceRequest $request)
-{
-    abort_if(Gate::denies('financial_assistance_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-    // Make sure the directory exists (your FormRequest should already validate this)
-    $directory = Directory::findOrFail($request->input('directory_id'));
-
-    // Create through the relationship so directory_id is set automatically
-    $fa = $directory->financialAssistances()->create(
-        $request->except(['directory_id', 'requirements', 'ck-media'])
-    );
-
-    // Requirements (Spatie Media Library)
-    foreach ($request->input('requirements', []) as $file) {
-        $fa->addMedia(storage_path('tmp/uploads/' . basename($file)))
-           ->toMediaCollection('requirements');
-    }
-
-    // CKEditor media (if any)
-    if ($media = $request->input('ck-media', false)) {
-        Media::whereIn('id', $media)->update(['model_id' => $fa->id]);
-    }
-
-    // Redirect to the Directory show page
-    return redirect()
-        ->route('admin.directories.show', $directory->id)
-        ->with('message', 'Financial assistance created and linked to the directory ✅');
-}
-
-
-    public function edit(FinancialAssistance $financialAssistance)
+    public function store(StoreFinancialAssistanceRequest $request)
     {
-        abort_if(Gate::denies('financial_assistance_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('financial_assistance_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.financialAssistances.edit', compact('financialAssistance'));
+        $directory = Directory::findOrFail($request->input('directory_id'));
+
+        // Create via parent relation (sets directory_id automatically)
+        $fa = $directory->financialAssistances()->create(
+            $request->except(['directory_id', 'requirements', 'ck-media'])
+                + ['user' => auth()->id()] // <-- set FK using your "user" column
+        );
+
+        // Attach uploaded requirement files (Dropzone tmp -> media library)
+        foreach ($request->input('requirements', []) as $file) {
+            $fa->addMedia(storage_path('tmp/uploads/' . basename($file)))
+                ->toMediaCollection('requirements');
+        }
+
+        // CKEditor media, if any
+        if ($media = $request->input('ck-media', false)) {
+            Media::whereIn('id', $media)->update(['model_id' => $fa->id]);
+        }
+
+        $data = $request->validate([
+            // your rules...
+            'directory_id' => ['required', 'exists:directories,id'],
+        ]);
+
+        $fa = \App\Models\FinancialAssistance::create($data);
+
+        return redirect()->to(
+            route('admin.financial-assistances.create', ['directory_id' => $fa->directory_id]) . '#tab-general'
+        )->with('message', 'Financial assistance created ✅');
     }
 
     public function update(UpdateFinancialAssistanceRequest $request, FinancialAssistance $financialAssistance)
     {
-        $financialAssistance->update($request->all());
+        abort_if(Gate::denies('financial_assistance_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        // Update FA (keep directory_id if you don’t allow reassignment)
+        $financialAssistance->update(
+            $request->except(['requirements', 'ck-media'])
+        );
+
+        // --- Media sync (kept from your working code) ---
         if (count($financialAssistance->requirements) > 0) {
             foreach ($financialAssistance->requirements as $media) {
                 if (! in_array($media->file_name, $request->input('requirements', []))) {
@@ -182,15 +193,40 @@ class FinancialAssistanceController extends Controller
                 }
             }
         }
-        $media = $financialAssistance->requirements->pluck('file_name')->toArray();
+        $existing = $financialAssistance->requirements->pluck('file_name')->toArray();
         foreach ($request->input('requirements', []) as $file) {
-            if (count($media) === 0 || ! in_array($file, $media)) {
-                $financialAssistance->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('requirements');
+            if (count($existing) === 0 || ! in_array($file, $existing)) {
+                $financialAssistance
+                    ->addMedia(storage_path('tmp/uploads/' . basename($file)))
+                    ->toMediaCollection('requirements');
             }
         }
+        // --- end media sync ---
 
-        return redirect()->route('admin.financial-assistances.index');
+        // After editing, redirect to create form (with same directory context) as requested
+        return redirect()->to(
+            route('admin.financial-assistances.create', ['directory_id' => $financialAssistance->directory_id])
+        )->with('message', 'Financial assistance updated ✅ Redirected to create new record.');
     }
+
+
+
+
+    public function edit(FinancialAssistance $financialAssistance)
+    {
+        abort_if(Gate::denies('financial_assistance_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        // Load relations the Blade uses (parent directory + media for Dropzone preload)
+        $financialAssistance->load('directory', 'media');
+
+        // The edit.blade expects $fa and $directory (and sometimes $financialAssistance)
+        return view('admin.financialAssistances.edit', [
+            'fa'                   => $financialAssistance,
+            'directory'            => $financialAssistance->directory,
+            'financialAssistance'  => $financialAssistance, // keep this too, in case the view references it
+        ]);
+    }
+
 
     public function show(FinancialAssistance $financialAssistance)
     {
@@ -219,6 +255,11 @@ class FinancialAssistanceController extends Controller
         return response(null, Response::HTTP_NO_CONTENT);
     }
 
+    public function financialAssistances()
+    {
+        return $this->hasMany(\App\Models\FinancialAssistance::class, 'directory_id');
+    }
+
     public function storeCKEditorImages(Request $request)
     {
         abort_if(Gate::denies('financial_assistance_create') && Gate::denies('financial_assistance_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -231,5 +272,18 @@ class FinancialAssistanceController extends Controller
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
     }
 
-    
+    public function printCaseSummary(\App\Models\FinancialAssistance $financialAssistance)
+    {
+        abort_if(\Gate::denies('financial_assistance_show'), \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        // Eager load what we need
+        $financialAssistance->load([
+            'directory.barangay',
+            'directory.familycompositions',
+            'directory.sectors',   // if you have a sectors relation
+            'addedBy:id,name'      // if you show "added by" elsewhere
+        ]);
+
+        return view('admin.financialAssistances.print-case-summary', compact('financialAssistance'));
+    }
 }

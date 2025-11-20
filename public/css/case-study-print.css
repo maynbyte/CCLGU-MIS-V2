@@ -1,0 +1,206 @@
+
+/* Generic underline for fields */
+.underline {
+  border-bottom: 1px solid #000;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+/* Header Styles */
+.header-container {
+  position: relative;
+  padding: 2rem 1rem;
+}
+
+.logo-left {
+  left: 150px;
+}
+.logo-right {
+  right: 0;
+}
+
+/* Specific sizes for logos */
+.header-logo.logo-left {
+  width: 80px;
+
+}
+.header-logo.logo-right {
+
+  width:150px;
+  margin-left: -25px;
+
+}
+@media (max-width: 767.98px) {
+  .header-logo {
+    position: static;
+    transform: none;
+    margin: 0.5rem auto;
+    display: block;
+  }
+}
+/* Print-specific header */
+@media print {
+  .header-container {
+    position: relative;
+    padding: 1rem;
+  }
+  .header-logo {
+    position: static !important;
+    transform: none !important;
+    display: block !important;
+    max-width: 80px;
+    margin: 0 auto 0.5rem auto;
+  }
+  .d-none,
+  .d-md-block {
+    display: block !important;
+  }
+}
+@media print {
+  .row {
+    flex-wrap: nowrap !important;
+  }
+  .col-md-5 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+/* Indentation for form groups */
+.form-group.indent {
+  padding-left: 30px;
+  margin-bottom: -5px;
+}
+/* Date container for padding */
+.date-container {
+  padding-right: 100px;
+  padding-top: 20px;
+}
+.date-line {
+  display: inline-block;
+  width: auto;
+  border-bottom: 1px solid #000;
+  padding-bottom: 2px;
+}
+/* Header text margin */
+.header-text {
+  margin-left: 10px;
+}
+/* Identifying information left padding */
+.identifying-info {
+  padding-left: 50px;
+  padding-bottom: 20px;
+}
+/* Row layouts */
+.name-row, .address-row, .dob-row {
+  display: flex;
+  align-items: baseline;
+  margin-top: 10px;
+}
+.name-row {
+  margin-top: 0;
+}
+/* Field width definitions */
+.name-field {
+  flex: 0 0 55%;
+  margin-right: 10px;
+  display: flex;
+  align-items: baseline;
+}
+.age-field {
+  flex: 0 0 15%;
+  margin-right: 10px;
+  display: flex;
+  align-items: baseline;
+}
+.sex-field {
+  flex: 0 0 14%;
+  display: flex;
+  align-items: baseline;
+}
+.address-field {
+  flex: 0 0 48%;
+  margin-right: 10px;
+  display: flex;
+  align-items: baseline;
+}
+.barangay-field {
+  flex: 0 0 37%;
+  display: flex;
+  align-items: baseline;
+}
+.dob-field {
+  flex: 0 0 42.5%;
+  margin-right: 10px;
+  display: flex;
+  align-items: baseline;
+}
+.pob-field {
+  flex: 0 0 42.5%;
+  display: flex;
+  align-items: baseline;
+}
+/* Additional field groupings */
+.higheduc-field {
+  flex: 0 0 56%;
+  margin-right: 10px;
+  display: flex;
+  align-items: baseline;
+}
+.contact-field {
+  flex: 0 0 29%;
+  margin-right: 10px;
+  display: flex;
+  align-items: baseline;
+}
+.occupation-field {
+  flex: 0 0 50%;
+  margin-right: 10px;
+  display: flex;
+  align-items: baseline;
+}
+.religion-field {
+  flex: 0 0 35%;
+  margin-right: 10px;
+  display: flex;
+  align-items: baseline;
+}
+/* Section title spacing */
+.section-title {
+  padding: 0 0 0 0;
+}
+/* Signature section */
+.signature {
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* Assessment text with repeating line */
+.assessment-text {
+  display: block;
+  line-height: 1.5em;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent calc(1.5em - 1px),
+    #000 calc(1.5em - 1px),
+    #000 1.5em
+  );
+  padding-bottom: 20px;
+}
+/* Label styling for fields */
+.field-label {
+  margin: 0 5px 0 0;
+  font-weight: bolder;
+}
+/* Field value for spans */
+.field-value {
+  flex: 1;
+  text-align: center;
+}
+/* Table column widths */
+.table-col-name { width: 20%; }
+.table-col-dob { width: 15%; }
+.table-col-relationship { width: 10%; }
+.table-col-civil { width: 10%; }
+.table-col-education { width: 10%; }
+.table-col-occupation { width: 10%; }

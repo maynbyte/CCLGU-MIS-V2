@@ -32,6 +32,7 @@
                     <th>{{ trans('cruds.directory.fields.comelec_status') }}</th>
                     {{-- NEW: Latest FA + Status --}}
                     <th>Latest FA Record</th>
+                    <th>Payout Schedule</th>
                     <th>Status</th>
                     <th>Remarks</th>
                     <th>Financial Assistance</th>
@@ -202,6 +203,19 @@ function formatDateTime12h(value) {
     return isNaN(ts) ? '' : ts;
   }
 },
+
+    // NEW: Payout Schedule (scheduled_fa)
+    {
+      data: 'latest_fa_scheduled_fa',
+      name: 'latest_fa_scheduled_fa',
+      render: function (data, type, row) {
+        if (type === 'display' || type === 'filter') {
+          return data ? (new Date(String(data).replace(' ', 'T'))).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '<span class="text-muted">—</span>';
+        }
+        const ts = Date.parse(typeof data === 'string' ? data.replace(' ', 'T') : data);
+        return isNaN(ts) ? '' : ts;
+      }
+    },
 
   // Latest FA status as a colored badge
 {

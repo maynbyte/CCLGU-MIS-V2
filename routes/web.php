@@ -32,6 +32,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('financial-assistances/parse-csv-import', 'FinancialAssistanceController@parseCsvImport')->name('financial-assistances.parseCsvImport');
     Route::post('financial-assistances/process-csv-import', 'FinancialAssistanceController@processCsvImport')->name('financial-assistances.processCsvImport');
     Route::resource('financial-assistances', 'FinancialAssistanceController');
+    // Put this near your other financial-assistances routes (inside the admin group)
+    Route::get('financial-assistances/{financialAssistance}/print', 'FinancialAssistanceController@printCaseSummary')
+        ->name('financial-assistances.print');
+
+
 
     // Guarantee Letter
     Route::delete('guarantee-letters/destroy', 'GuaranteeLetterController@massDestroy')->name('guarantee-letters.massDestroy');
@@ -115,6 +120,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('directories/parse-csv-import', 'DirectoryController@parseCsvImport')->name('directories.parseCsvImport');
     Route::post('directories/process-csv-import', 'DirectoryController@processCsvImport')->name('directories.processCsvImport');
     Route::resource('directories', 'DirectoryController');
+
+
+
+
+    Route::post('directories/match/upload', 'DirectoryController@matchUpload')->name('directories.match.upload');
+    Route::get('directories/match/download', 'DirectoryController@matchDownload')->name('directories.match.download');
+
+
 
     // Familycomposition
     Route::delete('familycompositions/destroy', 'FamilycompositionController@massDestroy')->name('familycompositions.massDestroy');

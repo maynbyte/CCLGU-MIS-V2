@@ -103,3 +103,83 @@ div.dt-button-collection {
     background-color: rgba(128, 128, 128, 0.1);
     font-weight: bolder;
 }
+
+/* Prevent AdminLTE sidebar from expanding on hover when using sidebar-mini + sidebar-collapse */
+/* Forces a fixed collapsed width and disables transition/hover expansion */
+body.sidebar-mini.sidebar-collapse .main-sidebar,
+body.sidebar-mini.sidebar-collapse .main-sidebar:hover {
+    width: 60px !important;
+    min-width: 60px !important;
+    transition: none !important;
+}
+
+/* Ensure child elements don't reveal additional width on hover */
+body.sidebar-mini.sidebar-collapse .main-sidebar .brand-link,
+body.sidebar-mini.sidebar-collapse .main-sidebar .user-panel,
+body.sidebar-mini.sidebar-collapse .main-sidebar .nav-sidebar .nav-link {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* Disable sidebar transition globally to avoid visual shift */
+.main-sidebar {
+    transition: none !important;
+}
+
+/* Keep icons stable (no movement) */
+.nav-sidebar .nav-link .nav-icon {
+    transition: none !important;
+}
+
+/* Keyboard focus + spacing improvements for sidebar */
+.nav-sidebar .nav-link:focus {
+    outline: 2px solid rgba(255,255,255,0.12);
+    outline-offset: -2px;
+}
+
+.nav-sidebar .nav-link p { margin: 0; padding-left: 6px; }
+.nav-sidebar .nav-icon { width: 28px; text-align: center; font-size: 1.05rem; }
+.nav-sidebar .nav-link .badge { margin-left: 6px; }
+
+/* Slightly increase click/tap target on small screens */
+@media (max-width: 768px) {
+    .nav-sidebar .nav-link { padding: 10px 12px; }
+}
+
+/* Keep labels hidden when sidebar is collapsed even on hover */
+/* Show labels only when the sidebar is expanded (i.e., NOT sidebar-collapse) */
+body.sidebar-mini.sidebar-collapse .main-sidebar .brand-link .brand-text,
+body.sidebar-mini.sidebar-collapse .main-sidebar .user-panel .info,
+body.sidebar-mini.sidebar-collapse .main-sidebar .nav-sidebar .nav-link p,
+body.sidebar-mini.sidebar-collapse .main-sidebar .nav-sidebar .nav-treeview {
+    display: none !important;
+}
+
+/* Also ensure tooltips or title reveals don't appear via :after/:before */
+body.sidebar-mini.sidebar-collapse .main-sidebar .nav-link .right,
+body.sidebar-mini.sidebar-collapse .main-sidebar .nav-link .badge,
+body.sidebar-mini.sidebar-collapse .main-sidebar .nav-link .nav-text {
+    display: none !important;
+}
+
+/* Extra coverage: hide any inline text nodes inside links while collapsed */
+body.sidebar-mini.sidebar-collapse .main-sidebar .nav-link > *:not(.nav-icon) {
+    display: none !important;
+    visibility: hidden !important;
+    color: transparent !important;
+}
+
+/* Ensure treeview children are hidden when collapsed or when sidebar is temporarily opened by hover */
+body.sidebar-mini.sidebar-collapse .main-sidebar .nav-treeview,
+body.sidebar-mini.sidebar-collapse.sidebar-open .main-sidebar .nav-treeview,
+body.sidebar-mini.sidebar-collapse.sidebar-open .main-sidebar .nav-link > p {
+    display: none !important;
+}
+
+/* Prevent AdminLTE scripts from expanding width on hover by forcing max-width */
+body.sidebar-mini.sidebar-collapse .main-sidebar,
+body.sidebar-mini.sidebar-collapse .main-sidebar:hover,
+body.sidebar-mini.sidebar-collapse.sidebar-open .main-sidebar {
+    max-width: 60px !important;
+    width: 60px !important;
+}

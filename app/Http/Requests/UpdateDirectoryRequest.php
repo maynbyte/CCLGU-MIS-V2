@@ -14,6 +14,15 @@ class UpdateDirectoryRequest extends FormRequest
         return Gate::allows('directory_edit');
     }
 
+    // app/Http/Requests/StoreDirectoryRequest.php (and UpdateDirectoryRequest.php)
+    public function prepareForValidation(): void
+    {
+        if ($this->input('barangay_id') === 'other') {
+            $this->merge(['barangay_id' => null]);
+        }
+    }
+
+
     public function rules()
     {
         return [
@@ -89,6 +98,9 @@ class UpdateDirectoryRequest extends FormRequest
                 'string',
                 'nullable',
             ],
+
+            'barangay_id'    => ['nullable', 'integer', 'exists:barangays,id'],
+            'barangay_other' => ['required_without:barangay_id', 'nullable', 'string', 'max:191'],
         ];
     }
 }

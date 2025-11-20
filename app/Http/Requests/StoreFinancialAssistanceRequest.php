@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\FinancialAssistance;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 
 class StoreFinancialAssistanceRequest extends FormRequest
 {
@@ -17,47 +16,61 @@ class StoreFinancialAssistanceRequest extends FormRequest
     public function rules()
     {
         return [
-            'problem_presented' => [
+            'directory_id' => ['required', 'exists:directories,id'],
+
+            // Type of assistance (inline list)
+            'type_of_assistance' => [
+                'nullable',
                 'string',
-                'nullable',
+                Rule::in([
+                    'Financial Assistance',
+                    'Guarantee Letter',
+                    'Burial Assistance',
+                    'Medical Assistance',
+                    'Education Assistance',
+                    'Solicitation',
+                ]),
             ],
-            'date_interviewed' => [
-                'date_format:' . config('panel.date_format') . ' ' . config('panel.time_format'),
-                'nullable',
-            ],
-            'assessment' => [
-                'string',
-                'nullable',
-            ],
-            'recommendation' => [
-                'string',
-                'nullable',
-            ],
-            'amount' => [
-                'string',
-                'nullable',
-            ],
-            'scheduled_fa' => [
-                'string',
-                'nullable',
-            ],
-            'status' => [
-                'string',
-                'nullable',
-            ],
-            'date_claimed' => [
-                'string',
-                'nullable',
-            ],
-            'note' => [
-                'string',
-                'nullable',
-            ],
-            'requirements' => [
-                'array',
-            ],
-            'directory_id' => [
-                'required', 'exists:directories,id'],
+
+
+
+            'patient_name'        => ['nullable', 'string', 'max:255'],
+            'claimant_is_patient' => ['nullable', 'boolean'],
+
+            // Single checkbox group -> JSON/array
+            'requirement_checklist'   => ['nullable', 'array'],
+            'requirement_checklist.*' => ['string'],
+
+            // Status (inline list; must match option values)
+            'status' => ['nullable', Rule::in(['Claimed', 'Pending', 'Cancelled'])],
+
+            // Problem presented (checkbox group -> array)
+            'problem_presented_value'   => ['nullable', 'array'],
+            'problem_presented_value.*' => ['string'],
+
+            // Free-text SWO fields (since you’re not enforcing picks here)
+            'social_welfare_name'  => ['nullable', 'string', 'max:255'],
+            'social_welfare_desig' => ['nullable', 'string', 'max:255'],
+
+            // Existing fields
+            'problem_presented' => ['nullable', 'string'],
+            'assessment'        => ['nullable', 'string'],
+            'recommendation'    => ['nullable', 'string'],
+            'amount'            => ['nullable', 'numeric'],
+            'scheduled_fa'      => ['nullable', 'string'],
+            // Use 'date' to accept Y-m-d or full datetime; switch to date_format if you require strictness
+            'date_interviewed'  => ['nullable', 'date'],
+            'date_claimed'      => ['nullable', 'date'],
+            'note'              => ['nullable', 'string'],
+
+            // Media (Spatie)
+            'requirements'   => ['sometimes', 'array'],
+            'requirements.*' => ['string'],
         ];
+
+        $validated = $request->validate([
+            // ...
+            'reference_no' => ['nullable', 'string', 'max:50', 'unique:financial_assistances,reference_no'],
+        ]);
     }
 }

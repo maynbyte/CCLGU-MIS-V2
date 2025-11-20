@@ -271,171 +271,13 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
         </div>
 
         {{-- RIGHT COLUMN --}}
-       <div class="col-lg-9">
-  <div class="card">
-    <div class="card-header p-2 d-flex align-items-center">
-      <ul class="nav nav-pills flex-grow-1" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link" href="#tab-general-info" data-toggle="tab" role="tab">General Information</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="#tab-edit-FA" data-toggle="tab" role="tab">Edit Financial Assistance</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#tab-previous-FA" data-toggle="tab" role="tab">Previous FA</a>
-        </li>
-      </ul>
-
-      @can('financial_assistance_create')
-        {{-- Pass the current directory so the create form is pre-filled --}}
-        <a href="{{ route('admin.financial-assistances.create', ['directory_id' => $directory->id]) }}"
-            class="btn btn-success btn-sm ml-2">
-            <i class="fas fa-plus-circle"></i> Add Financial Assistance
-        </a>
-        @endcan
-
-      @can('directory_edit')
-      <a href="{{ route('admin.directories.edit', $directory->id) }}" class="btn btn-primary btn-sm ml-2">
-        <i class="fas fa-edit"></i> {{ trans('global.edit') }} Directory
-      </a>
-      @endcan
-    </div>
-
-    <div class="card-body">
-      <div class="tab-content">
-
-      {{-- GENERAL INFORMATION --}}
-        <div class="tab-pane" id="tab-general-info" role="tabpanel">
-          <div>
-            {{-- PERSONAL DETAILS --}}
-            <div class="mb-4 pb-3 border-bottom">
-              <h6 class="text-muted font-weight-bold mb-3">PERSONAL DETAILS</h6>
-              <div class="row">
-                @if(!empty($directory->maiden_surname))
-                  <div class="col-md-3 mb-3">
-                    <span class="small-label">Maiden Surname</span>
-                    <div class="font-weight-medium">{{ $directory->maiden_surname }}</div>
-                  </div>
-                @endif
-
-                <div class="col-md-3 mb-3">
-                  <span class="small-label">Last name</span>
-                  <div class="font-weight-medium">{{ $directory->last_name}} {{ $directory->suffix }}</div>
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header p-2">
+                    <h5 class="mb-0">Edit Financial Assistance</h5>
                 </div>
-                <div class="col-md-3 mb-3">
-                  <span class="small-label">First name</span>
-                  <div class="font-weight-medium">{{ $directory->first_name}}</div>
-                </div>
-                <div class="col-md-3 mb-3">
-                  <span class="small-label">Middle Name</span>
-                  <div class="font-weight-medium">{{ $directory->middle_name ?? '-' }}</div>
-                </div>
-
-                <div class="col-md-3 mb-3">
-                  <span class="small-label">Birthdate</span>
-                  <div class="font-weight-medium">
-                    {{ $directory->birthday ? \Carbon\Carbon::parse($directory->birthday)->format('F j, Y') : '-' }}
-                  </div>
-                </div>
-
-                <div class="col-md-3 mb-3">
-                  <span class="small-label">Address</span>
-                  <div class="font-weight-medium">
-                    @php
-                      $displayBarangay = trim((string)($directory->barangay_other ?? ''));
-                      if ($displayBarangay === '') {
-                        $displayBarangay = $barangayName ?? optional($directory->barangay)->barangay_name;
-                      }
-                    @endphp
-                    {{ $address }}
-                    @if(!empty($displayBarangay))
-                      <span class="text-muted"> • </span><span>{{ $displayBarangay }}</span>
-                    @endif
-                  </div>
-                </div>
-
-                <div class="col-md-3 mb-3">
-                  <span class="small-label">Phone number</span>
-                  <div class="font-weight-medium">{{ $phone }}</div>
-                </div>
-                <div class="col-md-3 mb-3">
-                  <span class="small-label">Email</span>
-                  <div class="font-weight-medium">{{ $email }}</div>
-                </div>
-              </div>
-            </div>
-
-            {{-- BACKGROUND INFORMATION --}}
-            <div class="mb-4 pb-3 border-bottom">
-              <h6 class="text-muted font-weight-bold mb-3">BACKGROUND INFORMATION</h6>
-              <div class="row">
-                <div class="col-lg-3 col-md-6 mb-3">
-                  <span class="small-label">Highest Educational Attainment</span>
-                  <span class="text-muted"> </span><span>{{ $directory->highest_edu }}</span>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-3">
-                  <span class="small-label">Religion</span>
-                  <span class="text-muted"> </span><span>{{ $directory->religion }}</span>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-3">
-                  <span class="small-label">Civil Status</span>
-                  <span class="text-muted"> </span><span>{{ $directory->civil_status }}</span>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-3">
-                  <span class="small-label">Place of Birth</span>
-                  <span class="text-muted"> </span><span>{{ $directory->place_of_birth }}</span>
-                </div>
-              </div>
-            </div>
-
-            {{-- FAMILY COMPOSITION --}}
-            <div>
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="text-muted font-weight-bold mb-0">Family Composition</h6>
-              </div>
-              <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                  <thead class="thead-light">
-                    <tr>
-                      <th>Names</th>
-                      <th>Birthday</th>
-                      <th>Relationship</th>
-                      <th>Civil Status</th>
-                      <th>Highest Education</th>
-                      <th>Occupation</th>
-                      <th>Remarks</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @forelse ($directory->familycompositions as $fam)
-                      <tr>
-                        <td>{{ $fam->family_name ?? '—' }}</td>
-                        <td>{{ $fmt($fam->family_birthday) ?: '—' }}</td>
-                        <td>{{ Familycomposition::FAMILY_RELATIONSHIP_SELECT[$fam->family_relationship] ?? ($fam->family_relationship ?? '—') }}</td>
-                        <td>{{ Familycomposition::FAMILY_CIVIL_STATUS_SELECT[$fam->family_civil_status] ?? ($fam->family_civil_status ?? '—') }}</td>
-                        <td>{{ Familycomposition::FAMILY_HIGHEST_EDU_SELECT[$fam->family_highest_edu] ?? ($fam->family_highest_edu ?? '—') }}</td>
-                        <td>{{ $fam->occupation ?? '—' }}</td>
-                        <td>{{ $fam->remarks ?? '—' }}</td>
-                      </tr>
-                    @empty
-                      <tr><td colspan="7" class="text-muted">No family members added.</td></tr>
-                    @endforelse
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {{-- EDIT FINANCIAL ASSISTANCE (ACTIVE) --}}
-        <div class="tab-pane active" id="tab-edit-FA" role="tabpanel">
-          <div class="card">
-            <div class="card-header">
-              {{ trans('global.edit') }} {{ trans('cruds.financialAssistance.title_singular') }}
-            </div>
-            <div class="card-body">
-              <form id="fa-form" method="POST" action="{{ route('admin.financial-assistances.update', $fa->id) }}" enctype="multipart/form-data">
+                <div class="card-body">
+                    <form id="fa-form" method="POST" action="{{ route('admin.financial-assistances.update', $fa->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -464,9 +306,13 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                   <div class="col-md-8">
                     <div class="form-group mb-2">
                       <label>Patient Name</label>
-                      <input type="text" name="patient_name" id="patient_name" class="form-control"
-                             value="{{ old('patient_name', $fa->patient_name ?? '') }}" placeholder="Full name"
-                             {{ $claimantIsPatient ? 'disabled' : '' }}>
+                       @php
+                         $patientValue = old('patient_name', $fa->patient_name ?? '');
+                         if ($patientValue === '') { $patientValue = $fullName; }
+                       @endphp
+                       <input type="text" name="patient_name" id="patient_name" class="form-control"
+                         value="{{ $patientValue }}" placeholder="{{ $fullName ?: 'Full name' }}"
+                         {{ $claimantIsPatient ? 'disabled' : '' }}>
                     </div>
                     <div class="form-check mt-1">
                       <input class="form-check-input" type="checkbox" id="claimant_is_patient" name="claimant_is_patient" value="1"
@@ -571,7 +417,7 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                              name="date_interviewed" id="date_interviewed"
                              value="{{ old('date_interviewed',
                                $fa->date_interviewed
-                                 ? Carbon::parse($fa->date_interviewed)->format(config('panel.date_format').' '.config('panel.time_format'))
+                                 ? (function($raw){ try { return Carbon::parse($raw)->format(config('panel.date_format').' '.config('panel.time_format')); } catch(\Throwable $e){ return ''; } })($fa->date_interviewed)
                                  : now('Asia/Manila')->format(config('panel.date_format').' '.config('panel.time_format'))
                              ) }}">
                       @if($errors->has('date_interviewed')) <span class="text-danger">{{ $errors->first('date_interviewed') }}</span> @endif
@@ -595,7 +441,7 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                       <label for="scheduled_fa">{{ trans('cruds.financialAssistance.fields.scheduled_fa') }}</label>
                       <input class="form-control {{ $errors->has('scheduled_fa') ? 'is-invalid' : '' }}" type="date"
                              name="scheduled_fa" id="scheduled_fa"
-                             value="{{ old('scheduled_fa', $fa->scheduled_fa ? Carbon::parse($fa->scheduled_fa)->format('Y-m-d') : '') }}">
+                             value="{{ old('scheduled_fa', $fa->scheduled_fa ? (function($raw){ try { return Carbon::parse($raw)->format('Y-m-d'); } catch(\Throwable $e){ return ''; } })($fa->scheduled_fa) : '') }}">
                       @if($errors->has('scheduled_fa')) <span class="text-danger">{{ $errors->first('scheduled_fa') }}</span> @endif
                       <span class="help-block">{{ trans('cruds.financialAssistance.fields.scheduled_fa_helper') }}</span>
                     </div>
@@ -655,7 +501,7 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                          value="{{ old('date_claimed',
                             isset($fa->date_claimed_for_input) && $fa->date_claimed_for_input
                               ? $fa->date_claimed_for_input
-                              : ($fa->date_claimed ? Carbon::parse($fa->date_claimed)->format('Y-m-d\TH:i') : '')
+                              : ($fa->date_claimed ? (function($raw){ try { return Carbon::parse($raw)->format('Y-m-d\TH:i'); } catch(\Throwable $e){ return ''; } })($fa->date_claimed) : '')
                          ) }}">
                   @if($errors->has('date_claimed')) <span class="text-danger">{{ $errors->first('date_claimed') }}</span> @endif
                   <span class="help-block">{{ trans('cruds.financialAssistance.fields.date_claimed_helper') }}</span>
@@ -716,160 +562,10 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                     {{ trans('global.save') }}
                   </button>
                 </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        {{-- PREVIOUS FA (NOT ACTIVE BY DEFAULT) --}}
-        <div class="tab-pane" id="tab-previous-FA" role="tabpanel">
-         <div>
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h6 class="text-muted font-weight-bold mb-0">Financial Assistance List</h6>
-                                </div>
-
-                                @php
-                                $fmtLong = function ($raw) {
-                                if (empty($raw)) return '—';
-                                try {
-                                $dt = $raw instanceof \DateTimeInterface
-                                ? \Carbon\Carbon::instance($raw)
-                                : \Carbon\Carbon::parse((string)$raw);
-                                return $dt->format('F j (l), Y'); // e.g., September 29 (Monday), 2025
-                                } catch (\Throwable $e) { return '—'; }
-                                };
-                                $list = $directory->financialAssistances ?? collect();
-                                @endphp
-
-
-                                <div class="table-responsive">
-
-                                    <div class="card mt-3">
-                                        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-                                        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-                                        <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-
-                                        @php
-                                        // Pretty long-date formatter
-                                        $fmtLong = function ($raw) {
-                                        if (empty($raw)) return '—';
-                                        try {
-                                        $dt = $raw instanceof \DateTimeInterface
-                                        ? \Carbon\Carbon::instance($raw)
-                                        : \Carbon\Carbon::parse((string)$raw);
-                                        return $dt->format('F j (l), Y'); // e.g., September 29 (Monday), 2025
-                                        } catch (\Throwable $e) { return '—'; }
-                                        };
-
-                                        $list = ($list ?? collect());
-                                        @endphp
-
-                                    
-
-                                        <div class="table-responsive">
-                                            <table id="fa-table" class="table table-striped table-sm mb-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No.</th>
-                                                        <th>Reference No.</th>
-                                                        <th>Type of Assistance</th>
-                                                        <th>Patient Name</th>
-                                                        <th>Date of Application</th>
-                                                        <th>Payout Schedule</th>
-                                                        <th>Date Claimed</th>
-                                                        <th>Status</th>
-                                                        <th>Added By</th>
-                                                        <th>Settings</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @forelse($list as $fa)
-                                                    @php
-                                                    $isSame = (int)($fa->claimant_is_patient ?? 0) === 1;
-                                                    $patientDisplay = $isSame ? ($fullName ?? '—') : ($fa->patient_name ?: '—');
-
-                                                    // Pretty display for Payout Schedule
-                                                    $schedDisplay = $fa->scheduled_fa
-                                                    ? \Carbon\Carbon::parse($fa->scheduled_fa)->format('F j (l), Y')
-                                                    : '—';
-
-                                                    // Badge color
-                                                    $status = $fa->status ?: '—';
-                                                    $statusLower = strtolower($fa->status ?? '');
-                                                    $badgeClass = 'secondary';
-                                                    if ($statusLower === 'claimed') $badgeClass = 'success';
-                                                    elseif ($statusLower === 'pending') $badgeClass = 'warning';
-                                                    elseif (in_array($statusLower, ['cancelled','canceled'])) $badgeClass = 'danger';
-
-                                                    // Application date (choose your real column, fallback to created_at)
-                                                    $applicationRaw = $fa->application_date ?? $fa->date ?? $fa->created_at ?? null;
-
-                                                    // Timestamps for correct sorting (DataTables uses data-order)
-                                                    $appTs = 0;
-                                                    if ($applicationRaw instanceof \DateTimeInterface) { $appTs = $applicationRaw->getTimestamp(); }
-                                                    elseif (!empty($applicationRaw)) { try { $appTs = \Carbon\Carbon::parse((string)$applicationRaw)->timestamp; } catch (\Throwable $e) {} }
-
-                                                    $schedTs = 0;
-                                                    if ($fa->scheduled_fa instanceof \DateTimeInterface) { $schedTs = $fa->scheduled_fa->getTimestamp(); }
-                                                    elseif (!empty($fa->scheduled_fa)) { try { $schedTs = \Carbon\Carbon::parse((string)$fa->scheduled_fa)->timestamp; } catch (\Throwable $e) {} }
-
-                                                    $claimTs = 0;
-                                                    if ($fa->date_claimed instanceof \DateTimeInterface) { $claimTs = $fa->date_claimed->getTimestamp(); }
-                                                    elseif (!empty($fa->date_claimed)) { try { $claimTs = \Carbon\Carbon::parse((string)$fa->date_claimed)->timestamp; } catch (\Throwable $e) {} }
-                                                    @endphp
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $fa->reference_no ?? '—' }}</td>
-                                                        <td>{{ $fa->type_of_assistance ?: '—' }}</td>
-                                                        <td>{{ $patientDisplay }}</td>
-
-                                                        {{-- Date of Application (pretty) with numeric sort key --}}
-                                                        <td data-order="{{ $appTs }}">{{ $fmtLong($applicationRaw) }}</td>
-
-                                                        {{-- Payout Schedule --}}
-                                                        <td data-order="{{ $schedTs }}">{{ $schedDisplay }}</td>
-
-                                                        {{-- Date Claimed --}}
-                                                        <td data-order="{{ $claimTs }}">{{ $fmtLong($fa->date_claimed) }}</td>
-
-                                                        <td><span class="badge bg-{{ $badgeClass }}">{{ $status }}</span></td>
-                                                        <td>{{ optional($fa->addedBy)->name ?? '—' }}</td>
-                                                        <td class="text-nowrap">
-                                                            <a href="{{ route('admin.financial-assistances.edit', $fa->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                                                            <a href="{{ route('admin.financial-assistances.print', $fa->id) }}" target="_blank" class="btn btn-sm btn-secondary">Print</a>
-                                                            @can('financial_assistance_delete')
-                                                            <form action="{{ route('admin.financial-assistances.destroy', $fa->id) }}" method="POST" class="d-inline">
-                                                                @csrf @method('DELETE')
-                                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                                    onclick="return confirm('Delete this financial assistance record? This cannot be undone.')">
-                                                                    Delete
-                                                                </button>
-                                                            </form>
-                                                            @endcan
-                                                        </td>
-                                                    </tr>
-                                                    @empty
-                                                    <tr>
-                                                        <td colspan="10" class="text-muted">No records yet.</td>
-                                                    </tr>
-                                                    @endforelse
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-
-                                    </div>
-
-                                </div>
-                            </div>
-        </div>
-
-        
-
-      </div> {{-- /.tab-content --}}
-    </div>
-  </div>
-</div> {{-- /RIGHT --}}
+                  </form>
+                </div>
+              </div>
+            </div> {{-- /RIGHT --}}
 
     </div>
 </div>
@@ -965,68 +661,25 @@ Dropzone.options.requirementsDropzone = {
 
 
 <script>
-    (function() {
-        function toggleWrap(selector, inputSelector, triggerValue) {
-            const anyChecked = Array.from(document.querySelectorAll(inputSelector))
-                .some(cb => cb.checked && cb.value === triggerValue);
-            document.querySelector(selector).style.display = anyChecked ? '' : 'none';
-        }
-
-        function wire(groupClass, wrapSelector) {
-            document.querySelectorAll(groupClass).forEach(cb => {
-                cb.addEventListener('change', function() {
-                    toggleWrap(wrapSelector, groupClass, 'Others');
-                });
-            });
-            toggleWrap(wrapSelector, groupClass, 'Others'); // initial
-        }
-
-        wire('.req-patient', '#req_patient_other_wrap');
-        wire('.req-claimant', '#req_claimant_other_wrap');
-        wire('.ppv', '#ppv_other_wrap');
-    })();
-
-    $(function() {
-        var table = $('#fa-table').DataTable({
-            dom: 'lfrtip', // keeps built-in search (the 'f'), still no Buttons bar
-            buttons: [], // ensure no DT Buttons
-            select: false,
-            ordering: true,
-            order: [
-                [4, 'desc']
-            ],
-            paging: true,
-            pageLength: 10,
-            lengthChange: false,
-            info: true,
-            autoWidth: false,
-            columnDefs: [{
-                orderable: false,
-                targets: [0, 9]
-            }],
-            drawCallback: function() {
-                var api = this.api();
-                api.column(0, {
-                        search: 'applied',
-                        order: 'applied'
-                    })
-                    .nodes().each(function(cell, i) {
-                        cell.innerHTML = i + 1;
-                    });
-            }
+  // Keep single Others toggle script (DataTables removed with previous FA list)
+  (function() {
+    function toggleWrap(selector, inputSelector, triggerValue) {
+      const anyChecked = Array.from(document.querySelectorAll(inputSelector))
+        .some(cb => cb.checked && cb.value === triggerValue);
+      var el = document.querySelector(selector);
+      if (el) el.style.display = anyChecked ? '' : 'none';
+    }
+    function wire(groupClass, wrapSelector) {
+      document.querySelectorAll(groupClass).forEach(cb => {
+        cb.addEventListener('change', function() {
+          toggleWrap(wrapSelector, groupClass, 'Others');
         });
-
-        // Your custom search still works
-        $('#fa-search-btn').on('click', function() {
-            table.search($('#fa-search').val()).draw();
-        });
-        $('#fa-clear-btn').on('click', function() {
-            $('#fa-search').val('');
-            table.search('').draw();
-        });
-        $('#fa-search').on('keypress', function(e) {
-            if (e.which === 13) $('#fa-search-btn').click();
-        });
-    });
+      });
+      toggleWrap(wrapSelector, groupClass, 'Others');
+    }
+    wire('.req-patient', '#req_patient_other_wrap');
+    wire('.req-claimant', '#req_claimant_other_wrap');
+    wire('.ppv', '#ppv_other_wrap');
+  })();
 </script>
 @endsection

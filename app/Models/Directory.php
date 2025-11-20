@@ -12,6 +12,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
+
 class Directory extends Model implements HasMedia
 {
     use SoftDeletes, InteractsWithMedia, Auditable, HasFactory;
@@ -55,6 +56,7 @@ class Directory extends Model implements HasMedia
 
     protected $fillable = [
         'last_name',
+        'maiden_surname',
         'first_name',
         'middle_name',
         'suffix',
@@ -80,6 +82,8 @@ class Directory extends Model implements HasMedia
         'created_at',
         'updated_at',
         'deleted_at',
+        'barangay_id',
+        'barangay_other',
     ];
 
     public const HIGHEST_EDU_SELECT = [
@@ -174,4 +178,18 @@ class Directory extends Model implements HasMedia
     {
         return $this->hasMany(Familycomposition::class, 'directory_id');
     }
+
+    public function setBarangayOtherAttribute($value): void
+    {
+        // if a valid barangay_id exists, ignore custom text
+        if (!empty($this->attributes['barangay_id'])) {
+            $this->attributes['barangay_other'] = null;
+        } else {
+            $this->attributes['barangay_other'] = $value;
+        }
+    }
+
+    
+
+
 }

@@ -352,13 +352,17 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? fals
                                                 <div class="col-md-8">
                                                     <div class="form-group mb-2">
                                                         <label>Patient Name</label>
+                                                        @php
+                                                            $patientValue = old('patient_name', $fa->patient_name ?? '');
+                                                            if ($patientValue === '') { $patientValue = $fullName; }
+                                                        @endphp
                                                         <input
                                                             type="text"
                                                             name="patient_name"
                                                             id="patient_name"
                                                             class="form-control"
-                                                            value="{{ old('patient_name', $fa->patient_name ?? '') }}"
-                                                            placeholder="Full name"
+                                                            value="{{ $patientValue }}"
+                                                            placeholder="{{ $fullName ?: 'Full name' }}"
                                                             {{ $claimantIsPatient ? 'disabled' : '' }} {{-- initial state on edit/validation back --}}>
 
                                                     </div>
@@ -761,9 +765,15 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? fals
                                                     $patientDisplay = $isSame ? ($fullName ?? '—') : ($fa->patient_name ?: '—');
 
                                                     // Pretty display for Payout Schedule
-                                                    $schedDisplay = $fa->scheduled_fa
-                                                    ? \Carbon\Carbon::parse($fa->scheduled_fa)->format('F j (l), Y')
-                                                    : '—';
+                                                    $schedDisplay = '—';
+                                                    if (!empty($fa->scheduled_fa)) {
+                                                        try {
+                                                            $schedDisplay = \Carbon\Carbon::parse($fa->scheduled_fa)->format('F j (l), Y');
+                                                        } catch (\Throwable $e) {
+                                                            // Keep em dash; optionally could expose raw value for debugging
+                                                            // $schedDisplay = e($fa->scheduled_fa); // Uncomment to see raw invalid string
+                                                        }
+                                                    }
 
                                                     // Badge color
                                                     $status = $fa->status ?: '—';
@@ -865,7 +875,17 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? fals
                                         <div class="col-md-3 mb-3">
                                             <span class="small-label">Birthdate</span>
                                             <div class="font-weight-medium">
-                                                {{ $directory->birthday ? \Carbon\Carbon::parse($directory->birthday)->format('F j, Y') : '-' }}
+                                                @php
+                                                    $birthdateDisplay = '-';
+                                                    if (!empty($directory->birthday)) {
+                                                        try {
+                                                            $birthdateDisplay = \Carbon\Carbon::parse($directory->birthday)->format('F j, Y');
+                                                        } catch (\Throwable $e) {
+                                                            // Swallow parse error; keep '-'. Optionally log if needed.
+                                                        }
+                                                    }
+                                                @endphp
+                                                {{ $birthdateDisplay }}
                                             </div>
                                         </div>
 
