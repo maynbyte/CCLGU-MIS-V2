@@ -168,13 +168,6 @@ class FinancialAssistanceController extends Controller
             Media::whereIn('id', $media)->update(['model_id' => $fa->id]);
         }
 
-        $data = $request->validate([
-            // your rules...
-            'directory_id' => ['required', 'exists:directories,id'],
-        ]);
-
-        $fa = \App\Models\FinancialAssistance::create($data);
-
         return redirect()->to(
             route('admin.financial-assistances.create', ['directory_id' => $fa->directory_id]) . '#tab-general'
         )->with('message', 'Financial assistance created ✅');
