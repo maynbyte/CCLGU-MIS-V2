@@ -9,81 +9,63 @@
         <!-- Sidebar user (optional) -->
 
         <!-- Sidebar Menu -->
-        <nav class="mt-2" aria-label="Main sidebar navigation">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" aria-label="Main navigation" data-accordion="false">
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs("admin.home") ? "active" : "" }}" href="{{ route("admin.home") }}" role="menuitem" aria-label="{{ trans('global.dashboard') }}" @if(request()->routeIs("admin.home")) aria-current="page" @endif>
-                        <i class="fas fa-fw fa-tachometer-alt nav-icon" aria-hidden="true"></i>
-                        <p>{{ trans('global.dashboard') }}</p>
+                    <a class="nav-link {{ request()->routeIs("admin.home") ? "active" : "" }}" href="{{ route("admin.home") }}">
+                        <i class="fas fa-fw fa-tachometer-alt nav-icon">
+                        </i>
+                        <p>
+                            {{ trans('global.dashboard') }}
+                        </p>
                     </a>
                 </li>
                 @can('directory_access')
                     <li class="nav-item">
-                        <a href="{{ route("admin.directories.index") }}" class="nav-link {{ request()->is("admin/directories") || request()->is("admin/directories/*") ? "active" : "" }}" role="menuitem" aria-label="{{ trans('cruds.directory.title') }}" @if(request()->is("admin/directories") || request()->is("admin/directories/*")) aria-current="page" @endif>
-                            <i class="fa-fw nav-icon far fa-address-card" aria-hidden="true"></i>
-                            <p>{{ trans('cruds.directory.title') }}</p>
+                        <a href="{{ route("admin.directories.index") }}" class="nav-link {{ request()->is("admin/directories") || request()->is("admin/directories/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon far fa-address-card">
+
+                            </i>
+                            <p>
+                                {{ trans('cruds.directory.title') }}
+                            </p>
                         </a>
                     </li>
                 @endcan
                 @can('service_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/financial-assistances*") ? "menu-open" : "" }} {{ request()->is("admin/guarantee-letters*") ? "menu-open" : "" }} {{ request()->is("admin/burial-assistances*") ? "menu-open" : "" }} {{ request()->is("admin/medical-assistances*") ? "menu-open" : "" }} {{ request()->is("admin/solicitations*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/financial-assistances*") ? "active" : "" }} {{ request()->is("admin/guarantee-letters*") ? "active" : "" }} {{ request()->is("admin/burial-assistances*") ? "active" : "" }} {{ request()->is("admin/medical-assistances*") ? "active" : "" }} {{ request()->is("admin/solicitations*") ? "active" : "" }}" href="#" role="menuitem" aria-label="{{ trans('cruds.service.title') }}">
-                            <i class="fa-fw nav-icon fas fa-list-ul" aria-hidden="true"></i>
+                    <li class="nav-item has-treeview {{ request()->is("admin/financial-assistances*") ? "menu-open" : "" }} {{ request()->is("admin/solicitations*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/financial-assistances*") ? "active" : "" }} {{ request()->is("admin/guarantee-letters*") ? "active" : "" }} {{ request()->is("admin/burial-assistances*") ? "active" : "" }} {{ request()->is("admin/medical-assistances*") ? "active" : "" }} {{ request()->is("admin/solicitations*") ? "active" : "" }}" href="#">
+                            <i class="fa-fw nav-icon fas fa-list-ul">
+
+                            </i>
                             <p>
                                 {{ trans('cruds.service.title') }}
-                                <i class="right fa fa-fw fa-angle-left nav-icon" aria-hidden="true"></i>
+                                <i class="right fa fa-fw fa-angle-left nav-icon"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
                             @can('financial_assistance_access')
                                 <li class="nav-item">
-                                    <a href="{{ route("admin.financial-assistances.index") }}" class="nav-link {{ request()->is("admin/financial-assistances") || request()->is("admin/financial-assistances/*") ? "active" : "" }}" role="menuitem" aria-label="{{ trans('cruds.financialAssistance.title') }}" @if(request()->is("admin/financial-assistances") || request()->is("admin/financial-assistances/*")) aria-current="page" @endif>
-                                        <i class="fa-fw nav-icon fas fa-hand-holding-heart" aria-hidden="true"></i>
-                                        <p>{{ trans('cruds.financialAssistance.title') }}</p>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('guarantee_letter_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.guarantee-letters.index") }}" class="nav-link {{ request()->is("admin/guarantee-letters") || request()->is("admin/guarantee-letters/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fab fa-gofore">
+                                    <a href="{{ route("admin.financial-assistances.index") }}" class="nav-link {{ request()->is("admin/financial-assistances") || request()->is("admin/financial-assistances/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-hand-holding-heart">
 
                                         </i>
                                         <p>
-                                            {{ trans('cruds.guaranteeLetter.title') }}
+                                            {{ trans('cruds.financialAssistance.title') }}
                                         </p>
                                     </a>
                                 </li>
                             @endcan
-                            @can('burial_assistance_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.burial-assistances.index") }}" class="nav-link {{ request()->is("admin/burial-assistances") || request()->is("admin/burial-assistances/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fab fa-pagelines">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.burialAssistance.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('medical_assistance_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.medical-assistances.index") }}" class="nav-link {{ request()->is("admin/medical-assistances") || request()->is("admin/medical-assistances/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-notes-medical">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.medicalAssistance.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
+                           
                             @can('solicitation_access')
                                 <li class="nav-item">
-                                    <a href="{{ route("admin.solicitations.index") }}" class="nav-link {{ request()->is("admin/solicitations") || request()->is("admin/solicitations/*") ? "active" : "" }}" role="menuitem" aria-label="{{ trans('cruds.solicitation.title') }}" @if(request()->is("admin/solicitations") || request()->is("admin/solicitations/*")) aria-current="page" @endif>
-                                        <i class="fa-fw nav-icon fas fa-newspaper" aria-hidden="true"></i>
-                                        <p>{{ trans('cruds.solicitation.title') }}</p>
+                                    <a href="{{ route("admin.solicitations.index") }}" class="nav-link {{ request()->is("admin/solicitations") || request()->is("admin/solicitations/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-newspaper">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.solicitation.title') }}
+                                        </p>
                                     </a>
                                 </li>
                             @endcan
@@ -320,38 +302,48 @@
                 @endcan
                 @can('familycomposition_access')
                     <li class="nav-item">
-                        <a href="{{ route("admin.familycompositions.index") }}" class="nav-link {{ request()->is("admin/familycompositions") || request()->is("admin/familycompositions/*") ? "active" : "" }}" role="menuitem" aria-label="{{ trans('cruds.familycomposition.title') }}" @if(request()->is("admin/familycompositions") || request()->is("admin/familycompositions/*")) aria-current="page" @endif>
-                            <i class="fa-fw nav-icon fas fa-cogs" aria-hidden="true"></i>
-                            <p>{{ trans('cruds.familycomposition.title') }}</p>
+                        <a href="{{ route("admin.familycompositions.index") }}" class="nav-link {{ request()->is("admin/familycompositions") || request()->is("admin/familycompositions/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon fas fa-cogs">
+
+                            </i>
+                            <p>
+                                {{ trans('cruds.familycomposition.title') }}
+                            </p>
                         </a>
                     </li>
                 @endcan
                 @php($unread = \App\Models\QaTopic::unreadCount())
                     <li class="nav-item">
-                        <a href="{{ route("admin.messenger.index") }}" class="{{ request()->is("admin/messenger") || request()->is("admin/messenger/*") ? "active" : "" }} nav-link" role="menuitem" aria-label="{{ trans('global.messages') }}" @if(request()->is("admin/messenger") || request()->is("admin/messenger/*")) aria-current="page" @endif>
-                            <i class="fa-fw fa fa-envelope nav-icon" aria-hidden="true"></i>
-                            <p>
-                                {{ trans('global.messages') }}
-                                @if($unread > 0)
-                                    <span class="badge badge-warning ml-1" aria-label="{{ $unread }} unread messages">{{ $unread }}</span>
-                                @endif
-                            </p>
+                        <a href="{{ route("admin.messenger.index") }}" class="{{ request()->is("admin/messenger") || request()->is("admin/messenger/*") ? "active" : "" }} nav-link">
+                            <i class="fa-fw fa fa-envelope nav-icon">
+                            </i>
+                            <p>{{ trans('global.messages') }}</p>
+                            @if($unread > 0)
+                                <strong>( {{ $unread }} )</strong>
+                            @endif
                         </a>
                     </li>
                     @if(file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php')))
                         @can('profile_password_edit')
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('profile/password') || request()->is('profile/password/*') ? 'active' : '' }}" href="{{ route('profile.password.edit') }}" role="menuitem" aria-label="{{ trans('global.change_password') }}" @if(request()->is('profile/password') || request()->is('profile/password/*')) aria-current="page" @endif>
-                                    <i class="fa-fw fas fa-key nav-icon" aria-hidden="true"></i>
-                                    <p>{{ trans('global.change_password') }}</p>
+                                <a class="nav-link {{ request()->is('profile/password') || request()->is('profile/password/*') ? 'active' : '' }}" href="{{ route('profile.password.edit') }}">
+                                    <i class="fa-fw fas fa-key nav-icon">
+                                    </i>
+                                    <p>
+                                        {{ trans('global.change_password') }}
+                                    </p>
                                 </a>
                             </li>
                         @endcan
                     @endif
                     <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logoutform').submit();" role="menuitem" aria-label="{{ trans('global.logout') }}">
-                            <i class="fas fa-fw fa-sign-out-alt nav-icon" aria-hidden="true"></i>
-                            <p>{{ trans('global.logout') }}</p>
+                        <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logoutform').submit();">
+                            <p>
+                                <i class="fas fa-fw fa-sign-out-alt nav-icon">
+
+                                </i>
+                                <p>{{ trans('global.logout') }}</p>
+                            </p>
                         </a>
                     </li>
             </ul>
