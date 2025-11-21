@@ -37,8 +37,8 @@ class DirectoryController extends Controller
         if ($request->ajax()) {
             $dirTable = (new Directory)->getTable();
 
-            // Subquery: latest FA date per directory
-            $latestFaSub = FinancialAssistance::select('directory_id', DB::raw('MAX(created_at) as latest_fa_created_at'))
+            // Subquery now tracks latest FA by unique id to avoid duplicates when multiple rows share identical created_at timestamps
+            $latestFaSub = FinancialAssistance::select('directory_id', DB::raw('MAX(id) as latest_fa_id'))
                 ->groupBy('directory_id');
 
             // Build ONE query only (do not overwrite later)
@@ -47,9 +47,8 @@ class DirectoryController extends Controller
                 ->leftJoinSub($latestFaSub, 'fa_latest', function ($join) use ($dirTable) {
                     $join->on('fa_latest.directory_id', '=', "$dirTable.id");
                 })
-                ->leftJoin('financial_assistances as fa_last', function ($join) use ($dirTable) {
-                    $join->on('fa_last.directory_id', '=', "$dirTable.id")
-                        ->on('fa_last.created_at', '=', 'fa_latest.latest_fa_created_at');
+                ->leftJoin('financial_assistances as fa_last', function ($join) {
+                    $join->on('fa_last.id', '=', 'fa_latest.latest_fa_id');
                 })
                 ->addSelect([
                     DB::raw('fa_last.created_at as latest_fa_created_at'),
