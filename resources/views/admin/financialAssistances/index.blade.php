@@ -105,6 +105,28 @@ function formatDateTime12h(value) {
   return `${datePart} ${timePart}`; // e.g., "June 10, 1992 3:15 PM"
 }
 
+function formatDateOnly(value) {
+  if (!value) return '<span class="text-muted">—</span>';
+
+  let d;
+  if (value instanceof Date) {
+    d = value;
+  } else if (typeof value === 'string') {
+    const s = value.trim();
+    if (/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}(:\d{2})?$/.test(s)) {
+      d = new Date(s.replace(' ', 'T'));
+    } else {
+      d = new Date(s);
+    }
+  } else {
+    return '<span class="text-muted">—</span>';
+  }
+
+  if (isNaN(d)) return '<span class="text-muted">—</span>';
+
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
 
   function toTitleCase(str) {
     if (!str) return '';
@@ -190,15 +212,14 @@ function formatDateTime12h(value) {
       { data: 'barangay_barangay_name', name: 'barangay.barangay_name' },
       { data: 'comelec_status', name: 'comelec_status' },
 
-    // NEW: Latest FA (created_at)
+    // Latest FA (created_at from latest FA record)
 {
-  data: 'created_at',
-  name: 'created_at',
+  data: 'latest_fa_created_at',
+  name: 'fa_last.created_at',
   render: function (data, type, row) {
     if (type === 'display' || type === 'filter') {
-      return formatDateTime12h(data);
+      return formatDateOnly(data);
     }
-    // For sorting, return a numeric timestamp
     const ts = Date.parse(typeof data === 'string' ? data.replace(' ', 'T') : data);
     return isNaN(ts) ? '' : ts;
   }

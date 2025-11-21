@@ -175,9 +175,9 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
 @endphp
 
 <div class="mb-3">
-    <a class="btn btn-default" href="{{ route('admin.directories.index') }}">
-        {{ trans('global.back_to_list') }}
-    </a>
+  <a class="btn btn-default" href="{{ route('admin.financial-assistances.index') }}">
+    {{ trans('global.back_to_list') }}
+  </a>
 </div>
 
 <div class="container-fluid">
@@ -273,9 +273,14 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
         {{-- RIGHT COLUMN --}}
         <div class="col-lg-9">
             <div class="card">
-                <div class="card-header p-2">
-                    <h5 class="mb-0">Edit Financial Assistance</h5>
-                </div>
+              <div class="card-header p-2 d-flex align-items-center justify-content-between">
+                <h5 class="mb-0">Edit Financial Assistance</h5>
+                @can('directory_edit')
+                  <a href="{{ route('admin.directories.edit', $directory->id) }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-edit"></i> {{ trans('global.edit') }} Directory
+                  </a>
+                @endcan
+              </div>
                 <div class="card-body">
                     <form id="fa-form" method="POST" action="{{ route('admin.financial-assistances.update', $fa->id) }}" enctype="multipart/form-data">
                 @csrf
@@ -571,9 +576,9 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
 </div>
 
 <div class="mt-3">
-    <a class="btn btn-default" href="{{ route('admin.directories.index') }}">
-        {{ trans('global.back_to_list') }}
-    </a>
+  <a class="btn btn-default" href="{{ route('admin.financial-assistances.index') }}">
+    {{ trans('global.back_to_list') }}
+  </a>
 </div>
 @endsection
 
