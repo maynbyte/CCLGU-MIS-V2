@@ -16,7 +16,7 @@ function eligibilityBadge(createdAt) {
     var days = diffMs / (1000 * 60 * 60 * 24);
 
     // 3 months ≈ 90 days (simple business rule)
-    var eligible = days > 90;
+    var eligible = days > 180; // more than 6 months old
 
     return eligible
         ? '<span class="badge badge-success">Eligible</span>'
