@@ -207,7 +207,9 @@ function formatDateTime12h(value) {
     // NEW: Payout Schedule (scheduled_fa)
     {
       data: 'latest_fa_scheduled_fa',
-      name: 'latest_fa_scheduled_fa',
+      // Use actual joined column name so Yajra doesn't prefix with directories.
+      // Prevents SQL: Unknown column directories.latest_fa_scheduled_fa in where clause
+      name: 'fa_last.scheduled_fa',
       render: function (data, type, row) {
         if (type === 'display' || type === 'filter') {
           return data ? (new Date(String(data).replace(' ', 'T'))).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '<span class="text-muted">—</span>';
