@@ -285,4 +285,49 @@ class FinancialAssistanceController extends Controller
 
         return view('admin.financialAssistances.print-case-summary', compact('financialAssistance'));
     }
+
+    // Bulk update the LATEST Financial Assistance per selected Directory IDs
+    public function bulkLatestUpdate(Request $request)
+    {
+        abort_if(Gate::denies('financial_assistance_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $data = $request->validate([
+            'ids' => ['required', 'array', 'min:1'],
+            'ids.*' => ['integer'],
+            'scheduled_fa' => ['nullable', 'date'],
+            'status' => ['nullable', 'string', 'in:Ongoing,Pending,Claimed,Cancelled'],
+        ]);
+
+        $ids = $data['ids'];
+        $scheduled = $data['scheduled_fa'] ?? null;
+        $status = $data['status'] ?? null;
+
+        // For each directory id, locate latest FA by max(id) and update
+        foreach ($ids as $dirId) {
+            $latest = FinancialAssistance::where('directory_id', (int)$dirId)
+                ->orderByDesc('id')
+                ->first();
+            if (!$latest) continue;
+
+            $update = [];
+            if ($status !== null && $status !== '') {
+                $update['status'] = $status;
+            }
+            if ($status === 'Claimed') {
+                $update['scheduled_fa'] = null;
+                // Optionally set claimed date automatically if missing
+                // if (empty($latest->date_claimed)) { $update['date_claimed'] = now('Asia/Manila'); }
+            } else {
+                if ($request->has('scheduled_fa')) {
+                    $update['scheduled_fa'] = $scheduled; // can be null to clear
+                }
+            }
+
+            if (!empty($update)) {
+                $latest->update($update);
+            }
+        }
+
+        return response()->json(['status' => 'ok']);
+    }
 }

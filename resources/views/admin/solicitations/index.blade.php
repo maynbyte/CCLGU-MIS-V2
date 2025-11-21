@@ -19,7 +19,11 @@
     </div>
 
     <div class="card-body">
-        <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-Solicitation">
+      <style>
+        /* Universal toolbar spacing */
+        .dataTables_wrapper .dt-buttons { margin-left: 10px; }
+      </style>
+      <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-Solicitation">
             <thead>
                 <tr>
                     <th width="10">
@@ -59,36 +63,31 @@
 @parent
 <script>
     $(function () {
-  let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('solicitation_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
-  let deleteButton = {
-    text: deleteButtonTrans,
-    url: "{{ route('admin.solicitations.massDestroy') }}",
-    className: 'btn-danger',
-    action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
-          return entry.id
-      });
-
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
-        return
-      }
-
+  // Universal button set: Select all, Deselect all, Delete selected, then export utilities
+  let dtButtons = [];
+  dtButtons.push({ extend: 'selectAll', text: '<i class="fas fa-check-double"></i> Select all', className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'selectNone', text: '<i class="fas fa-ban"></i> Deselect all', className: 'btn btn-outline-secondary btn-sm' });
+  @can('solicitation_delete')
+  dtButtons.push({
+    extend: 'selected',
+    text: '<i class="fas fa-trash-alt"></i> {{ trans('global.datatables.delete') }}',
+    className: 'btn btn-danger btn-sm',
+    action: function (e, dt) {
+      var ids = $.map(dt.rows({ selected: true }).data(), function (entry) { return entry.id });
+      if (ids.length === 0) { alert('{{ trans('global.datatables.zero_selected') }}'); return }
       if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
+        $.ajax({ headers: {'x-csrf-token': _token}, method: 'POST', url: "{{ route('admin.solicitations.massDestroy') }}", data: { ids: ids, _method: 'DELETE' } })
+          .done(function(){ location.reload() })
       }
     }
-  }
-  dtButtons.push(deleteButton)
-@endcan
+  });
+  @endcan
+  dtButtons.push({ extend: 'copy',  text: '<i class="fas fa-copy"></i> Copy',  className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'csv',   text: '<i class="fas fa-file-csv"></i> CSV',  className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'pdf',   text: '<i class="fas fa-file-pdf"></i> PDF',    className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'print', text: '<i class="fas fa-print"></i> Print',    className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'colvis', text: '<i class="fas fa-columns"></i> Columns', className: 'btn btn-outline-secondary btn-sm' });
 
   let dtOverrideGlobals = {
     buttons: dtButtons,
@@ -96,12 +95,13 @@
     serverSide: true,
     retrieve: true,
     aaSorting: [],
+    select: { style: 'multi', selector: 'td:not(:last-child)' },
     ajax: "{{ route('admin.solicitations.index') }}",
     columns: [
       { data: 'placeholder', name: 'placeholder' },
-{ data: 'id', name: 'id' },
-{ data: 'solicitation', name: 'solicitation' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+      { data: 'id', name: 'id' },
+      { data: 'solicitation', name: 'solicitation' },
+      { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],

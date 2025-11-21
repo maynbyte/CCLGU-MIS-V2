@@ -20,6 +20,12 @@
     </div>
 
     <div class="card-body">
+      <style>
+        /* Default DataTables filter alignment (right).
+           Removed custom left float so the search/filter returns to the native right side.
+           Keep buttons spacing tight. */
+        .dataTables_wrapper .dt-buttons { margin-left: 10px; }
+      </style>
         <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-Directory">
             <thead>
                 <tr>   
@@ -41,42 +47,89 @@
         </table>
     </div>
 </div>
+<!-- Bulk Edit Modal -->
+<div class="modal fade" id="bulkEditModal" tabindex="-1" role="dialog" aria-labelledby="bulkEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bulkEditModalLabel">Edit Selected – Latest Financial Assistance</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="bulk_scheduled_fa">Payout Schedule</label>
+          <input type="date" id="bulk_scheduled_fa" class="form-control">
+          <small class="form-text text-muted">Leave blank to keep existing schedule. If Status = Claimed, schedule will be cleared.</small>
+        </div>
+        <div class="form-group">
+          <label for="bulk_status">Status</label>
+          <select id="bulk_status" class="form-control">
+            <option value="">— No change —</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Pending">Pending</option>
+            <option value="Claimed">Claimed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="bulkApplyBtn" class="btn btn-primary">Apply Changes</button>
+      </div>
+    </div>
+  </div>
+  </div>
 @endsection
 
 @section('scripts')
 @parent
 <script>
 $(function () {
-  let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
+  // Rebuild buttons so Edit/Delete are beside Deselect all
+  let dtButtons = []
 
+  // Select all
+  dtButtons.push({
+    extend: 'selectAll',
+    text: '<i class="fas fa-check-double"></i> Select all',
+    className: 'btn btn-outline-secondary btn-sm'
+  });
+  // Deselect all
+  dtButtons.push({
+    extend: 'selectNone',
+    text: '<i class="fas fa-ban"></i> Deselect all',
+    className: 'btn btn-outline-secondary btn-sm'
+  });
+  // Edit Selected (right beside Deselect all)
+  dtButtons.push({
+    extend: 'selected',
+    text: '<i class="fas fa-edit"></i> Edit Selected',
+    className: 'btn btn-primary btn-sm',
+    action: function (e, dt) { $('#bulkEditModal').modal('show'); }
+  });
+  // Delete Selected (right beside Edit Selected)
   @can('directory_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
-  let deleteButton = {
-    text: deleteButtonTrans,
-    url: "{{ route('admin.directories.massDestroy') }}",
-    className: 'btn-danger',
-    action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
-          return entry.id
-      });
-
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-        return
-      }
-
+  dtButtons.push({
+    extend: 'selected',
+    text: '<i class="fas fa-trash-alt"></i> {{ trans('global.datatables.delete') }}',
+    className: 'btn btn-danger btn-sm',
+    action: function (e, dt) {
+      var ids = $.map(dt.rows({ selected: true }).data(), function (entry) { return entry.id });
+      if (ids.length === 0) { alert('{{ trans('global.datatables.zero_selected') }}'); return }
       if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
+        $.ajax({ headers: {'x-csrf-token': _token}, method: 'POST', url: "{{ route('admin.directories.massDestroy') }}", data: { ids: ids, _method: 'DELETE' } })
+          .done(function(){ location.reload() })
       }
     }
-  }
-  dtButtons.push(deleteButton)
+  });
   @endcan
+  // Remaining utilities
+  dtButtons.push({ extend: 'copy',  text: '<i class="fas fa-copy"></i> Copy',  className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'csv',   text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'pdf',   text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'print', text: '<i class="fas fa-print"></i> Print', className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({ extend: 'colvis', text: '<i class="fas fa-columns"></i> Columns', className: 'btn btn-outline-secondary btn-sm' });
 
 
   // Put this once (e.g., in your ccmis-directory.js)
@@ -154,6 +207,7 @@ function formatDateOnly(value) {
     serverSide: true,
     retrieve: true,
     aaSorting: [],
+    select: { style: 'multi', selector: 'td:not(:last-child)' },
     ajax: "{{ route('admin.directories.index') }}",
     columns: [
   
@@ -289,6 +343,31 @@ function formatDateOnly(value) {
   };
 
   let table = $('.datatable-Directory').DataTable(dtOverrideGlobals);
+  // Apply bulk changes
+  $('#bulkApplyBtn').on('click', function(){
+      var ids = $.map(table.rows({ selected: true }).data(), function (entry) { return entry.id });
+      if (ids.length === 0) { alert('{{ trans('global.datatables.zero_selected') }}'); return; }
+
+      var payload = {
+        ids: ids,
+        scheduled_fa: $('#bulk_scheduled_fa').val() || null,
+        status: $('#bulk_status').val() || null
+      };
+
+      $.ajax({
+        headers: {'x-csrf-token': _token},
+        method: 'POST',
+        url: "{{ route('admin.financial-assistances.bulkLatestUpdate') }}",
+        data: payload
+      }).done(function(){
+        $('#bulkEditModal').modal('hide');
+        $('#bulk_scheduled_fa').val('');
+        $('#bulk_status').val('');
+        table.ajax.reload(null, false);
+      }).fail(function(xhr){
+        alert((xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Update failed');
+      });
+  });
   $('a[data-toggle="tab"]').on('shown.bs.tab click', function(){
       $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
   });

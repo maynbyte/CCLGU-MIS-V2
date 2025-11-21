@@ -31,6 +31,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('financial-assistances/ckmedia', 'FinancialAssistanceController@storeCKEditorImages')->name('financial-assistances.storeCKEditorImages');
     Route::post('financial-assistances/parse-csv-import', 'FinancialAssistanceController@parseCsvImport')->name('financial-assistances.parseCsvImport');
     Route::post('financial-assistances/process-csv-import', 'FinancialAssistanceController@processCsvImport')->name('financial-assistances.processCsvImport');
+    // Bulk update latest FA per directory (used by FA index bulk edit)
+    Route::post('financial-assistances/bulk-latest-update', 'FinancialAssistanceController@bulkLatestUpdate')
+        ->name('financial-assistances.bulkLatestUpdate');
     Route::resource('financial-assistances', 'FinancialAssistanceController');
     // Put this near your other financial-assistances routes (inside the admin group)
     Route::get('financial-assistances/{financialAssistance}/print', 'FinancialAssistanceController@printCaseSummary')
