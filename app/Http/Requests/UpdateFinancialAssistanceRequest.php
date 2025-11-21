@@ -44,6 +44,7 @@ class UpdateFinancialAssistanceRequest extends FormRequest
             'status' => [
                 'string',
                 'nullable',
+                'in:Ongoing,Pending,Claimed,Cancelled',
             ],
             'date_claimed' => [
                 'string',

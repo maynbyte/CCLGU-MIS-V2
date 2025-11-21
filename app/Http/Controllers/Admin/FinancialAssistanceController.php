@@ -147,10 +147,14 @@ class FinancialAssistanceController extends Controller
 
         $directory = Directory::findOrFail($request->input('directory_id'));
 
+        // Ensure default status 'Ongoing' if none supplied
+        $payload = $request->except(['directory_id', 'requirements', 'ck-media']);
+        if (empty($payload['status'])) {
+            $payload['status'] = 'Ongoing';
+        }
         // Create via parent relation (sets directory_id automatically)
         $fa = $directory->financialAssistances()->create(
-            $request->except(['directory_id', 'requirements', 'ck-media'])
-                + ['user' => auth()->id()] // <-- set FK using your "user" column
+            $payload + ['user' => auth()->id()]
         );
 
         // Attach uploaded requirement files (Dropzone tmp -> media library)
@@ -181,9 +185,11 @@ class FinancialAssistanceController extends Controller
         abort_if(Gate::denies('financial_assistance_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         // Update FA (keep directory_id if you don’t allow reassignment)
-        $financialAssistance->update(
-            $request->except(['requirements', 'ck-media'])
-        );
+        $updateData = $request->except(['requirements', 'ck-media']);
+        if (empty($updateData['status'])) {
+            $updateData['status'] = 'Ongoing';
+        }
+        $financialAssistance->update($updateData);
 
         // --- Media sync (kept from your working code) ---
         if (count($financialAssistance->requirements) > 0) {

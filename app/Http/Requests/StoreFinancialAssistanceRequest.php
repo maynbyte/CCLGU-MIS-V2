@@ -41,8 +41,8 @@ class StoreFinancialAssistanceRequest extends FormRequest
             'requirement_checklist'   => ['nullable', 'array'],
             'requirement_checklist.*' => ['string'],
 
-            // Status (inline list; must match option values)
-            'status' => ['nullable', Rule::in(['Claimed', 'Pending', 'Cancelled'])],
+            // Status (inline list; now includes Ongoing as default option)
+            'status' => ['nullable', Rule::in(['Ongoing', 'Pending', 'Claimed', 'Cancelled'])],
 
             // Problem presented (checkbox group -> array)
             'problem_presented_value'   => ['nullable', 'array'],

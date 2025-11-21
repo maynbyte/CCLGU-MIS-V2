@@ -543,9 +543,9 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? fals
                                                 </div>
                                                 <div class="col-md-3">
                                                     @php
-                                                    $statuses = ['Pending','Claimed','Cancelled'];
-                                                    // Default to Pending unless there's old() or an existing $fa->status
-                                                    $currentStatus = old('status', $fa->status ?? 'Pending');
+                                                    $statuses = ['Ongoing','Pending','Claimed','Cancelled'];
+                                                    // Default to Ongoing unless there's old() or an existing $fa->status
+                                                    $currentStatus = old('status', $fa->status ?? 'Ongoing');
                                                     @endphp
 
                                                     <label for="status">{{ trans('cruds.financialAssistance.fields.status') }}</label>

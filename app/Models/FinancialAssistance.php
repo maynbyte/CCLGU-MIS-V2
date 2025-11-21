@@ -34,8 +34,9 @@ class FinancialAssistance extends Model implements HasMedia
     ];
 
     public const STATUS_OPTIONS = [
-        'Claimed',
+        'Ongoing',    // newly added default status
         'Pending',
+        'Claimed',
         'Cancelled',
     ];
 

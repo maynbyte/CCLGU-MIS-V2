@@ -449,8 +449,8 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
 
                   <div class="col-md-3">
                     @php
-                      $statuses = ['Pending','Claimed','Cancelled'];
-                      $currentStatus = old('status', $fa->status ?? 'Pending');
+                      $statuses = ['Ongoing','Pending','Claimed','Cancelled'];
+                      $currentStatus = old('status', $fa->status ?? 'Ongoing');
                     @endphp
                     <label for="status">{{ trans('cruds.financialAssistance.fields.status') }}</label>
                     <select name="status" id="status" class="form-control @error('status') is-invalid @enderror">
