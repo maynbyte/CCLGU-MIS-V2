@@ -11,6 +11,30 @@
 
     {{-- Your print stylesheet (lives in /public) --}}
     <link rel="stylesheet" href="{{ asset( 'css/case-study-print.css') }}">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+        }
+        .no-print {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .no-print button {
+            margin: 0;
+            padding: 5px 12px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 
@@ -117,6 +141,10 @@ $fam = collect($fam)->take(4)->values();
 @endphp
 
 <body>
+    <div class="no-print">
+        <button onclick="window.print()">🖨️ Print</button>
+        <button onclick="window.close()">✖ Close</button>
+    </div>
     <div class="container my-4">
         <!-- Header Information -->
         <div class="container">
