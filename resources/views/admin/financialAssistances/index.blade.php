@@ -22,7 +22,6 @@
     <div class="card-body">
       <style>
         /* Default DataTables filter alignment (right).
-           Removed custom left float so the search/filter returns to the native right side.
            Keep buttons spacing tight. */
         .dataTables_wrapper .dt-buttons { margin-left: 10px; }
       </style>
@@ -302,11 +301,8 @@ function formatDateOnly(value) {
   }
 },
 
-    // NEW: Payout Schedule (scheduled_fa)
     {
       data: 'latest_fa_scheduled_fa',
-      // Use actual joined column name so Yajra doesn't prefix with directories.
-      // Prevents SQL: Unknown column directories.latest_fa_scheduled_fa in where clause
       name: 'fa_last.scheduled_fa',
       render: function (data, type, row) {
         if (type === 'display' || type === 'filter') {

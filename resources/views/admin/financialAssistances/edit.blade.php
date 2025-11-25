@@ -674,7 +674,7 @@ Dropzone.options.requirementsDropzone = {
     },
      error: function (file, response) {
          if ($.type(response) === 'string') {
-             var message = response //dropzone sends it's own error messages in string
+             var message = response //dropzone sends its own error messages in string
          } else {
              var message = response.errors.file
          }

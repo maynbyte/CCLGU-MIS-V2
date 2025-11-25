@@ -183,3 +183,28 @@ body.sidebar-mini.sidebar-collapse.sidebar-open .main-sidebar {
     max-width: 60px !important;
     width: 60px !important;
 }
+
+/* add padding inside the sidebar */
+.main-sidebar .sidebar {
+    box-sizing: border-box;
+    padding: 1rem;        /* vertical + horizontal padding inside sidebar */
+}
+
+/* adjust nav link spacing */
+.main-sidebar .nav .nav-link {
+    padding: .5rem .75rem; /* top/bottom .5rem, left/right .75rem */
+}
+
+/* keep collapsed/mini sidebar compact (no large gaps) */
+body.sidebar-mini .main-sidebar .sidebar,
+body.sidebar-mini.sidebar-collapse .main-sidebar .sidebar {
+    padding: .25rem; /* smaller padding when collapsed */
+}
+
+/* optional: prevent sidebar padding from shifting header/content */
+.content-wrapper,
+.main-header,
+.main-footer {
+    transition: margin-left .15s;
+    /* margin-left should already be set to sidebar width elsewhere (60px) */
+}
