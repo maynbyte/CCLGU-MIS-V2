@@ -175,7 +175,15 @@ $reqPatientOther = is_array($req) ? ($req['patient_other'] ?? '') : '';
 $reqClaimant = is_array($req) ? ($req['claimant'] ?? []) : [];
 $reqClaimantOther = is_array($req) ? ($req['claimant_other'] ?? '') : '';
 
-$claimantIsPatient = (bool) old('claimant_is_patient', $fa->claimant_is_patient ?? false);
+// Determine claimantIsPatient: prefer explicit old input, otherwise treat DB value
+// as true only when it equals 1 (avoid checking by default unintentionally).
+if (old('claimant_is_patient') !== null) {
+  // old() returns string values from the request ('1' when checked)
+  $claimantIsPatient = (string) old('claimant_is_patient') === '1';
+} else {
+  // Only consider DB value true when exactly integer 1
+  $claimantIsPatient = isset($fa->claimant_is_patient) && ((int) $fa->claimant_is_patient === 1);
+}
 
 /** Defaults (only if nothing saved/posted) **/
 if (!old('problem_presented_value') && empty($ppvValues)) {
@@ -342,7 +350,10 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                       <label>Claimant Name</label>
                       @php
                         $claimantValue = old('claimant_name', $fa->claimant_name ?? '');
-                        if ($claimantValue === '' && $claimantIsPatient) { $claimantValue = $fullName; }
+                        // Only sync with patient name if checkbox is actually checked in DB
+                        if ($claimantValue === '' && $claimantIsPatient && $patientValue) { 
+                          $claimantValue = $patientValue; 
+                        }
                       @endphp
                       <input type="text" name="claimant_name" id="claimant_name" class="form-control"
                         value="{{ $claimantValue }}" placeholder="{{ $fullName ?: 'Full name' }}"
@@ -355,8 +366,10 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-check mb-3">
+                      {{-- Hidden input ensures claimant_is_patient always submits (0 when unchecked) --}}
+                      <input type="hidden" name="claimant_is_patient" value="0">
                       <input class="form-check-input" type="checkbox" id="claimant_is_patient" name="claimant_is_patient" value="1"
-                             {{ old('claimant_is_patient', $fa->claimant_is_patient ?? false) ? 'checked' : '' }}>
+                             {{ $claimantIsPatient ? 'checked' : '' }}>
                       <label class="form-check-label" for="claimant_is_patient">
                         Claimant and Patient are the same
                       </label>

@@ -152,6 +152,8 @@ class FinancialAssistanceController extends Controller
         if (empty($payload['status'])) {
             $payload['status'] = 'Ongoing';
         }
+        // Normalize claimant_is_patient to 0 or 1
+        $payload['claimant_is_patient'] = ($request->input('claimant_is_patient') == '1') ? 1 : 0;
         // Create via parent relation (sets directory_id automatically)
         $fa = $directory->financialAssistances()->create(
             $payload + ['user' => auth()->id()]
@@ -177,11 +179,13 @@ class FinancialAssistanceController extends Controller
     {
         abort_if(Gate::denies('financial_assistance_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        // Update FA (keep directory_id if you don’t allow reassignment)
+        // Update FA (keep directory_id if you don't allow reassignment)
         $updateData = $request->except(['requirements', 'ck-media']);
         if (empty($updateData['status'])) {
             $updateData['status'] = 'Ongoing';
         }
+        // Normalize claimant_is_patient to 0 or 1
+        $updateData['claimant_is_patient'] = ($request->input('claimant_is_patient') == '1') ? 1 : 0;
         $financialAssistance->update($updateData);
 
         // --- Media sync (kept from your working code) ---
