@@ -23,8 +23,9 @@
     }
 </style>
 
-<link rel="stylesheet" href="{{ asset('plugins/dropzone/min/dropzone.min.css') }}">
-<script src="{{ asset('plugins/dropzone/min/dropzone.min.js') }}"></script>
+{{-- Dropzone assets - install via npm or use CDN if needed --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 
 @push('scripts')
 <script>
@@ -618,6 +619,9 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
 
 @section('scripts')
 <script>
+    // Prevent Dropzone from auto-discovering
+    Dropzone.autoDiscover = false;
+    
     var uploadedRequirementsMap = {}
 Dropzone.options.requirementsDropzone = {
     url: '{{ route('admin.financial-assistances.storeMedia') }}',
@@ -719,6 +723,47 @@ Dropzone.options.requirementsDropzone = {
     wire('.req-patient', '#req_patient_other_wrap');
     wire('.req-claimant', '#req_claimant_other_wrap');
     wire('.ppv', '#ppv_other_wrap');
+  })();
+</script>
+<script>
+  // Defensive handler: ensure claimant/patient readonly sync works even if other scripts ran earlier
+  (function(){
+    function initClaimantPatientSync(){
+      var cb = document.getElementById('claimant_is_patient');
+      var patient = document.getElementById('patient_name');
+      var claimant = document.getElementById('claimant_name');
+      if (!cb || !patient || !claimant) return;
+
+      function applyState(){
+        var checked = !!cb.checked;
+        patient.readOnly = checked;
+        claimant.readOnly = checked;
+        patient.classList.toggle('bg-light', checked);
+        claimant.classList.toggle('bg-light', checked);
+        // Only sync claimant value when checkbox is checked
+        if (checked && patient.value) {
+          claimant.value = patient.value;
+        }
+      }
+
+      cb.addEventListener('change', function(){
+        applyState();
+      });
+
+      // Keep claimant in sync while checked (only when checkbox is checked)
+      patient.addEventListener('input', function(){ 
+        if (cb.checked) claimant.value = patient.value; 
+      });
+
+      // initial
+      applyState();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initClaimantPatientSync);
+    } else {
+      initClaimantPatientSync();
+    }
   })();
 </script>
 @endsection
