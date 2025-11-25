@@ -206,10 +206,10 @@ class FinancialAssistanceController extends Controller
         }
         // --- end media sync ---
 
-        // After editing, redirect to create form (with same directory context) as requested
+        // After editing, redirect to create form (with same directory context)
         return redirect()->to(
             route('admin.financial-assistances.create', ['directory_id' => $financialAssistance->directory_id])
-        )->with('message', 'Financial assistance updated ✅ Redirected to create new record.');
+        )->with('message', 'Financial assistance updated ✅');
     }
 
 

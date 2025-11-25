@@ -192,7 +192,7 @@ $reqPatientOther = is_array($req) ? ($req['patient_other'] ?? '') : '';
 $reqClaimant = is_array($req) ? ($req['claimant'] ?? []) : [];
 $reqClaimantOther = is_array($req) ? ($req['claimant_other'] ?? '') : '';
 
-$claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? false);
+$claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true);
 @endphp
 
 <div class="mb-3">

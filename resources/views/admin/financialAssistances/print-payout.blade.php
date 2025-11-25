@@ -149,8 +149,8 @@
                 <th rowspan="2" class="col-barangay">BARANGAY</th>
                 <th rowspan="2" class="col-kind">TYPE OF<br>ASSISTANCE</th>
                 <th rowspan="2" class="col-address">ADDRESS</th>
-                <th rowspan="2" class="col-amount">Contact Number</th>
-                <th rowspan="2" class="col-signature">Signature</th>
+                <th rowspan="2" class="col-amount">CONTACT NUMBER</th>
+                <th rowspan="2" class="col-signature">SIGNATURE</th>
             </tr>
         </thead>
         <tbody>
@@ -176,7 +176,7 @@
                 <td class="text-left">{{ strtoupper($fullName) }}</td>
                 <td>{{ $directory->gender ? substr($directory->gender, 0, 1) : '' }}</td>
                 <td>{{ $age }}</td>
-                <td class="text-left"></td>
+                <td class="text-left">{{ $fa ? $fa->claimant_name : '' }}</td>
                 <td class="text-left">{{ $directory->barangay->barangay_name ?? $directory->barangay_other ?? '' }}</td>
                 <td class="text-left">{{ $fa ? $fa->type_of_assistance : '' }}</td>
                 <td class="text-left">{{ $address }}</td>
