@@ -7,9 +7,9 @@
     <style>
         @media print {
             @page { 
-                size: landscape;
-                margin: 0.3in 0.3in 0.3in 0.3in;
-            }
+                    size: A4 landscape;
+                    margin: 0.3in 0.3in 0.3in 0.3in;
+                }
             body { margin: 0; }
             .no-print { display: none !important; }
         }
@@ -18,7 +18,7 @@
             font-size: 9px;
             line-height: 1.2;
             margin: 0;
-            padding: 10px;
+            padding: 10px;gent
         }
         .header {
             text-align: left;
@@ -69,12 +69,10 @@
         .col-sex { width: 30px; }
         .col-age { width: 25px; }
         .col-claimant { width: 140px; }
-        /* relationship column removed */
         .col-barangay { width: 100px; }
         .col-kind { width: 80px; }
         .col-address { width: 120px; }
         .col-amount { width: 60px; }
-        .col-signature { width: 80px; }
         .footer-section {
             margin-top: 15px;
             font-size: 8px;
@@ -140,17 +138,15 @@
         <thead>
             <tr>
                 <th rowspan="2" class="col-no">NO.</th>
-                <th rowspan="2" class="col-date">DATE</th>
+                <th rowspan="2" class="col-date">PAYOUT DATE</th>
                 <th rowspan="2" class="col-name">NAME OF BENEFICIARY</th>
                 <th rowspan="2" class="col-sex">SEX</th>
                 <th rowspan="2" class="col-age">AGE</th>
                 <th rowspan="2" class="col-claimant">NAME OF CLAIMANT</th>
-                <!-- RELATIONSHIP column removed -->
                 <th rowspan="2" class="col-barangay">BARANGAY</th>
                 <th rowspan="2" class="col-kind">TYPE OF<br>ASSISTANCE</th>
                 <th rowspan="2" class="col-address">ADDRESS</th>
                 <th rowspan="2" class="col-amount">CONTACT NUMBER</th>
-                <th rowspan="2" class="col-signature">SIGNATURE</th>
             </tr>
         </thead>
         <tbody>
@@ -181,11 +177,10 @@
                 <td class="text-left">{{ $fa ? $fa->type_of_assistance : '' }}</td>
                 <td class="text-left">{{ $address }}</td>
                 <td>{{ $directory->contact_no ?? '' }}</td>
-                <td style="background-color: #f9f9f9;">&nbsp;</td>
             </tr>
             @empty
             <tr>
-                <td colspan="11" style="text-align: center; padding: 20px;">No recipients scheduled for {{ \Carbon\Carbon::parse($payoutDate)->format('F d, Y') }}</td>
+                <td colspan="10" style="text-align: center; padding: 20px;">No recipients scheduled for {{ \Carbon\Carbon::parse($payoutDate)->format('F d, Y') }}</td>
             </tr>
             @endforelse
             
@@ -202,14 +197,11 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td style="background-color: #f9f9f9;">&nbsp;</td>
             </tr>
             @endfor
             @endif
         </tbody>
     </table>
-
-    {{-- Footer/signature blocks removed — showing only the full list for printing --}}
 
     <script>
         // Auto-print on load
