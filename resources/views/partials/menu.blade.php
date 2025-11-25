@@ -303,7 +303,7 @@
                 @can('familycomposition_access')
                     <li class="nav-item">
                         <a href="{{ route("admin.familycompositions.index") }}" class="nav-link {{ request()->is("admin/familycompositions") || request()->is("admin/familycompositions/*") ? "active" : "" }}">
-                            <i class="fa-fw nav-icon fas fa-cogs">
+                            <i class="fa-fw nav-icon fas fa-user-friends" style="opacity: 0.6;">
 
                             </i>
                             <p>
