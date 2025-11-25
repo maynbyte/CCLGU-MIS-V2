@@ -330,4 +330,35 @@ class FinancialAssistanceController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
+
+    // Generate printable payout list for a specific date
+    public function printPayout(Request $request)
+    {
+        abort_if(Gate::denies('financial_assistance_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $payoutDate = $request->query('date');
+        
+        if (!$payoutDate) {
+            return redirect()->route('admin.financial-assistances.index')
+                ->with('error', 'Payout date is required.');
+        }
+
+        // Get all latest FA IDs that match the payout date
+        $latestFaIds = FinancialAssistance::selectRaw('MAX(id) as latest_id')
+            ->groupBy('directory_id')
+            ->havingRaw('MAX(id) IN (SELECT id FROM financial_assistances WHERE DATE(scheduled_fa) = ?)', [$payoutDate])
+            ->pluck('latest_id');
+
+        // Get directories whose latest FA is in the matching list
+        $directories = Directory::with(['barangay', 'latestFinancialAssistance'])
+            ->whereHas('latestFinancialAssistance', function ($query) use ($payoutDate) {
+                $query->whereDate('scheduled_fa', $payoutDate);
+            })
+            ->orderBy('barangay_id')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+
+        return view('admin.financialAssistances.print-payout', compact('directories', 'payoutDate'));
+    }
 }

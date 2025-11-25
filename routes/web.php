@@ -34,6 +34,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Bulk update latest FA per directory (used by FA index bulk edit)
     Route::post('financial-assistances/bulk-latest-update', 'FinancialAssistanceController@bulkLatestUpdate')
         ->name('financial-assistances.bulkLatestUpdate');
+    // Print payout list for a specific date
+    Route::get('financial-assistances/print-payout', 'FinancialAssistanceController@printPayout')
+        ->name('financial-assistances.printPayout');
     Route::resource('financial-assistances', 'FinancialAssistanceController');
     // Put this near your other financial-assistances routes (inside the admin group)
     Route::get('financial-assistances/{financialAssistance}/print', 'FinancialAssistanceController@printCaseSummary')

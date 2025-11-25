@@ -79,6 +79,29 @@
     </div>
   </div>
   </div>
+
+<!-- Print Payout Modal -->
+<div class="modal fade" id="printPayoutModal" tabindex="-1" role="dialog" aria-labelledby="printPayoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="printPayoutModalLabel">Select Payout Date</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="print_payout_date">Payout Date</label>
+          <input type="date" id="print_payout_date" class="form-control" required>
+          <small class="form-text text-muted">Select the scheduled payout date to print records.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" id="printPayoutBtn" class="btn btn-primary"><i class="fas fa-print"></i> Preview & Print</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -124,7 +147,11 @@ $(function () {
   });
   @endcan
   // Remaining utilities
-  dtButtons.push({ extend: 'print', text: '<i class="fas fa-print"></i> Print', className: 'btn btn-outline-secondary btn-sm' });
+  dtButtons.push({
+    text: '<i class="fas fa-print"></i> Print Payout',
+    className: 'btn btn-outline-secondary btn-sm',
+    action: function (e, dt) { $('#printPayoutModal').modal('show'); }
+  });
   dtButtons.push({ extend: 'colvis', text: '<i class="fas fa-columns"></i> Columns', className: 'btn btn-outline-secondary btn-sm' });
 
 
@@ -366,6 +393,22 @@ function formatDateOnly(value) {
   });
   $('a[data-toggle="tab"]').on('shown.bs.tab click', function(){
       $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+  });
+
+  // Print Payout handler
+  $('#printPayoutBtn').on('click', function(){
+      var payoutDate = $('#print_payout_date').val();
+      if (!payoutDate) {
+        alert('Please select a payout date');
+        return;
+      }
+
+      // Open print preview in new window with the selected date
+      var printUrl = "{{ route('admin.financial-assistances.printPayout') }}" + "?date=" + payoutDate;
+      window.open(printUrl, '_blank');
+      
+      $('#printPayoutModal').modal('hide');
+      $('#print_payout_date').val('');
   });
 });
 </script>

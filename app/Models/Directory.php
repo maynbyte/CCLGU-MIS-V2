@@ -158,6 +158,10 @@ class Directory extends Model implements HasMedia
         return $this->hasMany(\App\Models\FinancialAssistance::class, 'directory_id');
     }
 
+    public function latestFinancialAssistance()
+    {
+        return $this->hasOne(\App\Models\FinancialAssistance::class, 'directory_id')->latestOfMany();
+    }
 
     public function barangay()
     {
