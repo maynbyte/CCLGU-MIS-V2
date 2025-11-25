@@ -139,15 +139,15 @@
     <table>
         <thead>
             <tr>
-                <th rowspan="2" class="col-no">No.</th>
-                <th rowspan="2" class="col-date">Date</th>
+                <th rowspan="2" class="col-no">NO.</th>
+                <th rowspan="2" class="col-date">DATE</th>
                 <th rowspan="2" class="col-name">NAME OF BENEFICIARY</th>
                 <th rowspan="2" class="col-sex">SEX</th>
                 <th rowspan="2" class="col-age">AGE</th>
                 <th rowspan="2" class="col-claimant">NAME OF CLAIMANT</th>
                 <!-- RELATIONSHIP column removed -->
-                <th rowspan="2" class="col-barangay">Barangay</th>
-                <th rowspan="2" class="col-kind">KIND OF<br>ASSISTANCE</th>
+                <th rowspan="2" class="col-barangay">BARANGAY</th>
+                <th rowspan="2" class="col-kind">TYPE OF<br>ASSISTANCE</th>
                 <th rowspan="2" class="col-address">ADDRESS</th>
                 <th rowspan="2" class="col-amount">Contact Number</th>
                 <th rowspan="2" class="col-signature">Signature</th>
@@ -178,7 +178,7 @@
                 <td>{{ $age }}</td>
                 <td class="text-left"></td>
                 <td class="text-left">{{ $directory->barangay->barangay_name ?? $directory->barangay_other ?? '' }}</td>
-                <td class="text-left">{{ $fa ? $fa->recommendation : '' }}</td>
+                <td class="text-left">{{ $fa ? $fa->type_of_assistance : '' }}</td>
                 <td class="text-left">{{ $address }}</td>
                 <td>{{ $directory->contact_no ?? '' }}</td>
                 <td style="background-color: #f9f9f9;">&nbsp;</td>
