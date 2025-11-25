@@ -69,7 +69,7 @@
         .col-sex { width: 30px; }
         .col-age { width: 25px; }
         .col-claimant { width: 140px; }
-        .col-relationship { width: 80px; }
+        /* relationship column removed */
         .col-barangay { width: 100px; }
         .col-kind { width: 80px; }
         .col-address { width: 120px; }
@@ -132,9 +132,8 @@
     </div>
 
     <div class="header">
-        <div class="title">PAYROLL - FINANCIAL ASSISTANCE</div>
+        <div class="title">LIST OF BENEFICIARIES</div>
         <div class="subtitle">CITY OF CAVITE</div>
-        <div class="subtitle">PAYMENT FOR FINANCIAL ASSISTANCE</div>
     </div>
 
     <table>
@@ -146,7 +145,7 @@
                 <th rowspan="2" class="col-sex">SEX</th>
                 <th rowspan="2" class="col-age">AGE</th>
                 <th rowspan="2" class="col-claimant">NAME OF CLAIMANT</th>
-                <th rowspan="2" class="col-relationship">RELATIONSHIP</th>
+                <!-- RELATIONSHIP column removed -->
                 <th rowspan="2" class="col-barangay">Barangay</th>
                 <th rowspan="2" class="col-kind">KIND OF<br>ASSISTANCE</th>
                 <th rowspan="2" class="col-address">ADDRESS</th>
@@ -178,7 +177,6 @@
                 <td>{{ $directory->gender ? substr($directory->gender, 0, 1) : '' }}</td>
                 <td>{{ $age }}</td>
                 <td class="text-left"></td>
-                <td></td>
                 <td class="text-left">{{ $directory->barangay->barangay_name ?? $directory->barangay_other ?? '' }}</td>
                 <td class="text-left">{{ $fa ? $fa->recommendation : '' }}</td>
                 <td class="text-left">{{ $address }}</td>
@@ -187,7 +185,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="12" style="text-align: center; padding: 20px;">No recipients scheduled for {{ \Carbon\Carbon::parse($payoutDate)->format('F d, Y') }}</td>
+                <td colspan="11" style="text-align: center; padding: 20px;">No recipients scheduled for {{ \Carbon\Carbon::parse($payoutDate)->format('F d, Y') }}</td>
             </tr>
             @endforelse
             
@@ -204,7 +202,6 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
                 <td style="background-color: #f9f9f9;">&nbsp;</td>
             </tr>
             @endfor
@@ -212,61 +209,7 @@
         </tbody>
     </table>
 
-    <div class="footer-section">
-        <div class="footer-text" style="margin-top: 15px;">
-            <table style="width: 100%; border: none;">
-                <tr>
-                    <td style="width: 50%; vertical-align: top; border: none; padding: 0; font-size: 8px; text-align: left;">
-                        I hereby certify that each person whose name appear on this payroll are entitled to cash assistance
-                    </td>
-                    <td style="width: 50%; vertical-align: top; border: none; padding: 0; text-align: right; font-size: 8px;">
-                        I Certify on my official oath that I have paid in cash this day of<br>
-                        _____ of _______ to each name that appears on the payroll, the<br>
-                        amount set opposite the name, having presented of identity<br>
-                        and affixed signature on the space provided hereof.
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div style="margin-top: 20px;">
-            <table style="width: 100%; border: none;">
-                <tr>
-                    <td style="width: 50%; vertical-align: top; border: none; padding: 5px; text-align: left;">
-                        <div style="font-size: 8px; margin-bottom: 3px; text-align: left;">Prepared by:</div>
-                        <div style="text-align: center;">
-                            <div style="font-weight: bold; margin-top: 25px; font-size: 9px;">DANICA O. CASTAÑEDA</div>
-                            <div style="border: 1px solid #000; padding: 2px; display: inline-block; margin-top: 2px; font-size: 7px;">ADMINISTRATIVE ASSISTANT IV</div>
-                        </div>
-                    </td>
-                    <td style="width: 50%; vertical-align: top; border: none; padding: 5px; text-align: center;">
-                        <div style="font-size: 8px; margin-bottom: 3px;">Approved for Payment:</div>
-                        <div style="margin-top: 40px;">&nbsp;</div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div style="margin-top: 25px;">
-            <div style="font-size: 8px; margin-bottom: 3px;">Certified by:</div>
-            <table style="width: 100%; border: none;">
-                <tr>
-                    <td style="width: 33%; vertical-align: top; border: none; padding: 5px; text-align: center;">
-                        <div style="font-weight: bold; margin-top: 25px; font-size: 9px;">DENVER CHRISTOPHER R. CHUA</div>
-                        <div style="font-size: 8px;">CITY MAYOR</div>
-                    </td>
-                    <td style="width: 33%; vertical-align: top; border: none; padding: 5px; text-align: center;">
-                        <div style="font-weight: bold; margin-top: 25px; font-size: 9px;">DENVER CHRISTOPHER R. CHUA</div>
-                        <div style="font-size: 8px;">CITY MAYOR</div>
-                    </td>
-                    <td style="width: 33%; vertical-align: top; border: none; padding: 5px; text-align: center;">
-                        <div style="font-weight: bold; margin-top: 25px; font-size: 9px;">MARITES M. ISIDRO</div>
-                        <div style="font-size: 8px;">ADMIN ASSISTANT VI</div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
+    {{-- Footer/signature blocks removed — showing only the full list for printing --}}
 
     <script>
         // Auto-print on load

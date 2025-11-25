@@ -31,13 +31,27 @@
     document.addEventListener('DOMContentLoaded', function() {
         const cb = document.getElementById('claimant_is_patient');
         const patient = document.getElementById('patient_name');
-        if (!cb || !patient) return;
+        const claimant = document.getElementById('claimant_name');
+
+        if (!cb || !patient || !claimant) return;
 
         function sync() {
-            patient.disabled = cb.checked;
+            const isChecked = cb.checked;
+            patient.readOnly = isChecked;
+            claimant.readOnly = isChecked;
+            
+            // Optional: add visual feedback
+            if (isChecked) {
+                patient.classList.add('bg-light');
+                claimant.classList.add('bg-light');
+            } else {
+                patient.classList.remove('bg-light');
+                claimant.classList.remove('bg-light');
+            }
         }
+
         cb.addEventListener('change', sync);
-        sync();
+        sync(); // set initial state on load
     });
 </script>
 @endpush
@@ -307,9 +321,9 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                     </div>
                   </div>
 
-                  {{-- Patient Name + claimant is patient --}}
-                  <div class="col-md-8">
-                    <div class="form-group mb-2">
+                  {{-- Patient Name --}}
+                  <div class="col-md-4">
+                    <div class="form-group">
                       <label>Patient Name</label>
                        @php
                          $patientValue = old('patient_name', $fa->patient_name ?? '');
@@ -317,9 +331,29 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                        @endphp
                        <input type="text" name="patient_name" id="patient_name" class="form-control"
                          value="{{ $patientValue }}" placeholder="{{ $fullName ?: 'Full name' }}"
-                         {{ $claimantIsPatient ? 'disabled' : '' }}>
+                         {{ $claimantIsPatient ? 'readonly' : '' }}>
                     </div>
-                    <div class="form-check mt-1">
+                  </div>
+
+                  {{-- Claimant Name --}}
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Claimant Name</label>
+                      @php
+                        $claimantValue = old('claimant_name', $fa->claimant_name ?? '');
+                        if ($claimantValue === '' && $claimantIsPatient) { $claimantValue = $fullName; }
+                      @endphp
+                      <input type="text" name="claimant_name" id="claimant_name" class="form-control"
+                        value="{{ $claimantValue }}" placeholder="{{ $fullName ?: 'Full name' }}"
+                        {{ $claimantIsPatient ? 'readonly' : '' }}>
+                    </div>
+                  </div>
+                </div>
+
+                {{-- Checkbox below the fields --}}
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-check mb-3">
                       <input class="form-check-input" type="checkbox" id="claimant_is_patient" name="claimant_is_patient" value="1"
                              {{ old('claimant_is_patient', $fa->claimant_is_patient ?? false) ? 'checked' : '' }}>
                       <label class="form-check-label" for="claimant_is_patient">
