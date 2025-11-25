@@ -1,12 +1,12 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="card">
-    <div class="card-header">
-        {{ trans('global.create') }} {{ trans('cruds.directory.title_singular') }}
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="fas fa-user-plus"></i> {{ trans('global.create') }} {{ trans('cruds.directory.title_singular') }}</h4>
     </div>
 
-    <div class="card-body">
+    <div class="card-body p-4">
         <form method="POST" action="{{ route('admin.directories.store') }}" enctype="multipart/form-data">
             @csrf
 
@@ -16,9 +16,9 @@
                     <div class="row">
                         <div class="col-12">
 
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Personal Information</h3>
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0"><i class="fas fa-user text-primary"></i> Personal Information</h5>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                             <i class="fas fa-minus"></i>
@@ -26,8 +26,8 @@
                                     </div>
                                 </div>
 
-                                <div class="card-body" style="display:block;">
-                                    <div class="form-group">
+                                <div class="card-body p-4" style="display:block;">
+                                    <div class="form-group mb-0">
                                         <div class="row">
                                             {{-- Picture --}}
                                          <div class="col-md-2 picture-container">
@@ -46,85 +46,93 @@
 
 
                                             <div class="col-md-10">
-                                                <div class="row">
+                                                <div class="row mb-3">
                                                     {{-- First Name --}}
-                                                    <div class="col-md-4">
-                                                        <label class="required" for="first_name">{{ trans('cruds.directory.fields.first_name') }}</label>
-                                                        <input class="form-control {{ $errors->has('first_name') ? 'is-invalid' : '' }}" type="text" name="first_name" id="first_name" value="{{ old('first_name', '') }}" required>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label class="form-label font-weight-bold required" for="first_name">
+                                                            <i class="fas fa-user text-muted mr-1"></i>{{ trans('cruds.directory.fields.first_name') }}
+                                                        </label>
+                                                        <input class="form-control form-control-lg {{ $errors->has('first_name') ? 'is-invalid' : '' }}" type="text" name="first_name" id="first_name" value="{{ old('first_name', '') }}" placeholder="Enter first name" required>
                                                         @if($errors->has('first_name'))
-                                                        <span class="text-danger">{{ $errors->first('first_name') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('first_name') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.first_name_helper') }}</span>
                                                     </div>
                                                     {{-- Middle Name --}}
-                                                    <div class="col-md-3">
-                                                        <label for="middle_name">{{ trans('cruds.directory.fields.middle_name') }}</label>
-                                                        <input class="form-control {{ $errors->has('middle_name') ? 'is-invalid' : '' }}" type="text" name="middle_name" id="middle_name" value="{{ old('middle_name', '') }}">
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label font-weight-bold" for="middle_name">
+                                                            <i class="fas fa-user text-muted mr-1"></i>{{ trans('cruds.directory.fields.middle_name') }}
+                                                        </label>
+                                                        <input class="form-control form-control-lg {{ $errors->has('middle_name') ? 'is-invalid' : '' }}" type="text" name="middle_name" id="middle_name" value="{{ old('middle_name', '') }}" placeholder="Enter middle name">
                                                         @if($errors->has('middle_name'))
-                                                        <span class="text-danger">{{ $errors->first('middle_name') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('middle_name') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.middle_name_helper') }}</span>
                                                     </div>
                                                     {{-- Last Name --}}
-                                                    <div class="col-md-4">
-                                                        <label class="required" for="last_name">{{ trans('cruds.directory.fields.last_name') }}</label>
-                                                        <input class="form-control {{ $errors->has('last_name') ? 'is-invalid' : '' }}" type="text" name="last_name" id="last_name" value="{{ old('last_name', '') }}" required>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label class="form-label font-weight-bold required" for="last_name">
+                                                            <i class="fas fa-user text-muted mr-1"></i>{{ trans('cruds.directory.fields.last_name') }}
+                                                        </label>
+                                                        <input class="form-control form-control-lg {{ $errors->has('last_name') ? 'is-invalid' : '' }}" type="text" name="last_name" id="last_name" value="{{ old('last_name', '') }}" placeholder="Enter last name" required>
                                                         @if($errors->has('last_name'))
-                                                        <span class="text-danger">{{ $errors->first('last_name') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('last_name') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.last_name_helper') }}</span>
                                                     </div>
                                                     {{-- Suffix --}}
-                                                    <div class="col-md-1">
-                                                        <label for="suffix">{{ trans('cruds.directory.fields.suffix') }}</label>
-                                                        <input class="form-control {{ $errors->has('suffix') ? 'is-invalid' : '' }}" type="text" name="suffix" id="suffix" value="{{ old('suffix', '') }}">
+                                                    <div class="col-md-1 mb-3">
+                                                        <label class="form-label font-weight-bold" for="suffix">Suffix</label>
+                                                        <input class="form-control form-control-lg {{ $errors->has('suffix') ? 'is-invalid' : '' }}" type="text" name="suffix" id="suffix" value="{{ old('suffix', '') }}" placeholder="Jr/Sr">
                                                         @if($errors->has('suffix'))
-                                                        <span class="text-danger">{{ $errors->first('suffix') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('suffix') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.suffix_helper') }}</span>
                                                     </div>
                                                 </div>
 
-                                                <div class="row row-2">
+                                                <div class="row mb-3">
                                                     {{-- Email --}}
-                                                    <div class="col-md-3">
-                                                        <label for="email">{{ trans('cruds.directory.fields.email') }}</label>
-                                                        <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="text" name="email" id="email" value="{{ old('email', '') }}">
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label font-weight-bold" for="email">
+                                                            <i class="fas fa-envelope text-muted mr-1"></i>{{ trans('cruds.directory.fields.email') }}
+                                                        </label>
+                                                        <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email', '') }}" placeholder="email@example.com">
                                                         @if($errors->has('email'))
-                                                        <span class="text-danger">{{ $errors->first('email') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('email') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.email_helper') }}</span>
                                                     </div>
                                                     {{-- Contact No --}}
-                                                    <div class="col-md-2">
-                                                        <label for="contact_no">{{ trans('cruds.directory.fields.contact_no') }}</label>
-                                                        <input class="form-control {{ $errors->has('contact_no') ? 'is-invalid' : '' }}" type="text" name="contact_no" id="contact_no" value="{{ old('contact_no', '') }}">
+                                                    <div class="col-md-2 mb-3">
+                                                        <label class="form-label font-weight-bold" for="contact_no">
+                                                            <i class="fas fa-phone text-muted mr-1"></i>{{ trans('cruds.directory.fields.contact_no') }}
+                                                        </label>
+                                                        <input class="form-control {{ $errors->has('contact_no') ? 'is-invalid' : '' }}" type="text" name="contact_no" id="contact_no" value="{{ old('contact_no', '') }}" placeholder="09XX XXX XXXX">
                                                         @if($errors->has('contact_no'))
-                                                        <span class="text-danger">{{ $errors->first('contact_no') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('contact_no') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.contact_no_helper') }}</span>
                                                     </div>
                                                     {{-- Birthday --}}
-                                                    <div class="col-md-3">
-                                                        <label for="birthday">{{ trans('cruds.directory.fields.birthday') }}</label>
-                                                        <input class="form-control date {{ $errors->has('birthday') ? 'is-invalid' : '' }}" type="text" name="birthday" id="birthday" value="{{ old('birthday') }}">
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label font-weight-bold" for="birthday">
+                                                            <i class="fas fa-birthday-cake text-muted mr-1"></i>{{ trans('cruds.directory.fields.birthday') }}
+                                                        </label>
+                                                        <input class="form-control date {{ $errors->has('birthday') ? 'is-invalid' : '' }}" type="text" name="birthday" id="birthday" value="{{ old('birthday') }}" placeholder="Select date">
                                                         @if($errors->has('birthday'))
-                                                        <span class="text-danger">{{ $errors->first('birthday') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('birthday') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.birthday_helper') }}</span>
                                                     </div>
                                                     {{-- Place of Birth --}}
-                                                    <div class="col-md-2">
-                                                        <label for="place_of_birth">{{ trans('cruds.directory.fields.place_of_birth') }}</label>
-                                                        <input class="form-control {{ $errors->has('place_of_birth') ? 'is-invalid' : '' }}" type="text" name="place_of_birth" id="place_of_birth" value="{{ old('place_of_birth', '') }}">
+                                                    <div class="col-md-2 mb-3">
+                                                        <label class="form-label font-weight-bold" for="place_of_birth">
+                                                            <i class="fas fa-map-marker-alt text-muted mr-1"></i>Place of Birth
+                                                        </label>
+                                                        <input class="form-control {{ $errors->has('place_of_birth') ? 'is-invalid' : '' }}" type="text" name="place_of_birth" id="place_of_birth" value="{{ old('place_of_birth', '') }}" placeholder="City">
                                                         @if($errors->has('place_of_birth'))
-                                                        <span class="text-danger">{{ $errors->first('place_of_birth') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('place_of_birth') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.place_of_birth_helper') }}</span>
                                                     </div>
                                                     {{-- Gender --}}
-                                                    <div class="col-md-2">
-                                                        <label>{{ trans('cruds.directory.fields.gender') }}</label>
+                                                    <div class="col-md-2 mb-3">
+                                                        <label class="form-label font-weight-bold">
+                                                            <i class="fas fa-venus-mars text-muted mr-1"></i>{{ trans('cruds.directory.fields.gender') }}
+                                                        </label>
                                                         <select class="form-control {{ $errors->has('gender') ? 'is-invalid' : '' }}" name="gender" id="gender">
                                                             <option value disabled {{ old('gender', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                                             @foreach(App\Models\Directory::GENDER_SELECT as $key => $label)
@@ -132,16 +140,15 @@
                                                             @endforeach
                                                         </select>
                                                         @if($errors->has('gender'))
-                                                        <span class="text-danger">{{ $errors->first('gender') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('gender') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.gender_helper') }}</span>
                                                     </div>
                                                 </div>
 
-                                                <div class="row row-2">
+                                                <div class="row mb-3">
                                                     {{-- Highest Education --}}
-                                                    <div class="col-md-3">
-                                                        <label>{{ trans('cruds.directory.fields.highest_edu') }}</label>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label font-weight-bold"><i class="fas fa-graduation-cap text-muted mr-1"></i>{{ trans('cruds.directory.fields.highest_edu') }}</label>
                                                         <select class="form-control {{ $errors->has('highest_edu') ? 'is-invalid' : '' }}" name="highest_edu" id="highest_edu">
                                                             <option value disabled {{ old('highest_edu', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                                             @foreach(App\Models\Directory::HIGHEST_EDU_SELECT as $key => $label)
@@ -154,8 +161,8 @@
                                                         <span class="help-block">{{ trans('cruds.directory.fields.highest_edu_helper') }}</span>
                                                     </div>
                                                     {{-- Civil Status --}}
-                                                    <div class="col-md-2">
-                                                        <label>{{ trans('cruds.directory.fields.civil_status') }}</label>
+                                                    <div class="col-md-2 mb-3">
+                                                        <label class="form-label font-weight-bold"><i class="fas fa-heart text-muted mr-1"></i>{{ trans('cruds.directory.fields.civil_status') }}</label>
                                                         <select class="form-control {{ $errors->has('civil_status') ? 'is-invalid' : '' }}" name="civil_status" id="civil_status">
                                                             <option value disabled {{ old('civil_status', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                                             @foreach(App\Models\Directory::CIVIL_STATUS_SELECT as $key => $label)
@@ -168,8 +175,8 @@
                                                         <span class="help-block">{{ trans('cruds.directory.fields.civil_status_helper') }}</span>
                                                     </div>
                                                     {{-- Religion --}}
-                                                    <div class="col-md-3">
-                                                        <label>{{ trans('cruds.directory.fields.religion') }}</label>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label font-weight-bold"><i class="fas fa-praying-hands text-muted mr-1"></i>{{ trans('cruds.directory.fields.religion') }}</label>
                                                         <select class="form-control {{ $errors->has('religion') ? 'is-invalid' : '' }}" name="religion" id="religion">
                                                             <option value disabled {{ old('religion', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                                             @foreach(App\Models\Directory::RELIGION_SELECT as $key => $label)
@@ -182,29 +189,28 @@
                                                         <span class="help-block">{{ trans('cruds.directory.fields.religion_helper') }}</span>
                                                     </div>
                                                     {{-- Nationality --}}
-                                                    <div class="col-md-2">
-                                                        <label for="nationality">{{ trans('cruds.directory.fields.nationality') }}</label>
-                                                        <input class="form-control {{ $errors->has('nationality') ? 'is-invalid' : '' }}" type="text" name="nationality" id="nationality" value="{{ old('nationality', '') }}">
+                                                    <div class="col-md-2 mb-3">
+                                                        <label class="form-label font-weight-bold" for="nationality"><i class="fas fa-flag text-muted mr-1"></i>{{ trans('cruds.directory.fields.nationality') }}</label>
+                                                        <input class="form-control {{ $errors->has('nationality') ? 'is-invalid' : '' }}" type="text" name="nationality" id="nationality" value="{{ old('nationality', '') }}" placeholder="Filipino">
                                                         @if($errors->has('nationality'))
-                                                        <span class="text-danger">{{ $errors->first('nationality') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('nationality') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.nationality_helper') }}</span>
                                                     </div>
                                                     {{-- Occupation --}}
-                                                    <div class="col-md-2">
-                                                        <label for="occupation">{{ trans('cruds.directory.fields.occupation') }}</label>
-                                                        <input class="form-control {{ $errors->has('occupation') ? 'is-invalid' : '' }}" type="text" name="occupation" id="occupation" value="{{ old('occupation', '') }}">
+                                                    <div class="col-md-2 mb-3">
+                                                        <label class="form-label font-weight-bold" for="occupation"><i class="fas fa-briefcase text-muted mr-1"></i>{{ trans('cruds.directory.fields.occupation') }}</label>
+                                                        <input class="form-control {{ $errors->has('occupation') ? 'is-invalid' : '' }}" type="text" name="occupation" id="occupation" value="{{ old('occupation', '') }}" placeholder="Job title">
                                                         @if($errors->has('occupation'))
-                                                        <span class="text-danger">{{ $errors->first('occupation') }}</span>
+                                                        <span class="text-danger small">{{ $errors->first('occupation') }}</span>
                                                         @endif
-                                                        <span class="help-block">{{ trans('cruds.directory.fields.occupation_helper') }}</span>
                                                     </div>
                                                 </div>
 
-                                                <div class="row">
+                                                <h6 class="text-muted mb-3 mt-2"><i class="fas fa-home mr-1"></i>Address Information</h6>
+                                                <div class="row mb-3">
                                                     {{-- House No --}}
-                                                    <div class="col-md-1">
-                                                        <label for="street_no">{{ trans('cruds.directory.fields.street_no') }}</label>
+                                                    <div class="col-md-1 mb-3">
+                                                        <label class="form-label font-weight-bold" for="street_no">House #</label>
                                                         <input class="form-control {{ $errors->has('street_no') ? 'is-invalid' : '' }}" type="text" name="street_no" id="street_no" value="{{ old('street_no', '') }}">
                                                         @if($errors->has('street_no'))
                                                         <span class="text-danger">{{ $errors->first('street_no') }}</span>
@@ -212,8 +218,8 @@
                                                         <span class="help-block">{{ trans('cruds.directory.fields.street_no_helper') }}</span>
                                                     </div>
                                                     {{-- Street --}}
-                                                    <div class="col-md-3">
-                                                        <label for="street">{{ trans('cruds.directory.fields.street') }}</label>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label font-weight-bold" for="street">{{ trans('cruds.directory.fields.street') }}</label>
                                                         <input class="form-control {{ $errors->has('street') ? 'is-invalid' : '' }}" type="text" name="street" id="street" value="{{ old('street', '') }}">
                                                         @if($errors->has('street'))
                                                         <span class="text-danger">{{ $errors->first('street') }}</span>
@@ -221,8 +227,8 @@
                                                         <span class="help-block">{{ trans('cruds.directory.fields.street_helper') }}</span>
                                                     </div>
                                                     {{-- City --}}
-                                                    <div class="col-md-3">
-                                                        <label for="city">{{ trans('cruds.directory.fields.city') }}</label>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label font-weight-bold" for="city">{{ trans('cruds.directory.fields.city') }}</label>
                                                         <input class="form-control {{ $errors->has('city') ? 'is-invalid' : '' }}" type="text" name="city" id="city" value="{{ old('city', '') }}">
                                                         @if($errors->has('city'))
                                                         <span class="text-danger">{{ $errors->first('city') }}</span>
@@ -230,8 +236,8 @@
                                                         <span class="help-block">{{ trans('cruds.directory.fields.city_helper') }}</span>
                                                     </div>
                                                     {{-- Province --}}
-                                                    <div class="col-md-2">
-                                                        <label for="province">{{ trans('cruds.directory.fields.province') }}</label>
+                                                    <div class="col-md-2 mb-3">
+                                                        <label class="form-label font-weight-bold" for="province">{{ trans('cruds.directory.fields.province') }}</label>
                                                         <input class="form-control {{ $errors->has('province') ? 'is-invalid' : '' }}" type="text" name="province" id="province" value="{{ old('province', '') }}">
                                                         @if($errors->has('province'))
                                                         <span class="text-danger">{{ $errors->first('province') }}</span>
@@ -239,8 +245,8 @@
                                                         <span class="help-block">{{ trans('cruds.directory.fields.province_helper') }}</span>
                                                     </div>
                                                     {{-- Barangay --}}
-                                                    <div class="col-md-3">
-                                                        <label for="barangay_id">{{ trans('cruds.directory.fields.barangay') }}</label>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label font-weight-bold" for="barangay_id">{{ trans('cruds.directory.fields.barangay') }}</label>
                                                         <select class="form-control select2 {{ $errors->has('barangay') ? 'is-invalid' : '' }}" name="barangay_id" id="barangay_id">
                                                             @foreach($barangays as $id => $entry)
                                                             <option value="{{ $id }}" {{ old('barangay_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
@@ -265,10 +271,10 @@
 
             {{-- ===== Family Composition (inside the same form) ===== --}}
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>{{ trans('global.create') }} {{ trans('cruds.familycomposition.title_singular') }}</span>
-                        <small class="text-muted">Up to 6 rows</small>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-user-friends text-primary"></i> {{ trans('cruds.familycomposition.title_singular') }}</h5>
+                        <small class="badge badge-info">Up to 6 rows</small>
                     </div>
 
                     <div class="card-body">
@@ -350,9 +356,9 @@
 
             {{-- ===== Other Information ===== --}}
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Other Information</h3>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-info-circle text-primary"></i> Other Information</h5>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                 <i class="fas fa-minus"></i>
@@ -360,14 +366,14 @@
                         </div>
                     </div>
 
-                    <div class="card-body" style="display:block;">
-                        <div class="form-group">
+                    <div class="card-body p-4" style="display:block;">
+                        <div class="form-group mb-4">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label for="ngos">{{ trans('cruds.directory.fields.ngo') }}</label>
-                                    <div style="padding-bottom:4px">
-                                        <span class="btn btn-info btn-xs select-all" style="border-radius:0">{{ trans('global.select_all') }}</span>
-                                        <span class="btn btn-info btn-xs deselect-all" style="border-radius:0">{{ trans('global.deselect_all') }}</span>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label font-weight-bold" for="ngos"><i class="fas fa-users text-muted mr-1"></i>{{ trans('cruds.directory.fields.ngo') }}</label>
+                                    <div class="mb-2">
+                                        <span class="btn btn-sm btn-outline-primary select-all">{{ trans('global.select_all') }}</span>
+                                        <span class="btn btn-sm btn-outline-secondary deselect-all">{{ trans('global.deselect_all') }}</span>
                                     </div>
                                     <select class="form-control select2 {{ $errors->has('ngos') ? 'is-invalid' : '' }}" name="ngos[]" id="ngos" multiple>
                                         @foreach($ngos as $id => $ngo)
@@ -380,11 +386,11 @@
                                     <span class="help-block">{{ trans('cruds.directory.fields.ngo_helper') }}</span>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label for="sectors">{{ trans('cruds.directory.fields.sector') }}</label>
-                                    <div style="padding-bottom:4px">
-                                        <span class="btn btn-info btn-xs select-all" style="border-radius:0">{{ trans('global.select_all') }}</span>
-                                        <span class="btn btn-info btn-xs deselect-all" style="border-radius:0">{{ trans('global.deselect_all') }}</span>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label font-weight-bold" for="sectors"><i class="fas fa-layer-group text-muted mr-1"></i>{{ trans('cruds.directory.fields.sector') }}</label>
+                                    <div class="mb-2">
+                                        <span class="btn btn-sm btn-outline-primary select-all">{{ trans('global.select_all') }}</span>
+                                        <span class="btn btn-sm btn-outline-secondary deselect-all">{{ trans('global.deselect_all') }}</span>
                                     </div>
                                     <select class="form-control select2 {{ $errors->has('sectors') ? 'is-invalid' : '' }}" name="sectors[]" id="sectors" multiple>
                                         @foreach($sectors as $id => $sector)
@@ -399,8 +405,8 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>{{ trans('cruds.directory.fields.comelec_status') }}</label>
+                        <div class="form-group mb-3">
+                            <label class="form-label font-weight-bold"><i class="fas fa-vote-yea text-muted mr-1"></i>{{ trans('cruds.directory.fields.comelec_status') }}</label>
                             <select class="form-control {{ $errors->has('comelec_status') ? 'is-invalid' : '' }}" name="comelec_status" id="comelec_status">
                                 <option value disabled {{ old('comelec_status', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                 @foreach(App\Models\Directory::COMELEC_STATUS_SELECT as $key => $label)
@@ -413,8 +419,8 @@
                             <span class="help-block">{{ trans('cruds.directory.fields.comelec_status_helper') }}</span>
                         </div>
 
-                        <div class="form-group">
-                            <label>{{ trans('cruds.directory.fields.life_status') }}</label>
+                        <div class="form-group mb-3">
+                            <label class="form-label font-weight-bold"><i class="fas fa-heartbeat text-muted mr-1"></i>{{ trans('cruds.directory.fields.life_status') }}</label>
                             <select class="form-control {{ $errors->has('life_status') ? 'is-invalid' : '' }}" name="life_status" id="life_status">
                                 <option value disabled {{ old('life_status', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                 @foreach(App\Models\Directory::LIFE_STATUS_SELECT as $key => $label)
@@ -427,28 +433,31 @@
                             <span class="help-block">{{ trans('cruds.directory.fields.life_status_helper') }}</span>
                         </div>
 
-                        <div class="form-group">
-                            <label for="description">{{ trans('cruds.directory.fields.description') }}</label>
-                            <textarea class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" name="description" id="description">{{ old('description') }}</textarea>
+                        <div class="form-group mb-3">
+                            <label class="form-label font-weight-bold" for="description"><i class="fas fa-file-alt text-muted mr-1"></i>{{ trans('cruds.directory.fields.description') }}</label>
+                            <textarea class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" name="description" id="description" rows="3" placeholder="Additional notes or description">{{ old('description') }}</textarea>
                             @if($errors->has('description'))
                             <span class="text-danger">{{ $errors->first('description') }}</span>
                             @endif
                             <span class="help-block">{{ trans('cruds.directory.fields.description_helper') }}</span>
                         </div>
 
-                        <div class="form-group">
-                            <label for="remarks">{{ trans('cruds.directory.fields.remarks') }}</label>
-                            <input class="form-control {{ $errors->has('remarks') ? 'is-invalid' : '' }}" type="text" name="remarks" id="remarks" value="{{ old('remarks', '') }}">
+                        <div class="form-group mb-4">
+                            <label class="form-label font-weight-bold" for="remarks"><i class="fas fa-sticky-note text-muted mr-1"></i>{{ trans('cruds.directory.fields.remarks') }}</label>
+                            <input class="form-control {{ $errors->has('remarks') ? 'is-invalid' : '' }}" type="text" name="remarks" id="remarks" value="{{ old('remarks', '') }}" placeholder="Special notes">
                             @if($errors->has('remarks'))
                             <span class="text-danger">{{ $errors->first('remarks') }}</span>
                             @endif
                             <span class="help-block">{{ trans('cruds.directory.fields.remarks_helper') }}</span>
                         </div>
 
-                        <div class="form-group">
-                            <button class="btn btn-danger" type="submit">
-                                {{ trans('global.save') }}
+                        <div class="form-group mt-4">
+                            <button class="btn btn-lg btn-primary px-5" type="submit">
+                                <i class="fas fa-save mr-2"></i>{{ trans('global.save') }}
                             </button>
+                            <a href="{{ route('admin.directories.index') }}" class="btn btn-lg btn-outline-secondary px-5 ml-2">
+                                <i class="fas fa-times mr-2"></i>Cancel
+                            </a>
                         </div>
                     </div>{{-- /.card-body --}}
                 </div>{{-- /.card --}}
@@ -467,6 +476,106 @@
 
     .gap-2>*:last-child {
         margin-right: 0;
+    }
+
+    /* Enhanced form styling */
+    .form-label {
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+        color: #495057;
+    }
+
+    .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .card {
+        border-radius: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+        padding: 1rem 1.25rem;
+    }
+
+    .required::after {
+        content: " *";
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .picture-container {
+        text-align: center;
+    }
+
+    .picture {
+        width: 150px;
+        height: 150px;
+        border: 3px solid #dee2e6;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .picture:hover {
+        border-color: #007bff;
+        transform: scale(1.05);
+    }
+
+    .picture img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .picture input[type="file"] {
+        display: none;
+    }
+
+    .picture-label {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.5rem;
+        cursor: pointer;
+    }
+
+    .picture-label:hover {
+        color: #007bff;
+    }
+
+    /* Table styling */
+    #family-table thead {
+        background-color: #f8f9fa;
+    }
+
+    #family-table th {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    #family-table td {
+        vertical-align: middle;
+    }
+
+    #family-table .form-control {
+        font-size: 0.875rem;
+    }
+
+    /* Button improvements */
+    .btn-sm {
+        font-size: 0.875rem;
+        padding: 0.25rem 0.75rem;
+    }
+
+    .text-muted {
+        opacity: 0.7;
     }
 </style>
 @endpush
