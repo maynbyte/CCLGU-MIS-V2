@@ -1,22 +1,26 @@
 @extends('layouts.admin')
 @section('content')
-@can('directory_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route('admin.directories.create') }}">
-                {{ trans('global.add') }} {{ trans('cruds.directory.title_singular') }}
-            </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
-                {{ trans('global.app_csvImport') }}
-            </button>
-            @include('csvImport.modal', ['model' => 'Directory', 'route' => 'admin.directories.parseCsvImport'])
-        </div>
-    </div>
-@endcan
-
 <div class="card">
-    <div class="card-header">
-        {{ trans('cruds.directory.title_singular') }} {{ trans('global.list') }}
+    <div class="card-header d-flex align-items-center">
+        <div>
+            <h3 class="card-title mb-2"><i class="fas fa-hand-holding-usd text-primary mr-2"></i>{{ trans('cruds.directory.title_singular') }} {{ trans('global.list') }}</h3>
+        </div>
+
+        <div class="card-tools ml-auto">
+            @can('directory_create')
+            <div class="btn btn-sm" role="group" aria-label="Directory actions">
+                <a class="btn btn-success" href="{{ route('admin.directories.create') }}" data-toggle="tooltip" title="Add new directory">
+                    <i class="fas fa-plus"></i>
+                    <span class="d-none d-sm-inline ml-1">{{ trans('global.add') }} {{ trans('cruds.directory.title_singular') }}</span>
+                </a>
+                <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal" data-toggle="tooltip" title="Import from CSV">
+                    <i class="fas fa-file-csv"></i>
+                    <span class="d-none d-sm-inline ml-1">{{ trans('global.app_csvImport') }}</span>
+                </button>
+            </div>
+            @include('csvImport.modal', ['model' => 'Directory', 'route' => 'admin.directories.parseCsvImport'])
+            @endcan
+        </div>
     </div>
 
     <div class="card-body">
@@ -406,6 +410,9 @@ function formatDateOnly(value) {
       $('#printPayoutModal').modal('hide');
       $('#print_payout_date').val('');
   });
+
+  // Enable Bootstrap tooltips for header actions
+  $('[data-toggle="tooltip"]').tooltip();
 });
 </script>
 @endsection
