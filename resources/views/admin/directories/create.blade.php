@@ -39,9 +39,14 @@
       alt="Profile preview"
       style="width:100%;height:auto;display:block;"
     >
-    <input type="file" name="profile_picture" id="wizard-picture" accept="image/*">
+    <input type="file" name="profile_picture" id="wizard-picture" accept="image/*" style="display: none;">
   </div>
-  <h6 class="picture-label">Choose Picture</h6>
+  <button type="button" class="btn btn-sm btn-primary mt-2" id="upload-btn" onclick="document.getElementById('wizard-picture').click()">
+    <i class="fas fa-upload mr-1"></i>Upload Picture
+  </button>
+  <button type="button" class="btn btn-sm btn-danger mt-2" id="delete-btn" style="display: none;">
+    <i class="fas fa-trash mr-1"></i>Delete Picture
+  </button>
 </div>
 
 
@@ -668,29 +673,53 @@
 document.addEventListener('DOMContentLoaded', function () {
   const input       = document.getElementById('wizard-picture');
   const img         = document.getElementById('wizardPicturePreview');
+  const uploadBtn   = document.getElementById('upload-btn');
+  const deleteBtn   = document.getElementById('delete-btn');
   const placeholder = "{{ asset('upload/free-user-icon.png') }}";
   let objectUrl     = null;
 
   function showPreview(file) {
     if (!file) { resetPreview(); return; }
-    if (!/^image\//i.test(file.type)) { alert('Please select an image file.'); input.value=''; return; }
-    if (file.size > 5 * 1024 * 1024) { alert('Max file size is 5MB.'); input.value=''; return; }
+    if (!/^image\//i.test(file.type)) { 
+      alert('Please select an image file (JPG, PNG, GIF).'); 
+      input.value=''; 
+      return; 
+    }
+    if (file.size > 5 * 1024 * 1024) { 
+      alert('Maximum file size is 5MB. Please choose a smaller image.'); 
+      input.value=''; 
+      return; 
+    }
 
     if (objectUrl) URL.revokeObjectURL(objectUrl);
     objectUrl = URL.createObjectURL(file);
     img.src = objectUrl;
+    
+    // Show delete button when file is uploaded
+    if (deleteBtn) deleteBtn.style.display = 'inline-block';
   }
 
   function resetPreview() {
     if (objectUrl) URL.revokeObjectURL(objectUrl);
     objectUrl = null;
     img.src = placeholder;
+    input.value = '';
+    
+    // Hide delete button when no file
+    if (deleteBtn) deleteBtn.style.display = 'none';
   }
 
   if (input) {
     input.addEventListener('change', function () {
       const file = this.files && this.files[0];
       showPreview(file);
+    });
+  }
+
+  // Delete button functionality
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', function() {
+      resetPreview();
     });
   }
 
