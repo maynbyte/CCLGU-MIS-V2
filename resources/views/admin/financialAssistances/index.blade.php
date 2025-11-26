@@ -39,7 +39,6 @@
                     <th>{{ trans('cruds.directory.fields.middle_name') }}</th>
                     <th>{{ trans('cruds.directory.fields.barangay') }}</th>
                     <th>{{ trans('cruds.directory.fields.comelec_status') }}</th>
-                    {{-- NEW: Latest FA + Status --}}
                     <th>Latest FA Record</th>
                     <th>Payout Schedule</th>
                     <th>Status</th>
@@ -149,6 +148,37 @@ $(function () {
     }
   });
   @endcan
+  // Text Selected (right beside Delete Selected)
+  dtButtons.push({
+    extend: 'selected',
+    text: '<i class="fas fa-sms"></i> Text Selected',
+    className: 'btn btn-info btn-sm',
+    action: function (e, dt) {
+      var selectedRows = dt.rows({ selected: true }).data();
+      if (selectedRows.length === 0) {
+        alert('{{ trans('global.datatables.zero_selected') }}');
+        return;
+      }
+      
+      // Collect phone numbers from selected rows
+      var phoneNumbers = [];
+      selectedRows.each(function(row) {
+        // You may need to adjust the property name based on your data structure
+        if (row.contact_no && row.contact_no !== 'N/A') {
+          phoneNumbers.push(row.contact_no);
+        }
+      });
+      
+      if (phoneNumbers.length === 0) {
+        alert('No valid phone numbers found in selected records.');
+        return;
+      }
+      
+      // Here you can implement your SMS/texting functionality
+      alert('Text messaging feature:\n\n' + phoneNumbers.length + ' contact number(s) selected:\n' + phoneNumbers.join(', '));
+      // TODO: Implement actual SMS sending logic
+    }
+  });
   // Remaining utilities
   dtButtons.push({
     text: '<i class="fas fa-print"></i> Print Payout',
