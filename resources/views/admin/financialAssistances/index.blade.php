@@ -104,6 +104,50 @@
     </div>
   </div>
 </div>
+
+<!-- Send SMS Modal -->
+<div class="modal fade" id="sendSmsModal" tabindex="-1" role="dialog" aria-labelledby="sendSmsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="sendSmsModalLabel"><i class="fas fa-sms mr-2"></i>Send SMS to Selected</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle"></i>
+          Sending to <strong id="smsRecipientCount">0</strong> recipient(s) out of <strong id="smsTotalSelected">0</strong> selected.
+          <span class="d-block small mt-1">Only records with valid phone numbers will receive the message.</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="smsMessageText">Message <span class="text-danger">*</span></label>
+          <textarea 
+            id="smsMessageText" 
+            class="form-control" 
+            rows="4" 
+            maxlength="160" 
+            placeholder="Type your message here (max 160 characters)..."
+            required></textarea>
+          <small class="form-text text-muted">
+            <span id="smsCharCount">0/160</span> characters
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label class="d-block">Quick Templates:</label>
+          <button type="button" class="btn btn-sm btn-outline-secondary sms-template" data-message="Your financial assistance is ready for claim at CCLGU office.">Claim Ready</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary sms-template" data-template="payout-reminder">Payout Reminder</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary sms-template" data-message="Your application has been processed. You will be notified once approved.">Application Update</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" id="sendSmsBtn" class="btn btn-info"><i class="fas fa-paper-plane"></i> Send SMS</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -160,23 +204,34 @@ $(function () {
         return;
       }
       
-      // Collect phone numbers from selected rows
-      var phoneNumbers = [];
+      // Count valid phone numbers
+      var validCount = 0;
+      var firstScheduledDate = null;
       selectedRows.each(function(row) {
-        // You may need to adjust the property name based on your data structure
-        if (row.contact_no && row.contact_no !== 'N/A') {
-          phoneNumbers.push(row.contact_no);
+        if (row.contact_no && row.contact_no !== 'N/A' && row.contact_no.trim() !== '') {
+          validCount++;
+          // Get the first scheduled date for the template
+          if (!firstScheduledDate && row.latest_fa_scheduled_fa) {
+            firstScheduledDate = row.latest_fa_scheduled_fa;
+          }
         }
       });
       
-      if (phoneNumbers.length === 0) {
+      if (validCount === 0) {
         alert('No valid phone numbers found in selected records.');
         return;
       }
       
-      // Here you can implement your SMS/texting functionality
-      alert('Text messaging feature:\n\n' + phoneNumbers.length + ' contact number(s) selected:\n' + phoneNumbers.join(', '));
-      // TODO: Implement actual SMS sending logic
+      // Update modal info and show
+      $('#smsRecipientCount').text(validCount);
+      $('#smsTotalSelected').text(selectedRows.length);
+      $('#smsMessageText').val('');
+      $('#smsCharCount').text('0/160');
+      
+      // Store the scheduled date in modal for template use
+      $('#sendSmsModal').data('scheduled-date', firstScheduledDate);
+      
+      $('#sendSmsModal').modal('show');
     }
   });
   // Remaining utilities
@@ -439,6 +494,91 @@ function formatDateOnly(value) {
       
       $('#printPayoutModal').modal('hide');
       $('#print_payout_date').val('');
+  });
+
+  // SMS character counter
+  $('#smsMessageText').on('input', function() {
+    var length = $(this).val().length;
+    $('#smsCharCount').text(length + '/160');
+  });
+
+  // SMS template buttons
+  $('.sms-template').on('click', function() {
+    var template = $(this).data('template');
+    var message = $(this).data('message');
+    
+    // Handle Payout Reminder template with dynamic date
+    if (template === 'payout-reminder') {
+      var scheduledDate = $('#sendSmsModal').data('scheduled-date');
+      
+      if (!scheduledDate) {
+        alert('No payout schedule found for selected records.');
+        return;
+      }
+      
+      // Format date to "Month Day, Year" (e.g., "December 13, 2025")
+      var date = new Date(scheduledDate.replace(' ', 'T'));
+      var months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+      var formattedDate = months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+      
+      message = "Buenas días!\nMula sa Cavite City Mayor's Office:\n\n" +
+                "Ang schedule ng iyong financial assistance payout ay sa " + formattedDate + 
+                ", sa Floating Pavilion, City Hall, Cavite City.\n" +
+                "Mangyaring dumating po ng 8:00 AM.\n\n" +
+                "Ito ay isang electronic message. Huwag pong magreply sa mensaheng ito.";
+    }
+    
+    $('#smsMessageText').val(message).trigger('input');
+  });
+
+  // Send SMS handler
+  $('#sendSmsBtn').on('click', function() {
+    var message = $('#smsMessageText').val().trim();
+    
+    if (!message) {
+      alert('Please enter a message');
+      return;
+    }
+
+    var ids = $.map(table.rows({ selected: true }).data(), function (entry) { return entry.id });
+    if (ids.length === 0) {
+      alert('{{ trans('global.datatables.zero_selected') }}');
+      return;
+    }
+
+    // Disable button and show loading
+    var $btn = $(this);
+    var originalText = $btn.html();
+    $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Sending...');
+
+    $.ajax({
+      headers: {'x-csrf-token': _token},
+      method: 'POST',
+      url: "{{ route('admin.directories.sendBulkSms') }}",
+      data: {
+        ids: ids,
+        message: message
+      }
+    }).done(function(response) {
+      $('#sendSmsModal').modal('hide');
+      $('#smsMessageText').val('');
+      
+      var alertMessage = response.message;
+      if (response.warning) {
+        alertMessage += '\n\n' + response.warning;
+      }
+      
+      alert(alertMessage);
+    }).fail(function(xhr) {
+      var errorMessage = 'Failed to send SMS.';
+      if (xhr.responseJSON && xhr.responseJSON.message) {
+        errorMessage = xhr.responseJSON.message;
+      }
+      alert(errorMessage);
+    }).always(function() {
+      $btn.prop('disabled', false).html(originalText);
+    });
   });
 
   // Enable Bootstrap tooltips for header actions

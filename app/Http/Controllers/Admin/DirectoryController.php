@@ -852,4 +852,92 @@ class DirectoryController extends Controller
         similar_text($a, $b, $percent);
         return (float)$percent; // 0..100
     }
+
+    /**
+     * Send bulk SMS to selected directories
+     */
+    public function sendBulkSms(Request $request)
+    {
+        abort_if(Gate::denies('directory_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        try {
+            $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'exists:directories,id',
+                'message' => 'required|string|max:160',
+            ]);
+
+            \Log::info('SMS Request received', [
+                'ids_count' => count($request->ids),
+                'message_length' => strlen($request->message),
+            ]);
+
+            $directories = Directory::whereIn('id', $request->ids)->get();
+            
+            // Collect valid phone numbers
+            $phoneNumbers = [];
+            $invalidContacts = [];
+            
+            foreach ($directories as $directory) {
+                if ($directory->contact_no && $directory->contact_no !== 'N/A' && !empty(trim($directory->contact_no))) {
+                    $phoneNumbers[] = $directory->contact_no;
+                } else {
+                    $invalidContacts[] = $directory->first_name . ' ' . $directory->last_name;
+                }
+            }
+
+            \Log::info('Phone numbers collected', [
+                'valid_count' => count($phoneNumbers),
+                'invalid_count' => count($invalidContacts),
+            ]);
+
+            if (empty($phoneNumbers)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No valid phone numbers found in selected records.',
+                ], 400);
+            }
+
+            // Send SMS using Semaphore
+            $smsService = new \App\Services\SemaphoreSmsService();
+            $result = $smsService->sendBulkSms($phoneNumbers, $request->message);
+
+            \Log::info('SMS send result', $result);
+
+            if ($result['success']) {
+                $response = [
+                    'success' => true,
+                    'message' => $result['message'],
+                    'sent_count' => count($phoneNumbers),
+                    'total_selected' => count($request->ids),
+                ];
+
+                if (!empty($invalidContacts)) {
+                    $response['warning'] = count($invalidContacts) . ' record(s) skipped (no valid contact number): ' . implode(', ', array_slice($invalidContacts, 0, 5));
+                }
+
+                return response()->json($response);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => $result['message'],
+                ], 400);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('SMS Validation error', ['errors' => $e->errors()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed: ' . implode(', ', $e->validator->errors()->all()),
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('SMS Exception', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }

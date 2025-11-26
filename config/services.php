@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'semaphore' => [
+        'api_key' => env('SEMAPHORE_API_KEY'),
+        'sender_name' => env('SEMAPHORE_SENDER_NAME', 'CCLGU'),
+        'base_url' => env('SEMAPHORE_BASE_URL', 'https://api.semaphore.co'),
+    ],
+
 ];

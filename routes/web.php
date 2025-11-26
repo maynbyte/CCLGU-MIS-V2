@@ -125,6 +125,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('directories/ckmedia', 'DirectoryController@storeCKEditorImages')->name('directories.storeCKEditorImages');
     Route::post('directories/parse-csv-import', 'DirectoryController@parseCsvImport')->name('directories.parseCsvImport');
     Route::post('directories/process-csv-import', 'DirectoryController@processCsvImport')->name('directories.processCsvImport');
+    Route::post('directories/send-bulk-sms', 'DirectoryController@sendBulkSms')->name('directories.sendBulkSms');
     Route::resource('directories', 'DirectoryController');
 
 
