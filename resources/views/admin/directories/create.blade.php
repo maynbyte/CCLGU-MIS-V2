@@ -57,7 +57,7 @@
                                                         <label class="form-label font-weight-bold required" for="first_name">
                                                             <i class="fas fa-user text-muted mr-1"></i>{{ trans('cruds.directory.fields.first_name') }}
                                                         </label>
-                                                        <input class="form-control form-control-lg {{ $errors->has('first_name') ? 'is-invalid' : '' }}" type="text" name="first_name" id="first_name" value="{{ old('first_name', '') }}" placeholder="Enter first name" required>
+                                                        <input class="form-control form-control-md {{ $errors->has('first_name') ? 'is-invalid' : '' }}" type="text" name="first_name" id="first_name" value="{{ old('first_name', '') }}" placeholder="Enter first name" required>
                                                         @if($errors->has('first_name'))
                                                         <span class="text-danger small">{{ $errors->first('first_name') }}</span>
                                                         @endif
@@ -67,7 +67,7 @@
                                                         <label class="form-label font-weight-bold" for="middle_name">
                                                             <i class="fas fa-user text-muted mr-1"></i>{{ trans('cruds.directory.fields.middle_name') }}
                                                         </label>
-                                                        <input class="form-control form-control-lg {{ $errors->has('middle_name') ? 'is-invalid' : '' }}" type="text" name="middle_name" id="middle_name" value="{{ old('middle_name', '') }}" placeholder="Enter middle name">
+                                                        <input class="form-control form-control-md {{ $errors->has('middle_name') ? 'is-invalid' : '' }}" type="text" name="middle_name" id="middle_name" value="{{ old('middle_name', '') }}" placeholder="Enter middle name">
                                                         @if($errors->has('middle_name'))
                                                         <span class="text-danger small">{{ $errors->first('middle_name') }}</span>
                                                         @endif
@@ -77,7 +77,7 @@
                                                         <label class="form-label font-weight-bold required" for="last_name">
                                                             <i class="fas fa-user text-muted mr-1"></i>{{ trans('cruds.directory.fields.last_name') }}
                                                         </label>
-                                                        <input class="form-control form-control-lg {{ $errors->has('last_name') ? 'is-invalid' : '' }}" type="text" name="last_name" id="last_name" value="{{ old('last_name', '') }}" placeholder="Enter last name" required>
+                                                        <input class="form-control form-control-md {{ $errors->has('last_name') ? 'is-invalid' : '' }}" type="text" name="last_name" id="last_name" value="{{ old('last_name', '') }}" placeholder="Enter last name" required>
                                                         @if($errors->has('last_name'))
                                                         <span class="text-danger small">{{ $errors->first('last_name') }}</span>
                                                         @endif
@@ -85,7 +85,7 @@
                                                     {{-- Suffix --}}
                                                     <div class="col-md-1 mb-3">
                                                         <label class="form-label font-weight-bold" for="suffix">Suffix</label>
-                                                        <input class="form-control form-control-lg {{ $errors->has('suffix') ? 'is-invalid' : '' }}" type="text" name="suffix" id="suffix" value="{{ old('suffix', '') }}" placeholder="Jr/Sr">
+                                                        <input class="form-control form-control-md form-control-md {{ $errors->has('suffix') ? 'is-invalid' : '' }}" type="text" name="suffix" id="suffix" value="{{ old('suffix', '') }}" placeholder="Jr/Sr">
                                                         @if($errors->has('suffix'))
                                                         <span class="text-danger small">{{ $errors->first('suffix') }}</span>
                                                         @endif
@@ -98,7 +98,7 @@
                                                         <label class="form-label font-weight-bold" for="email">
                                                             <i class="fas fa-envelope text-muted mr-1"></i>{{ trans('cruds.directory.fields.email') }}
                                                         </label>
-                                                        <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email', '') }}" placeholder="email@example.com">
+                                                        <input class="form-control form-control-md {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email', '') }}" placeholder="email@example.com">
                                                         @if($errors->has('email'))
                                                         <span class="text-danger small">{{ $errors->first('email') }}</span>
                                                         @endif
@@ -108,7 +108,7 @@
                                                         <label class="form-label font-weight-bold" for="contact_no">
                                                             <i class="fas fa-phone text-muted mr-1"></i>{{ trans('cruds.directory.fields.contact_no') }}
                                                         </label>
-                                                        <input class="form-control {{ $errors->has('contact_no') ? 'is-invalid' : '' }}" type="text" name="contact_no" id="contact_no" value="{{ old('contact_no', '') }}" placeholder="09XX XXX XXXX">
+                                                        <input class="form-control form-control-md {{ $errors->has('contact_no') ? 'is-invalid' : '' }}" type="text" name="contact_no" id="contact_no" value="{{ old('contact_no', '') }}" placeholder="09XX XXX XXXX">
                                                         @if($errors->has('contact_no'))
                                                         <span class="text-danger small">{{ $errors->first('contact_no') }}</span>
                                                         @endif
@@ -118,7 +118,7 @@
                                                         <label class="form-label font-weight-bold" for="birthday">
                                                             <i class="fas fa-birthday-cake text-muted mr-1"></i>{{ trans('cruds.directory.fields.birthday') }}
                                                         </label>
-                                                        <input class="form-control date {{ $errors->has('birthday') ? 'is-invalid' : '' }}" type="text" name="birthday" id="birthday" value="{{ old('birthday') }}" placeholder="Select date">
+                                                        <input class="form-control form-control-md date {{ $errors->has('birthday') ? 'is-invalid' : '' }}" type="text" name="birthday" id="birthday" value="{{ old('birthday') }}" placeholder="Select date">
                                                         @if($errors->has('birthday'))
                                                         <span class="text-danger small">{{ $errors->first('birthday') }}</span>
                                                         @endif
@@ -128,7 +128,7 @@
                                                         <label class="form-label font-weight-bold" for="place_of_birth">
                                                             <i class="fas fa-map-marker-alt text-muted mr-1"></i>Place of Birth
                                                         </label>
-                                                        <input class="form-control {{ $errors->has('place_of_birth') ? 'is-invalid' : '' }}" type="text" name="place_of_birth" id="place_of_birth" value="{{ old('place_of_birth', '') }}" placeholder="City">
+                                                        <input class="form-control form-control-md {{ $errors->has('place_of_birth') ? 'is-invalid' : '' }}" type="text" name="place_of_birth" id="place_of_birth" value="{{ old('place_of_birth', '') }}" placeholder="City">
                                                         @if($errors->has('place_of_birth'))
                                                         <span class="text-danger small">{{ $errors->first('place_of_birth') }}</span>
                                                         @endif
@@ -138,7 +138,7 @@
                                                         <label class="form-label font-weight-bold">
                                                             <i class="fas fa-venus-mars text-muted mr-1"></i>{{ trans('cruds.directory.fields.gender') }}
                                                         </label>
-                                                        <select class="form-control {{ $errors->has('gender') ? 'is-invalid' : '' }}" name="gender" id="gender">
+                                                        <select class="form-control form-control-md {{ $errors->has('gender') ? 'is-invalid' : '' }}" name="gender" id="gender">
                                                             <option value disabled {{ old('gender', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                                             @foreach(App\Models\Directory::GENDER_SELECT as $key => $label)
                                                             <option value="{{ $key }}" {{ old('gender', 'Male') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
@@ -154,7 +154,7 @@
                                                     {{-- Highest Education --}}
                                                     <div class="col-md-3 mb-3">
                                                         <label class="form-label font-weight-bold"><i class="fas fa-graduation-cap text-muted mr-1"></i>{{ trans('cruds.directory.fields.highest_edu') }}</label>
-                                                        <select class="form-control {{ $errors->has('highest_edu') ? 'is-invalid' : '' }}" name="highest_edu" id="highest_edu">
+                                                        <select class="form-control form-control-md {{ $errors->has('highest_edu') ? 'is-invalid' : '' }}" name="highest_edu" id="highest_edu">
                                                             <option value disabled {{ old('highest_edu', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                                             @foreach(App\Models\Directory::HIGHEST_EDU_SELECT as $key => $label)
                                                             <option value="{{ $key }}" {{ old('highest_edu', 'No Grade Completed') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
@@ -168,7 +168,7 @@
                                                     {{-- Civil Status --}}
                                                     <div class="col-md-2 mb-3">
                                                         <label class="form-label font-weight-bold"><i class="fas fa-heart text-muted mr-1"></i>{{ trans('cruds.directory.fields.civil_status') }}</label>
-                                                        <select class="form-control {{ $errors->has('civil_status') ? 'is-invalid' : '' }}" name="civil_status" id="civil_status">
+                                                        <select class="form-control form-control-md {{ $errors->has('civil_status') ? 'is-invalid' : '' }}" name="civil_status" id="civil_status">
                                                             <option value disabled {{ old('civil_status', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                                             @foreach(App\Models\Directory::CIVIL_STATUS_SELECT as $key => $label)
                                                             <option value="{{ $key }}" {{ old('civil_status', 'Single') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
@@ -182,7 +182,7 @@
                                                     {{-- Religion --}}
                                                     <div class="col-md-3 mb-3">
                                                         <label class="form-label font-weight-bold"><i class="fas fa-praying-hands text-muted mr-1"></i>{{ trans('cruds.directory.fields.religion') }}</label>
-                                                        <select class="form-control {{ $errors->has('religion') ? 'is-invalid' : '' }}" name="religion" id="religion">
+                                                        <select class="form-control form-control-md {{ $errors->has('religion') ? 'is-invalid' : '' }}" name="religion" id="religion">
                                                             <option value disabled {{ old('religion', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                                             @foreach(App\Models\Directory::RELIGION_SELECT as $key => $label)
                                                             <option value="{{ $key }}" {{ old('religion', 'Roman Catholic') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
@@ -196,7 +196,7 @@
                                                     {{-- Nationality --}}
                                                     <div class="col-md-2 mb-3">
                                                         <label class="form-label font-weight-bold" for="nationality"><i class="fas fa-flag text-muted mr-1"></i>{{ trans('cruds.directory.fields.nationality') }}</label>
-                                                        <input class="form-control {{ $errors->has('nationality') ? 'is-invalid' : '' }}" type="text" name="nationality" id="nationality" value="{{ old('nationality', '') }}" placeholder="Filipino">
+                                                        <input class="form-control form-control-md {{ $errors->has('nationality') ? 'is-invalid' : '' }}" type="text" name="nationality" id="nationality" value="{{ old('nationality', '') }}" placeholder="Filipino">
                                                         @if($errors->has('nationality'))
                                                         <span class="text-danger small">{{ $errors->first('nationality') }}</span>
                                                         @endif
@@ -204,7 +204,7 @@
                                                     {{-- Occupation --}}
                                                     <div class="col-md-2 mb-3">
                                                         <label class="form-label font-weight-bold" for="occupation"><i class="fas fa-briefcase text-muted mr-1"></i>{{ trans('cruds.directory.fields.occupation') }}</label>
-                                                        <input class="form-control {{ $errors->has('occupation') ? 'is-invalid' : '' }}" type="text" name="occupation" id="occupation" value="{{ old('occupation', '') }}" placeholder="Job title">
+                                                        <input class="form-control form-control-md {{ $errors->has('occupation') ? 'is-invalid' : '' }}" type="text" name="occupation" id="occupation" value="{{ old('occupation', '') }}" placeholder="Job title">
                                                         @if($errors->has('occupation'))
                                                         <span class="text-danger small">{{ $errors->first('occupation') }}</span>
                                                         @endif
@@ -214,9 +214,9 @@
                                                 <h6 class="text-muted mb-3 mt-2"><i class="fas fa-home mr-1"></i>Address Information</h6>
                                                 <div class="row mb-3">
                                                     {{-- House No --}}
-                                                    <div class="col-md-1 mb-3">
+                                                    <div class="col-md-1 mb-3 pr-1">
                                                         <label class="form-label font-weight-bold" for="street_no">House #</label>
-                                                        <input class="form-control {{ $errors->has('street_no') ? 'is-invalid' : '' }}" type="text" name="street_no" id="street_no" value="{{ old('street_no', '') }}">
+                                                        <input class="form-control form-control-md {{ $errors->has('street_no') ? 'is-invalid' : '' }}" type="text" name="street_no" id="street_no" value="{{ old('street_no', '') }}">
                                                         @if($errors->has('street_no'))
                                                         <span class="text-danger">{{ $errors->first('street_no') }}</span>
                                                         @endif
@@ -225,7 +225,7 @@
                                                     {{-- Street --}}
                                                     <div class="col-md-3 mb-3">
                                                         <label class="form-label font-weight-bold" for="street">{{ trans('cruds.directory.fields.street') }}</label>
-                                                        <input class="form-control {{ $errors->has('street') ? 'is-invalid' : '' }}" type="text" name="street" id="street" value="{{ old('street', '') }}">
+                                                        <input class="form-control form-control-md {{ $errors->has('street') ? 'is-invalid' : '' }}" type="text" name="street" id="street" value="{{ old('street', '') }}">
                                                         @if($errors->has('street'))
                                                         <span class="text-danger">{{ $errors->first('street') }}</span>
                                                         @endif
@@ -234,7 +234,7 @@
                                                     {{-- City --}}
                                                     <div class="col-md-3 mb-3">
                                                         <label class="form-label font-weight-bold" for="city">{{ trans('cruds.directory.fields.city') }}</label>
-                                                        <input class="form-control {{ $errors->has('city') ? 'is-invalid' : '' }}" type="text" name="city" id="city" value="{{ old('city', '') }}">
+                                                        <input class="form-control form-control-md {{ $errors->has('city') ? 'is-invalid' : '' }}" type="text" name="city" id="city" value="{{ old('city', '') }}">
                                                         @if($errors->has('city'))
                                                         <span class="text-danger">{{ $errors->first('city') }}</span>
                                                         @endif
@@ -243,7 +243,7 @@
                                                     {{-- Province --}}
                                                     <div class="col-md-2 mb-3">
                                                         <label class="form-label font-weight-bold" for="province">{{ trans('cruds.directory.fields.province') }}</label>
-                                                        <input class="form-control {{ $errors->has('province') ? 'is-invalid' : '' }}" type="text" name="province" id="province" value="{{ old('province', '') }}">
+                                                        <input class="form-control form-control-md {{ $errors->has('province') ? 'is-invalid' : '' }}" type="text" name="province" id="province" value="{{ old('province', '') }}">
                                                         @if($errors->has('province'))
                                                         <span class="text-danger">{{ $errors->first('province') }}</span>
                                                         @endif
@@ -252,7 +252,7 @@
                                                     {{-- Barangay --}}
                                                     <div class="col-md-3 mb-3">
                                                         <label class="form-label font-weight-bold" for="barangay_id">{{ trans('cruds.directory.fields.barangay') }}</label>
-                                                        <select class="form-control select2 {{ $errors->has('barangay') ? 'is-invalid' : '' }}" name="barangay_id" id="barangay_id">
+                                                        <select class="form-control form-control-md select2 {{ $errors->has('barangay') ? 'is-invalid' : '' }}" name="barangay_id" id="barangay_id">
                                                             @foreach($barangays as $id => $entry)
                                                             <option value="{{ $id }}" {{ old('barangay_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                                                             @endforeach
