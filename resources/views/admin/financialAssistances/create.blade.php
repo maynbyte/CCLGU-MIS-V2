@@ -34,6 +34,7 @@
         const cb = document.getElementById('claimant_is_patient');
         const patient = document.getElementById('patient_name');
         const claimant = document.getElementById('claimant_name');
+        const claimantContact = document.getElementById('claimant_contact_no');
 
         if (!cb || !patient || !claimant) return;
 
@@ -41,14 +42,17 @@
             const isChecked = cb.checked;
             patient.readOnly = isChecked;
             claimant.readOnly = isChecked;
+            if (claimantContact) claimantContact.readOnly = isChecked;
             
             // Optional: add visual feedback
             if (isChecked) {
                 patient.classList.add('bg-light');
                 claimant.classList.add('bg-light');
+                if (claimantContact) claimantContact.classList.add('bg-light');
             } else {
                 patient.classList.remove('bg-light');
                 claimant.classList.remove('bg-light');
+                if (claimantContact) claimantContact.classList.remove('bg-light');
             }
         }
 
@@ -343,7 +347,7 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
 
                                             <div class="row">
                                                 {{-- Type of Assistance --}}
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     @php
                                                     $defaultType = 'Medical Assistance';
                                                     @endphp
@@ -361,7 +365,7 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                                                 </div>
 
                                                 {{-- Patient Name --}}
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Patient Name</label>
                                                         @php
@@ -378,9 +382,11 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                                                             {{ $claimantIsPatient ? 'readonly' : '' }}>
                                                     </div>
                                                 </div>
+                                            </div>
 
+                                            <div class="row">
                                                 {{-- Claimant Name --}}
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Claimant Name</label>
                                                         @php
@@ -394,6 +400,27 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                                                             class="form-control"
                                                             value="{{ $claimantValue }}"
                                                             placeholder="{{ $fullName ?: 'Full name' }}"
+                                                            {{ $claimantIsPatient ? 'readonly' : '' }}>
+                                                    </div>
+                                                </div>
+
+                                                {{-- Claimant Contact No. --}}
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Claimant Contact No.</label>
+                                                        @php
+                                                            $claimantContactValue = old('claimant_contact_no', $fa->claimant_contact_no ?? '');
+                                                            if ($claimantContactValue === '' && $claimantIsPatient) { 
+                                                                $claimantContactValue = $phone !== 'N/A' ? $phone : ''; 
+                                                            }
+                                                        @endphp
+                                                        <input
+                                                            type="text"
+                                                            name="claimant_contact_no"
+                                                            id="claimant_contact_no"
+                                                            class="form-control"
+                                                            value="{{ $claimantContactValue }}"
+                                                            placeholder="09XX XXX XXXX"
                                                             {{ $claimantIsPatient ? 'readonly' : '' }}>
                                                     </div>
                                                 </div>
