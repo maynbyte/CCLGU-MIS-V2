@@ -94,7 +94,7 @@ $photoUrl = $directory->profile_picture;
 }
 } catch (\Throwable $e) { $photoUrl = null; }
 
-$templateAvatar = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCpU3fnq0AodONDFbe63OCRcl74XtWfXZenSLGxnDN33o0nNN0fgZIpyC2RFkw6tOa_TTRUnok8WXiswhLXqu5df1jGbGCqSwONnsRTovZGpjRnSK9S4PmEy2gEwDOQ_4ojHi8XRxFci-A8BJmhaaTIzB8-F1nClIFc89wRLsQKHH5J46S0iYGS62AIBZpoAGzwGD27EYMSY5UWz3BRM7f_ey1aONQXyQ_z7YRcGxXgOvezMdvjruvnxGAjsM0wZM323TxTG-ECT60_';
+$templateAvatar = asset('upload/free-user-icon.png');
 
 $gender = '';
 if (!empty($directory->gender)) {

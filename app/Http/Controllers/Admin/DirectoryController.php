@@ -132,6 +132,8 @@ class DirectoryController extends Controller
 
             // Profile picture (HTML). Adjust to how you store the image.
             $table->editColumn('profile_picture', function ($row) {
+                $defaultAvatar = asset('upload/free-user-icon.png');
+
                 // examples of possible sources; keep whichever applies to you
                 if (!empty($row->profile_picture_url)) {
                     return '<img src="' . $row->profile_picture_url . '" width="50" height="50" class="img-thumbnail">';
@@ -142,7 +144,9 @@ class DirectoryController extends Controller
                         return '<img src="' . $thumb . '" width="50" height="50" class="img-thumbnail">';
                     }
                 }
-                return '';
+                
+                // Return default avatar if no profile picture
+                return '<img src="' . $defaultAvatar . '" width="50" height="50" class="img-thumbnail">';
             });
 
             // FA info (optional display/use later)
