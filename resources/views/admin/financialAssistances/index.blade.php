@@ -516,17 +516,13 @@ function formatDateOnly(value) {
         return;
       }
       
-      // Format date to "Month Day, Year" (e.g., "December 13, 2025")
+      // Format date to "Dec. 13, 2025" format
       var date = new Date(scheduledDate.replace(' ', 'T'));
-      var months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                    'July', 'August', 'September', 'October', 'November', 'December'];
+      var months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 
+                    'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
       var formattedDate = months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
       
-      message = "Buenas días!\nMula sa Cavite City Mayor's Office:\n\n" +
-                "Ang schedule ng iyong financial assistance payout ay sa " + formattedDate + 
-                ", sa Floating Pavilion, City Hall, Cavite City.\n" +
-                "Mangyaring dumating po ng 8:00 AM.\n\n" +
-                "Ito ay isang electronic message. Huwag pong magreply sa mensaheng ito.";
+      message = "Buenas dias!\nMula sa Mayor's office. Ang payout ng inyong financial assistance ay sa " + formattedDate + ", 8:00 AM, sa Floating Pavilion, City Hall.\nHuwag pong mag-reply sa mensaheng ito.";
     }
     
     $('#smsMessageText').val(message).trigger('input');
