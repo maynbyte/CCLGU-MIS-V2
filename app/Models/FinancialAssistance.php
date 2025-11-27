@@ -91,6 +91,7 @@ class FinancialAssistance extends Model implements HasMedia
         'type_of_assistance',
         'patient_name',
         'claimant_name',
+        'claimant_contact_no',
         'claimant_is_patient',
         'requirement_checklist',   // JSON array
         'status',

@@ -35,6 +35,8 @@ class StoreFinancialAssistanceRequest extends FormRequest
 
 
             'patient_name'        => ['nullable', 'string', 'max:255'],
+            'claimant_name'       => ['nullable', 'string', 'max:255'],
+            'claimant_contact_no' => ['nullable', 'string', 'max:50'],
             'claimant_is_patient' => ['nullable', 'boolean'],
 
             // Single checkbox group -> JSON/array

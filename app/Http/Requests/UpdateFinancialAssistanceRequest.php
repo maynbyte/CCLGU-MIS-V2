@@ -17,6 +17,21 @@ class UpdateFinancialAssistanceRequest extends FormRequest
     public function rules()
     {
         return [
+            'patient_name' => [
+                'string',
+                'nullable',
+                'max:255',
+            ],
+            'claimant_name' => [
+                'string',
+                'nullable',
+                'max:255',
+            ],
+            'claimant_contact_no' => [
+                'string',
+                'nullable',
+                'max:50',
+            ],
             'problem_presented' => [
                 'string',
                 'nullable',

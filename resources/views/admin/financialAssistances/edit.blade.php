@@ -769,6 +769,9 @@ Dropzone.options.requirementsDropzone = {
       var claimantContact = document.getElementById('claimant_contact_no');
       if (!cb || !patient || !claimant) return;
 
+      // Store the directory contact number from PHP
+      var directoryContactNo = '{{ $directory->contact_no ?? "" }}';
+
       function applyState(){
         var checked = !!cb.checked;
         patient.readOnly = checked;
@@ -779,9 +782,14 @@ Dropzone.options.requirementsDropzone = {
         claimant.classList.toggle('bg-light', checked);
         if (claimantContact) claimantContact.classList.toggle('bg-light', checked);
         
-        // Only sync claimant value when checkbox is checked
-        if (checked && patient.value) {
-          claimant.value = patient.value;
+        // Sync claimant name and contact when checkbox is checked
+        if (checked) {
+          if (patient.value) {
+            claimant.value = patient.value;
+          }
+          if (claimantContact && directoryContactNo && directoryContactNo !== 'N/A') {
+            claimantContact.value = directoryContactNo;
+          }
         }
       }
 

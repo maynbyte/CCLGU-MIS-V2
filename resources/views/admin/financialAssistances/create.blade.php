@@ -168,17 +168,30 @@
 
         if (!cb || !patient || !claimant) return;
 
+        // Store the directory contact number from PHP
+        const directoryContactNo = '{{ $directory->contact_no ?? "" }}';
+
         function sync() {
             const isChecked = cb.checked;
             patient.readOnly = isChecked;
             claimant.readOnly = isChecked;
             if (claimantContact) claimantContact.readOnly = isChecked;
             
-            // Optional: add visual feedback
+            // Add visual feedback and sync values
             if (isChecked) {
                 patient.classList.add('bg-light');
                 claimant.classList.add('bg-light');
                 if (claimantContact) claimantContact.classList.add('bg-light');
+                
+                // Sync claimant name with patient name
+                if (patient.value) {
+                    claimant.value = patient.value;
+                }
+                
+                // Sync claimant contact with directory contact
+                if (claimantContact && directoryContactNo && directoryContactNo !== 'N/A') {
+                    claimantContact.value = directoryContactNo;
+                }
             } else {
                 patient.classList.remove('bg-light');
                 claimant.classList.remove('bg-light');
@@ -187,6 +200,14 @@
         }
 
         cb.addEventListener('change', sync);
+        
+        // Keep claimant name in sync with patient name while checked
+        patient.addEventListener('input', function() {
+            if (cb.checked && patient.value) {
+                claimant.value = patient.value;
+            }
+        });
+        
         sync(); // set initial state on load
     });
 </script>
