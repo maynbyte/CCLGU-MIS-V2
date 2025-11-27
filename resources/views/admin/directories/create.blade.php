@@ -372,40 +372,57 @@
                     </div>
 
                     <div class="card-body p-4" style="display:block;">
-                        <div class="form-group mb-4">
+                        <div class="form-group">
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label font-weight-bold" for="ngos"><i class="fas fa-users text-muted mr-1"></i>{{ trans('cruds.directory.fields.ngo') }}</label>
-                                    <div class="mb-2">
-                                        <span class="btn btn-sm btn-outline-primary select-all">{{ trans('global.select_all') }}</span>
-                                        <span class="btn btn-sm btn-outline-secondary deselect-all">{{ trans('global.deselect_all') }}</span>
+                                <div class="col-md-6 mb-4">
+                                    <div class="border rounded p-3 bg-white h-100">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="font-weight-bold"><i class="fas fa-users text-muted mr-1"></i>{{ trans('cruds.directory.fields.ngo') }}</span>
+                                            <button type="button" class="btn btn-tool collapse-toggle" data-target="#ngoCollapse" title="Collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <div id="ngoCollapse" class="collapse show">
+                                            <div class="mb-2">
+                                                <span class="btn btn-sm btn-outline-primary select-all">{{ trans('global.select_all') }}</span>
+                                                <span class="btn btn-sm btn-outline-secondary deselect-all">{{ trans('global.deselect_all') }}</span>
+                                            </div>
+                                            <select class="form-control select2 {{ $errors->has('ngos') ? 'is-invalid' : '' }}" name="ngos[]" id="ngos" multiple>
+                                                @foreach($ngos as $id => $ngo)
+                                                <option value="{{ $id }}" {{ in_array($id, old('ngos', [])) ? 'selected' : '' }}>{{ $ngo }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if($errors->has('ngos'))
+                                            <span class="text-danger">{{ $errors->first('ngos') }}</span>
+                                            @endif
+                                            <span class="help-block">{{ trans('cruds.directory.fields.ngo_helper') }}</span>
+                                        </div>
                                     </div>
-                                    <select class="form-control select2 {{ $errors->has('ngos') ? 'is-invalid' : '' }}" name="ngos[]" id="ngos" multiple>
-                                        @foreach($ngos as $id => $ngo)
-                                        <option value="{{ $id }}" {{ in_array($id, old('ngos', [])) ? 'selected' : '' }}>{{ $ngo }}</option>
-                                        @endforeach
-                                    </select>
-                                    @if($errors->has('ngos'))
-                                    <span class="text-danger">{{ $errors->first('ngos') }}</span>
-                                    @endif
-                                    <span class="help-block">{{ trans('cruds.directory.fields.ngo_helper') }}</span>
                                 </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label font-weight-bold" for="sectors"><i class="fas fa-layer-group text-muted mr-1"></i>{{ trans('cruds.directory.fields.sector') }}</label>
-                                    <div class="mb-2">
-                                        <span class="btn btn-sm btn-outline-primary select-all">{{ trans('global.select_all') }}</span>
-                                        <span class="btn btn-sm btn-outline-secondary deselect-all">{{ trans('global.deselect_all') }}</span>
+                                <div class="col-md-6 mb-4">
+                                    <div class="border rounded p-3 bg-white h-100">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="font-weight-bold"><i class="fas fa-layer-group text-muted mr-1"></i>{{ trans('cruds.directory.fields.sector') }}</span>
+                                            <button type="button" class="btn btn-tool collapse-toggle" data-target="#sectorsCollapse" title="Collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <div id="sectorsCollapse" class="collapse show">
+                                            <div class="mb-2">
+                                                <span class="btn btn-sm btn-outline-primary select-all">{{ trans('global.select_all') }}</span>
+                                                <span class="btn btn-sm btn-outline-secondary deselect-all">{{ trans('global.deselect_all') }}</span>
+                                            </div>
+                                            <select class="form-control select2 {{ $errors->has('sectors') ? 'is-invalid' : '' }}" name="sectors[]" id="sectors" multiple>
+                                                @foreach($sectors as $id => $sector)
+                                                <option value="{{ $id }}" {{ in_array($id, old('sectors', [])) ? 'selected' : '' }}>{{ $sector }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if($errors->has('sectors'))
+                                            <span class="text-danger">{{ $errors->first('sectors') }}</span>
+                                            @endif
+                                            <span class="help-block">{{ trans('cruds.directory.fields.sector_helper') }}</span>
+                                        </div>
                                     </div>
-                                    <select class="form-control select2 {{ $errors->has('sectors') ? 'is-invalid' : '' }}" name="sectors[]" id="sectors" multiple>
-                                        @foreach($sectors as $id => $sector)
-                                        <option value="{{ $id }}" {{ in_array($id, old('sectors', [])) ? 'selected' : '' }}>{{ $sector }}</option>
-                                        @endforeach
-                                    </select>
-                                    @if($errors->has('sectors'))
-                                    <span class="text-danger">{{ $errors->first('sectors') }}</span>
-                                    @endif
-                                    <span class="help-block">{{ trans('cruds.directory.fields.sector_helper') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -582,6 +599,16 @@
     .text-muted {
         opacity: 0.7;
     }
+
+    /* Uniform help-block styling */
+    .help-block {
+        display: block;
+        font-size: 0.7rem;
+        margin-top: 4px;
+        color: #6c757d;
+    }
+
+    .collapse-toggle { cursor: pointer; }
 </style>
 @endpush
 
@@ -725,5 +752,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Nice UX: click the image to open the file picker
   img.addEventListener('click', () => input && input.click());
+});
+</script>
+
+<script>
+// Independent collapse toggles for NGOs / Sectors
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.collapse-toggle').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            var target = document.querySelector(btn.getAttribute('data-target'));
+            if (!target) return;
+            var icon = btn.querySelector('i');
+            var visible = target.classList.contains('show');
+            if (visible) {
+                target.classList.remove('show');
+                target.style.display = 'none';
+                if (icon) { icon.classList.remove('fa-minus'); icon.classList.add('fa-plus'); }
+            } else {
+                target.classList.add('show');
+                target.style.display = '';
+                if (icon) { icon.classList.remove('fa-plus'); icon.classList.add('fa-minus'); }
+            }
+        });
+    });
 });
 </script>
