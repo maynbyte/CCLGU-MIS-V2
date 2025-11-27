@@ -3,30 +3,160 @@
 @section('styles')
 <style>
     .profile-user-img {
-        width: 120px;
-        height: 120px;
+        width: 150px;
+        height: 150px;
         object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .label-badge {
         font-size: 11px;
         font-weight: 600;
-        padding: .25rem .5rem;
+        padding: .35rem .65rem;
         border-radius: 999px;
     }
 
     .small-label {
         color: #6c757d;
-        font-size: .85rem;
-        margin-bottom: .25rem;
+        font-size: .8rem;
+        font-weight: 600;
+        margin-bottom: .4rem;
         display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .small-label i {
+        margin-right: 0.4rem;
+        opacity: 0.7;
+    }
+
+    .font-weight-medium {
+        font-weight: 500;
+        color: #2c3e50;
+        font-size: 0.95rem;
+    }
+
+    .card {
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 1.25rem;
+    }
+
+    .card-header h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #495057;
+        margin: 0;
+    }
+
+    .card-header h3 i {
+        margin-right: 0.5rem;
+        color: #007bff;
+    }
+
+    .list-group-item {
+        border-left: none;
+        border-right: none;
+        padding: 0.85rem 1.25rem;
+    }
+
+    .list-group-item:first-child {
+        border-top: none;
+    }
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+    .profile-username {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .section-header {
+        background: #f8f9fa;
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        margin-bottom: 1.25rem;
+        border-left: 4px solid #007bff;
+    }
+
+    .section-header h6 {
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #495057;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .section-header h6 i {
+        margin-right: 0.5rem;
+        color: #007bff;
+    }
+
+    .nav-pills .nav-link {
+        border-radius: 0.375rem;
+        padding: 0.6rem 1.2rem;
+        font-weight: 500;
+        color: #6c757d;
+        transition: all 0.2s;
+    }
+
+    .nav-pills .nav-link:hover {
+        background-color: #f8f9fa;
+        color: #007bff;
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .table-striped tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+
+    .info-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.4rem 0.8rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background-color: #e9ecef;
+        color: #495057;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-badge i {
+        margin-right: 0.4rem;
+    }
+
+    .data-row {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f1f3f5;
+    }
+
+    .data-row:last-child {
+        border-bottom: none;
     }
 </style>
 
 {{-- Usually in your layout or this blade --}}
 <link rel="stylesheet" href="{{ asset('plugins/dropzone/min/dropzone.min.css') }}">
 <script src="{{ asset('plugins/dropzone/min/dropzone.min.js') }}"></script>
-
+@endsection
 
 @push('scripts')
 <script>
@@ -60,9 +190,7 @@
         sync(); // set initial state on load
     });
 </script>
-
-
-@endsection
+@endpush
 
 @section('content')
 @php
@@ -217,31 +345,33 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                             src="{{ $photoUrl ?: $templateAvatar }}"
                             alt="Profile picture">
                     </div>
-                    <h3 class="profile-username text-center mt-3 mb-1">{{ $fullName }}</h3>
-                    <p class="text-center">
-                        <span class="badge bg-{{ $comelecStatusColor }}">{{ $comelecStatus }}</span>
+                    <h3 class="profile-username text-center mt-3 mb-2">{{ $fullName }}</h3>
+                    <p class="text-center mb-3">
+                        <span class="badge badge-lg bg-{{ $comelecStatusColor }}">
+                            <i class="fas fa-vote-yea mr-1"></i>{{ $comelecStatus }}
+                        </span>
                     </p>
 
                     <ul class="list-group list-group-unbordered mb-3">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Gender</span>
+                            <span class="text-muted"><i class="fas fa-venus-mars"></i> Gender</span>
                             <span class="text-dark font-weight-medium">{{ $gender }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Age</span>
-                            <span class="text-dark font-weight-medium">{{ $age }}</span>
+                            <span class="text-muted"><i class="fas fa-birthday-cake"></i> Age</span>
+                            <span class="text-dark font-weight-medium">{{ $age ?: 'N/A' }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="text-muted">City / Municipality</span>
-                            <span class="text-dark font-weight-medium">{{ $city }}</span>
+                            <span class="text-muted"><i class="fas fa-map-marker-alt"></i> City / Municipality</span>
+                            <span class="text-dark font-weight-medium">{{ $city ?: 'N/A' }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Occupation</span>
+                            <span class="text-muted"><i class="fas fa-briefcase"></i> Occupation</span>
                             <span class="text-dark font-weight-medium">{{ $occupation }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Life Status</span>
-                            <span class="text-dark font-weight-medium">{{ $lifeStatus }}</span>
+                            <span class="text-muted"><i class="fas fa-heartbeat"></i> Life Status</span>
+                            <span class="badge bg-{{ $lifeStatusColor }}">{{ $lifeStatus }}</span>
                         </li>
                     </ul>
                 </div>
@@ -249,8 +379,8 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
 
             {{-- Sector --}}
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Sector</h3>
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-layer-group text-primary"></i> Sectors</h5>
                 </div>
                 <div class="card-body">
                     @if(count($sectors))
@@ -268,8 +398,8 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
 
             {{-- NGO --}}
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Non-Government Organization</h3>
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-users text-primary"></i> Non-Government Organizations</h5>
                 </div>
                 <div class="card-body">
                     @if(count($ngos))
@@ -287,11 +417,11 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
 
             {{-- Notes --}}
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Notes</h3>
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-sticky-note text-primary"></i> Notes & Remarks</h5>
                 </div>
                 <div class="card-body">
-                    <p class="mb-0 text-muted">{{ $notes }}</p>
+                    <p class="mb-0" style="color: #495057; line-height: 1.6;">{{ $notes }}</p>
                 </div>
             </div>
         </div>
@@ -301,13 +431,13 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
             <div class="card">
                 <div class="card-header p-2 d-flex align-items-center">
                     <ul class="nav nav-pills flex-grow-1">
-                        <li class="nav-item"><a class="nav-link" href="#tab-family" data-toggle="tab">General Information</a></li>
-                        <li class="nav-item"><a class="nav-link " href="#tab-general" data-toggle="tab">Add Financial Assistance</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="#tab-orders" data-toggle="tab">Previous FA</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab-family" data-toggle="tab"><i class="fas fa-user mr-1"></i> General Information</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab-general" data-toggle="tab"><i class="fas fa-plus-circle mr-1"></i> Add Financial Assistance</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#tab-orders" data-toggle="tab"><i class="fas fa-history mr-1"></i> Previous FA</a></li>
                     </ul>
                     @can('directory_edit')
                     <a href="{{ route('admin.directories.edit', $directory->id) }}" class="btn btn-primary btn-sm ml-2">
-                        <i class="fas fa-edit"></i> {{ trans('global.edit') }} Directory
+                        <i class="fas fa-edit mr-1"></i> {{ trans('global.edit') }} Directory
                     </a>
                     @endcan
                 </div>
@@ -909,144 +1039,113 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                             </div>
                         </div>
                         <div class="tab-pane" id="tab-family">
+                            {{-- PERSONAL DETAILS --}}
+                            <div class="mb-4 pb-3">
+                                <div class="section-header">
+                                    <h6><i class="fas fa-id-card"></i> Personal Details</h6>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <span class="small-label"><i class="fas fa-user"></i> Last name</span>
+                                        <div class="font-weight-medium">{{ $directory->last_name}} {{ $directory->suffix ?: '' }}</div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <span class="small-label"><i class="fas fa-user"></i> First name</span>
+                                        <div class="font-weight-medium">{{ $directory->first_name}}</div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <span class="small-label"><i class="fas fa-user"></i> Middle Name</span>
+                                        <div class="font-weight-medium">{{ $directory->middle_name ?? '-' }}</div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <span class="small-label"><i class="fas fa-birthday-cake"></i> Birthdate</span>
+                                        <div class="font-weight-medium">{{ $directory->birthday ?: '-' }}</div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <span class="small-label"><i class="fas fa-map-marker-alt"></i> Address</span>
+                                        <div class="font-weight-medium">
+                                            {{ $address }}
+                                            @if($barangayName)
+                                            <br><span class="badge badge-info mt-1"><i class="fas fa-home mr-1"></i>{{ $barangayName }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <span class="small-label"><i class="fas fa-phone"></i> Phone number</span>
+                                        <div class="font-weight-medium">{{ $phone }}</div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <span class="small-label"><i class="fas fa-envelope"></i> Email</span>
+                                        <div class="font-weight-medium">{{ $email }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- BACKGROUND INFORMATION --}}
+                            <div class="mb-4 pb-3">
+                                <div class="section-header">
+                                    <h6><i class="fas fa-info-circle"></i> Background Information</h6>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-6 mb-3">
+                                        <span class="small-label"><i class="fas fa-graduation-cap"></i> Educational Attainment</span>
+                                        <div class="font-weight-medium">{{ $directory->highest_edu ?: 'N/A' }}</div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-6 mb-3">
+                                        <span class="small-label"><i class="fas fa-praying-hands"></i> Religion</span>
+                                        <div class="font-weight-medium">{{ $directory->religion ?: 'N/A' }}</div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-6 mb-3">
+                                        <span class="small-label"><i class="fas fa-heart"></i> Civil Status</span>
+                                        <div class="font-weight-medium">{{ $directory->civil_status ?: 'N/A' }}</div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-6 mb-3">
+                                        <span class="small-label"><i class="fas fa-map-marker-alt"></i> Place of Birth</span>
+                                        <div class="font-weight-medium">{{ $directory->place_of_birth ?: 'N/A' }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Family Composition --}}
                             <div>
-
-                                {{-- PERSONAL DETAILS --}}
-                                <div class="mb-4 pb-3 border-bottom">
-                                    <h6 class="text-muted font-weight-bold mb-3">PERSONAL DETAILS</h6>
-                                    <div class="row">
-                                        @if(!empty($directory->maiden_surname))
-                                        <div class="col-md-3 mb-3">
-                                            <span class="small-label">Maiden Surname</span>
-                                            <div class="font-weight-medium">{{ $directory->maiden_surname }}</div>
-                                        </div>
-                                        @endif
-
-                                        <div class="col-md-3 mb-3">
-                                            <span class="small-label">Last name</span>
-                                            <div class="font-weight-medium">{{ $directory->last_name}} {{ $directory->suffix }}</div>
-                                        </div>
-                                        <div class="col-md-3 mb-3">
-                                            <span class="small-label">First name</span>
-                                            <div class="font-weight-medium">{{ $directory->first_name}}</div>
-                                        </div>
-                                        <div class="col-md-3 mb-3">
-                                            <span class="small-label">Middle Name</span>
-                                            <div class="font-weight-medium">{{ $directory->middle_name ?? '-' }}</div>
-                                        </div>
-
-                                        <div class="col-md-3 mb-3">
-                                            <span class="small-label">Birthdate</span>
-                                            <div class="font-weight-medium">
-                                                @php
-                                                    $birthdateDisplay = '-';
-                                                    if (!empty($directory->birthday)) {
-                                                        try {
-                                                            $birthdateDisplay = \Carbon\Carbon::parse($directory->birthday)->format('F j, Y');
-                                                        } catch (\Throwable $e) {
-                                                            // Swallow parse error; keep '-'. Optionally log if needed.
-                                                        }
-                                                    }
-                                                @endphp
-                                                {{ $birthdateDisplay }}
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3 mb-3">
-                                            <span class="small-label">Address</span>
-                                            <div class="font-weight-medium">
-                                                @php
-                                                // Prefer typed "barangay_other"; else fall back to $barangayName (or relation)
-                                                $displayBarangay = trim((string)($directory->barangay_other ?? ''));
-                                                if ($displayBarangay === '') {
-                                                $displayBarangay = $barangayName ?? optional($directory->barangay)->barangay_name;
-                                                }
-                                                @endphp
-
-                                                {{ $address }}
-                                                @if(!empty($displayBarangay))
-                                                <span class="text-muted"> • </span><span>{{ $displayBarangay }}</span>
-                                                @endif
-
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 mb-3">
-                                            <span class="small-label">Phone number</span>
-                                            <div class="font-weight-medium">{{ $phone }}</div>
-                                        </div>
-                                        <div class="col-md-3 mb-3">
-                                            <span class="small-label">Email</span>
-                                            <div class="font-weight-medium">{{ $email }}</div>
-                                        </div>
-                                    </div>
+                                <div class="section-header">
+                                    <h6><i class="fas fa-user-friends"></i> Family Composition</h6>
                                 </div>
-
-                                {{-- BACKGROUND INFORMATION (template content retained) --}}
-                                <div class="mb-4 pb-3 border-bottom">
-                                    <h6 class="text-muted font-weight-bold mb-3">BACKGROUND INFORMATION</h6>
-                                    <div class="row">
-                                        <div class="col-lg-3 col-md-6 mb-3">
-                                            <span class="small-label">Highest Educational Attainment</span>
-                                            <span class="text-muted"> </span><span>{{ $directory->highest_edu }}</span>
-                                        </div>
-
-                                        <div class="col-lg-3 col-md-6 mb-3">
-                                            <span class="small-label">Religion</span>
-                                            <span class="text-muted"> </span><span>{{ $directory->religion }}</span>
-                                        </div>
-
-                                        <div class="col-lg-3 col-md-6 mb-3">
-                                            <span class="small-label">Civil Status</span>
-                                            <span class="text-muted"> </span><span>{{ $directory->civil_status }}</span>
-                                        </div>
-
-                                        <div class="col-lg-3 col-md-6 mb-3">
-                                            <span class="small-label">Place of Birth</span>
-                                            <span class="text-muted"> </span><span>{{ $directory->place_of_birth }}</span>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-
-                                {{-- Family Composition--}}
-
-                                <div>
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h6 class="text-muted font-weight-bold mb-0">Family Composition</h6>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-sm">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>Names</th>
-                                                    <th>Birthday</th>
-                                                    <th>Relationship</th>
-                                                    <th>Civil Status</th>
-                                                    <th>Highest Education</th>
-                                                    <th>Occupation</th>
-                                                    <th>Remarks</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($directory->familycompositions as $fam)
-                                                <tr>
-                                                    <td>{{ $fam->family_name ?? '—' }}</td>
-                                                    <td>{{ $fmt($fam->family_birthday) ?: '—' }}</td>
-                                                    <td>{{ Familycomposition::FAMILY_RELATIONSHIP_SELECT[$fam->family_relationship] ?? ($fam->family_relationship ?? '—') }}</td>
-                                                    <td>{{ Familycomposition::FAMILY_CIVIL_STATUS_SELECT[$fam->family_civil_status] ?? ($fam->family_civil_status ?? '—') }}</td>
-                                                    <td>{{ Familycomposition::FAMILY_HIGHEST_EDU_SELECT[$fam->family_highest_edu] ?? ($fam->family_highest_edu ?? '—') }}</td>
-                                                    <td>{{ $fam->occupation ?? '—' }}</td>
-                                                    <td>{{ $fam->remarks ?? '—' }}</td>
-                                                </tr>
-                                                @empty
-                                                <tr>
-                                                    <td colspan="7" class="text-muted">No family members added.</td>
-                                                </tr>
-                                                @endforelse
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Names</th>
+                                                <th>Birthday</th>
+                                                <th>Relationship</th>
+                                                <th>Civil Status</th>
+                                                <th>Highest Education</th>
+                                                <th>Occupation</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($directory->familycompositions as $fam)
+                                            <tr>
+                                                <td>{{ $fam->family_name ?? '—' }}</td>
+                                                <td>{{ $fmt($fam->family_birthday) ?: '—' }}</td>
+                                                <td>{{ Familycomposition::FAMILY_RELATIONSHIP_SELECT[$fam->family_relationship] ?? ($fam->family_relationship ?? '—') }}</td>
+                                                <td>{{ Familycomposition::FAMILY_CIVIL_STATUS_SELECT[$fam->family_civil_status] ?? ($fam->family_civil_status ?? '—') }}</td>
+                                                <td>{{ Familycomposition::FAMILY_HIGHEST_EDU_SELECT[$fam->family_highest_edu] ?? ($fam->family_highest_edu ?? '—') }}</td>
+                                                <td>{{ $fam->occupation ?? '—' }}</td>
+                                                <td>{{ $fam->remarks ?? '—' }}</td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="7" class="text-muted">No family members added.</td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -1185,7 +1284,3 @@ $(function() {
 </script>
 
 @endsection
-
-
-
-@endpush
