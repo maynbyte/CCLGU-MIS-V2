@@ -482,6 +482,7 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
 
                                             @if($forDirectory)
                                             <input type="hidden" name="directory_id" value="{{ $directory->id }}">
+                                            <input type="hidden" name="claimant_contact_no" value="{{ $directory->contact_no ?? '' }}">
 
                                             @else
                                             <div class="form-group">
@@ -535,47 +536,7 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                                                 </div>
                                             </div>
 
-                                            <div class="row">
-                                                {{-- Claimant Name --}}
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Claimant Name</label>
-                                                        @php
-                                                            $claimantValue = old('claimant_name', $fa->claimant_name ?? '');
-                                                            if ($claimantValue === '' && $claimantIsPatient) { $claimantValue = $fullName; }
-                                                        @endphp
-                                                        <input
-                                                            type="text"
-                                                            name="claimant_name"
-                                                            id="claimant_name"
-                                                            class="form-control"
-                                                            value="{{ $claimantValue }}"
-                                                            placeholder="{{ $fullName ?: 'Full name' }}"
-                                                            {{ $claimantIsPatient ? 'readonly' : '' }}>
-                                                    </div>
-                                                </div>
-
-                                                {{-- Claimant Contact No. --}}
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Claimant Contact No.</label>
-                                                        @php
-                                                            $claimantContactValue = old('claimant_contact_no', $fa->claimant_contact_no ?? '');
-                                                            if ($claimantContactValue === '' && $claimantIsPatient) { 
-                                                                $claimantContactValue = $phone !== 'N/A' ? $phone : ''; 
-                                                            }
-                                                        @endphp
-                                                        <input
-                                                            type="text"
-                                                            name="claimant_contact_no"
-                                                            id="claimant_contact_no"
-                                                            class="form-control"
-                                                            value="{{ $claimantContactValue }}"
-                                                            placeholder="09XX XXX XXXX"
-                                                            {{ $claimantIsPatient ? 'readonly' : '' }}>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            {{-- Claimant Name and Contact removed; claimant contact auto-bound to directory via hidden input above --}}
 
                                             {{-- Checkbox below the fields --}}
                                             <div class="row">
