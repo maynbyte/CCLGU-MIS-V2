@@ -315,6 +315,8 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
 
                 {{-- Keep the directory context --}}
                 <input type="hidden" name="directory_id" value="{{ $directory->id }}">
+                {{-- Auto-bind claimant contact to directory contact --}}
+                <input type="hidden" name="claimant_contact_no" value="{{ $directory->contact_no ?? '' }}">
 
                 <div class="row">
                   {{-- Type of Assistance --}}
@@ -349,39 +351,7 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                   </div>
                 </div>
 
-                <div class="row">
-                  {{-- Claimant Name --}}
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Claimant Name</label>
-                      @php
-                        $claimantValue = old('claimant_name', $fa->claimant_name ?? '');
-                        // Only sync with patient name if checkbox is actually checked in DB
-                        if ($claimantValue === '' && $claimantIsPatient && $patientValue) { 
-                          $claimantValue = $patientValue; 
-                        }
-                      @endphp
-                      <input type="text" name="claimant_name" id="claimant_name" class="form-control"
-                        value="{{ $claimantValue }}" placeholder="{{ $fullName ?: 'Full name' }}"
-                        {{ $claimantIsPatient ? 'readonly' : '' }}>
-                    </div>
-                  </div>
-
-                  {{-- Claimant Contact No. --}}
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Claimant Contact No.</label>
-                      @php
-                        $claimantContactValue = old('claimant_contact_no', $fa->claimant_contact_no ?? '');
-                        if ($claimantContactValue === '' && $claimantIsPatient) { 
-                          $claimantContactValue = $phone; 
-                        }
-                      @endphp
-                      <input type="text" name="claimant_contact_no" id="claimant_contact_no" class="form-control"
-                        value="{{ $claimantContactValue }}" placeholder="{{ $phone }}">
-                    </div>
-                  </div>
-                </div>
+                {{-- Claimant fields removed; claimant contact is bound to directory via hidden input above --}}
 
                 {{-- Checkbox below the fields --}}
                 <div class="row">
