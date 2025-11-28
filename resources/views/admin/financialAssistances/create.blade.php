@@ -983,8 +983,7 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                                                         <th>Payout Schedule</th>
                                                         <th>Date Claimed</th>
                                                         <th>Status</th>
-                                                        <th>Claimant Name</th>
-                                                        <th>Claimant Contact No</th>
+                                                        <th>Added By</th>
                                                         <th>Settings</th>
                                                     </tr>
                                                 </thead>
@@ -1045,8 +1044,7 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                                                         <td data-order="{{ $claimTs }}">{{ $fmtLong($fa->date_claimed) }}</td>
 
                                                         <td><span class="badge bg-{{ $badgeClass }}">{{ $status }}</span></td>
-                                                        <td>{{ $fa->claimant_name ?? '—' }}</td>
-                                                        <td>{{ $fa->claimant_contact_no ?? '—' }}</td>
+                                                        <td>{{ optional($fa->addedBy)->name ?? '—' }}</td>
                                                         <td class="text-nowrap">
                                                             <div class="d-flex flex-wrap gap-1" style="max-width: 200px;">
                                                                 <a href="{{ route('admin.financial-assistances.show', $fa->id) }}" class="btn btn-sm btn-success mb-1" title="View" style="flex: 1 0 45%;">View</a>
