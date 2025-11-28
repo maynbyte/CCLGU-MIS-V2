@@ -24,10 +24,9 @@
     }
 
     body.login-page {
-        height: 100% !important;
+        position: relative;
         min-height: 100vh !important;
         margin: 0 !important;
-        padding: 0 !important;
         background: url('{{ asset('city_hall.jpg') }}') no-repeat center center fixed !important;
         background-size: cover !important;
         background-color: transparent !important;
@@ -61,14 +60,14 @@
 
     /* Bottom landmark strip (repeat-x) */
     .auth-landmark {
-        position: fixed;
+        position: absolute;
         left: 0;
         right: 0;
         bottom: 0;
         height: 50px;
         background: url('{{ asset('landmark.png') }}') repeat-x center bottom;
         background-size: auto 50px;
-        z-index: 1;
+        z-index: 999;
         pointer-events: none;
     }
 
@@ -79,21 +78,13 @@
         z-index: 2;
     }
 
-    .details-box {
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        margin: 0 !important;
-    }
-
     /* Mobile (≤576px) - Fit to screen */
     @media (max-width: 576px) {
         body.login-page {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 350px 10px 360px 10px !important;
+            padding: 20px 10px 60px 10px !important;
         }
 
         .details-box {
@@ -104,7 +95,7 @@
             top: auto !important;
             left: auto !important;
             transform: none !important;
-            margin-bottom: 30px !important;
+            margin-bottom: 0 !important;
         }
         
         .card-body.login-card-body {
@@ -169,7 +160,7 @@
         }
 
         .auth-landmark {
-            position: fixed;
+            position: absolute;
             bottom: 0;
             height: 40px;
             background-size: auto 40px;
@@ -182,36 +173,36 @@
     @media (min-width: 577px) and (max-width: 1024px) {
         body.login-page {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
-            padding: clamp(30px, 4vw, 40px) clamp(15px, 2vw, 20px) clamp(80px, 10vw, 100px) clamp(15px, 2vw, 20px) !important;
+            padding: clamp(20px, 3vw, 40px) clamp(15px, 2vw, 20px) clamp(100px, 12vw, 150px) clamp(15px, 2vw, 20px) !important;
         }
 
         .details-box {
-            width: clamp(90%, 95%, 98%) !important;
-            max-width: clamp(700px, 85vw, 1000px) !important;
+            width: clamp(90%, 2vw + 90%, 95%) !important;
+            max-width: clamp(700px, 80vw + 100px, 1200px) !important;
             padding: 0 clamp(15px, 2vw, 20px) !important;
             position: relative !important;
             top: auto !important;
             left: auto !important;
             transform: none !important;
-            margin: clamp(20px, 3vw, 30px) auto !important;
+            margin: 0 auto !important;
         }
         
         .card-body.login-card-body {
-            padding: clamp(1.5rem, 2.5vw, 2.5rem) !important;
+            padding: clamp(1.5rem, 2vw + 0.5rem, 2.5rem) !important;
         }
         
         .login-box-msg {
-            font-size: clamp(1.05rem, 1.5vw, 1.2rem) !important;
-            margin-bottom: clamp(1rem, 1.5vw, 1.5rem) !important;
+            font-size: clamp(1.05rem, 0.8vw + 0.5rem, 1.2rem) !important;
+            margin-bottom: clamp(1rem, 1vw + 0.3rem, 1.5rem) !important;
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: clamp(1.5rem, 2vw, 2rem);
-            margin-bottom: clamp(1.5rem, 2vw, 2rem);
+            gap: clamp(1.5rem, 1.5vw + 0.3rem, 2rem);
+            margin-bottom: clamp(1.5rem, 1.5vw + 0.3rem, 2rem);
         }
 
         .info-section {
@@ -219,40 +210,54 @@
         }
         
         .info-section h2 {
-            font-size: clamp(0.9rem, 1.2vw, 1.1rem) !important;
-            margin-bottom: clamp(0.75rem, 1vw, 1rem) !important;
-            padding-bottom: clamp(0.4rem, 0.6vw, 0.6rem) !important;
+            font-size: clamp(0.9rem, 0.8vw + 0.4rem, 1.1rem) !important;
+            margin-bottom: clamp(0.75rem, 0.8vw + 0.2rem, 1rem) !important;
+            padding-bottom: clamp(0.4rem, 0.5vw + 0.1rem, 0.6rem) !important;
         }
         
         .info-row {
-            font-size: clamp(0.85rem, 1vw, 1rem) !important;
-            padding: clamp(0.4rem, 0.6vw, 0.75rem) 0 !important;
+            font-size: clamp(0.85rem, 0.7vw + 0.35rem, 1rem) !important;
+            padding: clamp(0.4rem, 0.8vw + 0.1rem, 0.75rem) 0 !important;
         }
         
         .info-label {
-            min-width: clamp(100px, 12vw, 140px) !important;
-            font-size: clamp(0.85rem, 1vw, 1rem) !important;
+            min-width: clamp(100px, 10vw + 20px, 150px) !important;
+            font-size: clamp(0.85rem, 0.7vw + 0.35rem, 1rem) !important;
         }
         
         .info-value {
-            font-size: clamp(0.85rem, 1vw, 1rem) !important;
+            font-size: clamp(0.85rem, 0.7vw + 0.35rem, 1rem) !important;
         }
         
         .payout-highlight {
-            font-size: clamp(0.85rem, 1vw, 1rem) !important;
-            padding: clamp(0.6rem, 0.8vw, 1rem) !important;
-            margin: clamp(0.75rem, 1vw, 1rem) 0 !important;
+            font-size: clamp(0.85rem, 0.7vw + 0.35rem, 1rem) !important;
+            padding: clamp(0.6rem, 0.8vw + 0.2rem, 1rem) !important;
+            margin: clamp(0.75rem, 0.8vw + 0.2rem, 1rem) 0 !important;
         }
         
         .reference-number {
-            font-size: clamp(0.9rem, 1.1vw, 1.1rem) !important;
+            font-size: clamp(0.9rem, 0.8vw + 0.4rem, 1.1rem) !important;
+        }
+
+        .header-logos {
+            height: clamp(60px, 5vw + 30px, 80px) !important;
+        }
+        
+        .logo-left,
+        .logo-right {
+            height: clamp(60px, 5vw + 30px, 80px) !important;
+        }
+        
+        .profile-picture {
+            width: clamp(100px, 8vw + 40px, 120px) !important;
+            height: clamp(100px, 8vw + 40px, 120px) !important;
         }
 
         .auth-landmark {
-            position: fixed;
+            position: absolute;
             bottom: 0;
-            height: clamp(50px, 6vw, 60px);
-            background-size: auto clamp(50px, 6vw, 60px);
+            height: clamp(50px, 4vw + 20px, 60px);
+            background-size: auto clamp(50px, 4vw + 20px, 60px);
             z-index: 999;
         }
     }
@@ -261,9 +266,9 @@
     @media (min-width: 1025px) {
         body.login-page {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
-            padding: 40px 20px 100px 20px !important;
+            padding: 20px 20px 150px 20px !important;
         }
 
         .details-box {
@@ -274,7 +279,7 @@
             top: auto !important;
             left: auto !important;
             transform: none !important;
-            margin: 20px auto !important;
+            margin: 0 auto !important;
         }
         
         .card-body.login-card-body {
@@ -321,7 +326,7 @@
         }
 
         .auth-landmark {
-            position: fixed;
+            position: absolute;
             bottom: 0;
             height: 60px;
             background-size: auto 60px;
@@ -336,9 +341,9 @@
     .info-section h2 {
         font-size: 1rem;
         font-weight: 600;
-        color: #007bff;
+        color: #0b5621;
         margin-bottom: 0.75rem;
-        border-bottom: 2px solid #007bff;
+        border-bottom: 2px solid #0b5621;
         padding-bottom: 0.5rem;
     }
 
@@ -363,7 +368,7 @@
 
     .info-label i {
         margin-right: 0.5rem;
-        color: #007bff;
+        color: #0b5621;
         width: 18px;
     }
 
@@ -402,7 +407,7 @@
 
     .payout-highlight {
         background: #f8f9fa;
-        border-left: 4px solid #007bff;
+        border-left: 4px solid #0b5621;
         padding: 0.75rem;
         margin: 0.75rem 0;
         border-radius: 6px;
@@ -410,13 +415,79 @@
     }
 
     .payout-highlight strong {
-        color: #007bff;
+        color: #f9c800;
     }
 
     .reference-number {
         font-family: 'Courier New', monospace;
         font-weight: 700;
         font-size: 1rem;
+        color: #f9c800;
+    }
+
+    /* Header logos styling */
+    .header-logos {
+        position: relative;
+        height: 80px;
+        margin-bottom: 1rem;
+    }
+
+    .logo-left {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 80px;
+        width: auto;
+        object-fit: contain;
+    }
+
+    .logo-right {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 80px;
+        width: auto;
+        object-fit: contain;
+    }
+
+    /* Profile picture styling */
+    .profile-picture {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #0b5621;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Responsive logo sizing */
+    @media (max-width: 576px) {
+        .header-logos {
+            height: 50px;
+        }
+        .logo-left,
+        .logo-right {
+            height: 50px;
+        }
+        .profile-picture {
+            width: 80px;
+            height: 80px;
+            border-width: 3px;
+        }
+    }
+
+    @media (min-width: 577px) and (max-width: 768px) {
+        .header-logos {
+            height: 60px;
+        }
+        .logo-left,
+        .logo-right {
+            height: 60px;
+        }
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+        }
     }
 
     /* 2x2 Grid Layout for Desktop */
@@ -441,6 +512,34 @@
 <div class="details-box">
     <div class="card">
         <div class="card-body login-card-body">
+            <!-- Header with logos -->
+            <div class="header-logos mb-3">
+                <img src="{{ asset('cavite-city-seal.png') }}" alt="Cavite City Seal" class="logo-left">
+                <img src="{{ asset('chuacares.png') }}" alt="Chua Cares" class="logo-right">
+            </div>
+
+            <!-- Profile Picture -->
+            <div class="text-center mb-3">
+                @php
+                    $photoUrl = null;
+                    try {
+                        if (method_exists($directory, 'getAttribute') && $directory->profile_picture) {
+                            if (method_exists($directory->profile_picture, 'getUrl')) {
+                                $photoUrl = $directory->profile_picture->getUrl();
+                            } else {
+                                $photoUrl = $directory->profile_picture;
+                            }
+                        }
+                    } catch (\Throwable $e) { 
+                        $photoUrl = null; 
+                    }
+                    $defaultAvatar = asset('upload/free-user-icon.png');
+                @endphp
+                <img src="{{ $photoUrl ?: $defaultAvatar }}" 
+                     alt="Profile Picture" 
+                     class="profile-picture">
+            </div>
+
             <p class="details-box-msg mb-3">
                 <strong>Financial Assistance Details</strong>
             </p>
