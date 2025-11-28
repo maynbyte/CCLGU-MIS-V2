@@ -983,7 +983,8 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                                                         <th>Payout Schedule</th>
                                                         <th>Date Claimed</th>
                                                         <th>Status</th>
-                                                        <th>Added By</th>
+                                                        <th>Claimant Name</th>
+                                                        <th>Claimant Contact No</th>
                                                         <th>Settings</th>
                                                     </tr>
                                                 </thead>
@@ -1044,10 +1045,11 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                                                         <td data-order="{{ $claimTs }}">{{ $fmtLong($fa->date_claimed) }}</td>
 
                                                         <td><span class="badge bg-{{ $badgeClass }}">{{ $status }}</span></td>
-                                                        <td>{{ optional($fa->addedBy)->name ?? '—' }}</td>
+                                                        <td>{{ $fa->claimant_name ?? '—' }}</td>
+                                                        <td>{{ $fa->claimant_contact_no ?? '—' }}</td>
                                                         <td class="text-nowrap">
                                                             <div class="d-flex flex-wrap gap-1" style="max-width: 200px;">
-                                                                <a href="{{ route('admin.financial-assistances.show', $fa->id) }}" class="btn btn-sm btn-success mb-1" title="View" style="flex: 1 0 45%;"><i class="fas fa-eye"></i> View</a>
+                                                                <a href="{{ route('admin.financial-assistances.show', $fa->id) }}" class="btn btn-sm btn-success mb-1" title="View" style="flex: 1 0 45%;">View</a>
                                                                 <a href="{{ route('admin.financial-assistances.edit', $fa->id) }}" class="btn btn-sm btn-primary mb-1" style="flex: 1 0 45%;">Edit</a>
                                                                 <a href="{{ route('admin.financial-assistances.print', $fa->id) }}" target="_blank" class="btn btn-sm btn-secondary mb-1" style="flex: 1 0 45%;">Print</a>
                                                                 @can('financial_assistance_delete')
