@@ -163,51 +163,52 @@
     document.addEventListener('DOMContentLoaded', function() {
         const cb = document.getElementById('claimant_is_patient');
         const patient = document.getElementById('patient_name');
-        const claimant = document.getElementById('claimant_name');
-        const claimantContact = document.getElementById('claimant_contact_no');
+        const claimantContact = document.querySelector('input[name="claimant_contact_no"]');
 
-        if (!cb || !patient || !claimant) return;
+        if (!cb || !patient) return;
 
         // Store the directory contact number from PHP
         const directoryContactNo = '{{ $directory->contact_no ?? "" }}';
 
         function sync() {
             const isChecked = cb.checked;
-            patient.readOnly = isChecked;
-            claimant.readOnly = isChecked;
-            if (claimantContact) claimantContact.readOnly = isChecked;
-            
-            // Add visual feedback and sync values
+
+            // Toggle readonly both via property and attribute for reliability
             if (isChecked) {
+                patient.readOnly = true;
+                patient.setAttribute('readonly', 'readonly');
+                patient.disabled = false; // ensure not disabled, we only lock editing
+                patient.removeAttribute('disabled');
                 patient.classList.add('bg-light');
-                claimant.classList.add('bg-light');
-                if (claimantContact) claimantContact.classList.add('bg-light');
-                
-                // Sync claimant name with patient name
-                if (patient.value) {
-                    claimant.value = patient.value;
-                }
-                
-                // Sync claimant contact with directory contact
+                // Remove focus/caret to signal lock
+                patient.blur();
+
+                // Ensure hidden claimant contact mirrors directory contact
                 if (claimantContact && directoryContactNo && directoryContactNo !== 'N/A') {
                     claimantContact.value = directoryContactNo;
                 }
             } else {
+                patient.readOnly = false;
+                patient.removeAttribute('readonly');
+                patient.disabled = false;
+                patient.removeAttribute('disabled');
                 patient.classList.remove('bg-light');
-                claimant.classList.remove('bg-light');
-                if (claimantContact) claimantContact.classList.remove('bg-light');
             }
         }
 
         cb.addEventListener('change', sync);
         
-        // Keep claimant name in sync with patient name while checked
-        patient.addEventListener('input', function() {
-            if (cb.checked && patient.value) {
-                claimant.value = patient.value;
+        // Defensive: Block edits while checked (covers edge cases)
+        const allowKeys = new Set(['Tab','Shift','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End']);
+        patient.addEventListener('keydown', function(e){
+            if (cb.checked && !allowKeys.has(e.key)) {
+                e.preventDefault();
             }
         });
-        
+        patient.addEventListener('beforeinput', function(e){ if (cb.checked) e.preventDefault(); });
+        patient.addEventListener('paste', function(e){ if (cb.checked) e.preventDefault(); });
+        patient.addEventListener('cut', function(e){ if (cb.checked) e.preventDefault(); });
+
         sync(); // set initial state on load
     });
 </script>
@@ -345,7 +346,11 @@ $reqPatientOther = is_array($req) ? ($req['patient_other'] ?? '') : '';
 $reqClaimant = is_array($req) ? ($req['claimant'] ?? []) : [];
 $reqClaimantOther = is_array($req) ? ($req['claimant_other'] ?? '') : '';
 
-$claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true);
+// Default to unchecked (false) unless explicitly posted or saved as 1
+$claimantIsPatient = (string) old(
+    'claimant_is_patient',
+    isset($fa) ? (string) ((int) ($fa->claimant_is_patient ?? 0)) : '0'
+) === '1';
 @endphp
 
 <div class="mb-3">
@@ -482,7 +487,8 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
 
                                             @if($forDirectory)
                                             <input type="hidden" name="directory_id" value="{{ $directory->id }}">
-                                            <input type="hidden" name="claimant_contact_no" value="{{ $directory->contact_no ?? '' }}">
+                                            <input type="hidden" name="claimant_name" value="{{ old('claimant_name', $fullName) }}">
+                                            <input type="hidden" name="claimant_contact_no" value="{{ old('claimant_contact_no', $directory->contact_no ?? '') }}">
 
                                             @else
                                             <div class="form-group">
@@ -522,7 +528,7 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                                                         <label>Patient Name</label>
                                                         @php
                                                             $patientValue = old('patient_name', $fa->patient_name ?? '');
-                                                            if ($patientValue === '') { $patientValue = $fullName; }
+                                                            // Do not auto-fill from directory full name by default
                                                         @endphp
                                                         <input
                                                             type="text"
@@ -542,6 +548,7 @@ $claimantIsPatient = old('claimant_is_patient', $fa->claimant_is_patient ?? true
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-check mb-3">
+                                                        <input type="hidden" name="claimant_is_patient" value="0">
                                                         <input class="form-check-input"
                                                             type="checkbox"
                                                             id="claimant_is_patient"
