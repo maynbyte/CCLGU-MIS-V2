@@ -107,6 +107,48 @@
                             @endforeach
                         </td>
                     </tr>
+                    @if($financialAssistance->reference_no)
+                    <tr>
+                        <th>
+                            Reference Number
+                        </th>
+                        <td>
+                            <strong>{{ $financialAssistance->reference_no }}</strong>
+                        </td>
+                    </tr>
+                    @endif
+                    @if($financialAssistance->qr_code)
+                    <tr>
+                        <th>
+                            QR Code
+                        </th>
+                        <td>
+                            <div class="mb-2">
+                                <img src="{{ $financialAssistance->getFirstMediaUrl('qr_code') }}" 
+                                     alt="QR Code" 
+                                     style="max-width: 300px; border: 1px solid #ddd; padding: 10px; background: white;">
+                            </div>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i> 
+                                Scan this QR code to view payout details
+                            </small>
+                            @if($financialAssistance->qr_token)
+                            <div class="mt-2">
+                                <a href="{{ route('admin.financial-assistances.printQrCode', $financialAssistance->id) }}" 
+                                   target="_blank" 
+                                   class="btn btn-sm btn-warning mr-2">
+                                    <i class="fas fa-qrcode"></i> Print QR Code
+                                </a>
+                                <a href="{{ route('payout.verify', ['qr_token' => $financialAssistance->qr_token]) }}" 
+                                   target="_blank" 
+                                   class="btn btn-sm btn-info">
+                                    <i class="fas fa-external-link-alt"></i> Preview Verification Page
+                                </a>
+                            </div>
+                            @endif
+                        </td>
+                    </tr>
+                    @endif
                 </tbody>
             </table>
             <div class="form-group">

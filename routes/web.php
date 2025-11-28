@@ -11,6 +11,9 @@ Route::get('/home', function () {
 
 Auth::routes(['register' => false]);
 
+// Public QR Code Verification Route (no authentication required)
+Route::get('/verify-payout/{qr_token}', 'PayoutVerificationController@verify')->name('payout.verify');
+
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index')->name('home');
     // Permissions
@@ -41,6 +44,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Put this near your other financial-assistances routes (inside the admin group)
     Route::get('financial-assistances/{financialAssistance}/print', 'FinancialAssistanceController@printCaseSummary')
         ->name('financial-assistances.print');
+    Route::get('financial-assistances/{financialAssistance}/print-qr', 'FinancialAssistanceController@printQrCode')
+        ->name('financial-assistances.printQrCode');
 
 
 

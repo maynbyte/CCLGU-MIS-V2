@@ -521,6 +521,21 @@ $reqClaimant = ['Photocopy of Valid ID', 'Original Barangay Certificate', 'Origi
                     </div>
                   </div>
 
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="payout_location">Payout Location</label>
+                      <input class="form-control {{ $errors->has('payout_location') ? 'is-invalid' : '' }}" 
+                             type="text"
+                             name="payout_location" 
+                             id="payout_location"
+                             placeholder="City Social Welfare and Development Office, Cauayan City"
+                             value="{{ old('payout_location', $fa->payout_location) }}">
+                      @if($errors->has('payout_location')) <span class="text-danger">{{ $errors->first('payout_location') }}</span> @endif
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
                   <div class="col-md-3">
                     @php
                       $statuses = ['Ongoing','Pending','Claimed','Cancelled'];

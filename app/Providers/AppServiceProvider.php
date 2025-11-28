@@ -11,7 +11,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register QR Code service provider
+        $this->app->register(\SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class);
     }
 
     /**

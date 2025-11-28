@@ -39,13 +39,31 @@ class FinancialAssistanceController extends Controller
                 $deleteGate    = 'financial_assistance_delete';
                 $crudRoutePart = 'financial-assistances';
 
-                return view('partials.datatablesActions', compact(
-                    'viewGate',
-                    'editGate',
-                    'deleteGate',
-                    'crudRoutePart',
-                    'row'
-                ));
+                $actions = '';
+                
+                // View button
+                if (\Gate::allows($viewGate)) {
+                    $actions .= '<a class="btn btn-xs btn-primary" href="' . route('admin.financial-assistances.show', $row->id) . '">View</a> ';
+                }
+                
+                // Edit button
+                if (\Gate::allows($editGate)) {
+                    $actions .= '<a class="btn btn-xs btn-info" href="' . route('admin.financial-assistances.edit', $row->id) . '">Edit</a> ';
+                }
+                
+                // Print QR Code button
+                $actions .= '<a class="btn btn-xs btn-warning" href="' . route('admin.financial-assistances.printQrCode', $row->id) . '" target="_blank" title="Print QR Code"><i class="fas fa-qrcode"></i> Print</a> ';
+                
+                // Delete button
+                if (\Gate::allows($deleteGate)) {
+                    $actions .= '<form action="' . route('admin.financial-assistances.destroy', $row->id) . '" method="POST" onsubmit="return confirm(\'Are you sure?\');" style="display: inline-block;">';
+                    $actions .= '<input type="hidden" name="_method" value="DELETE">';
+                    $actions .= '<input type="hidden" name="_token" value="' . csrf_token() . '">';
+                    $actions .= '<input type="submit" class="btn btn-xs btn-danger" value="Delete">';
+                    $actions .= '</form>';
+                }
+                
+                return $actions;
             });
 
             $table->editColumn('id', function ($row) {
@@ -170,6 +188,9 @@ class FinancialAssistanceController extends Controller
             Media::whereIn('id', $media)->update(['model_id' => $fa->id]);
         }
 
+        // Generate QR code for the FA
+        $fa->generateQrCode();
+
         return redirect()->to(
             route('admin.financial-assistances.create', ['directory_id' => $fa->directory_id]) . '#tab-general'
         )->with('message', 'Financial assistance created ✅');
@@ -205,6 +226,11 @@ class FinancialAssistanceController extends Controller
             }
         }
         // --- end media sync ---
+
+        // Regenerate QR code if reference number or important details changed
+        if (!$financialAssistance->qr_token || $request->filled('reference_no')) {
+            $financialAssistance->generateQrCode();
+        }
 
         // After editing, redirect to create form (with same directory context)
         return redirect()->to(
@@ -364,5 +390,18 @@ class FinancialAssistanceController extends Controller
             ->get();
 
         return view('admin.financialAssistances.print-payout', compact('directories', 'payoutDate'));
+    }
+
+    public function printQrCode(FinancialAssistance $financialAssistance)
+    {
+        abort_if(Gate::denies('financial_assistance_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        // Ensure QR code exists, generate if not
+        if (!$financialAssistance->qr_code) {
+            $financialAssistance->generateQrCode();
+            $financialAssistance->refresh();
+        }
+
+        return view('admin.financialAssistances.print-qr', compact('financialAssistance'));
     }
 }

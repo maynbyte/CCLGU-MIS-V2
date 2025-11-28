@@ -8,6 +8,11 @@
         {{ trans('global.edit') }}
     </a>
 @endcan
+@if($crudRoutePart === 'financial-assistances')
+    <a class="btn btn-xs btn-success" href="{{ route('admin.financial-assistances.printQrCode', $row->id) }}" target="_blank" title="Print QR Code">
+        <i class="fas fa-qrcode"></i> QR
+    </a>
+@endif
 @can($deleteGate)
     <form action="{{ route('admin.' . $crudRoutePart . '.destroy', $row->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
         <input type="hidden" name="_method" value="DELETE">

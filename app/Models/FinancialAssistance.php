@@ -107,6 +107,7 @@ class FinancialAssistance extends Model implements HasMedia
         'recommendation',
         'amount',
         'scheduled_fa',
+        'payout_location',
         'date_claimed',
         'note',
         'created_at',
@@ -114,6 +115,7 @@ class FinancialAssistance extends Model implements HasMedia
         'deleted_at',
         'amount',
         'reference_no',
+        'qr_token',
     ];
 
     /*
@@ -177,9 +179,21 @@ class FinancialAssistance extends Model implements HasMedia
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
     }
 
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('requirements');
+        $this->addMediaCollection('qr_code')
+            ->singleFile(); // Only one QR code per FA
+    }
+
     public function getRequirementsAttribute()
     {
         return $this->getMedia('requirements');
+    }
+
+    public function getQrCodeAttribute()
+    {
+        return $this->getFirstMedia('qr_code');
     }
 
     /*
@@ -321,6 +335,48 @@ class FinancialAssistance extends Model implements HasMedia
 
             return sprintf('CC-FA-%d-%06d', $year, $next);
         });
+    }
+
+    /**
+     * Generate and store QR code for this Financial Assistance
+     */
+    public function generateQrCode(): void
+    {
+        if (!$this->qr_token) {
+            $this->qr_token = \Illuminate\Support\Str::random(32);
+            $this->save();
+        }
+
+        // Generate verification URL
+        $verificationUrl = route('payout.verify', ['qr_token' => $this->qr_token]);
+
+        // Generate QR code as SVG (no ImageMagick required)
+        $qrCode = app('qrcode')
+            ->format('svg')
+            ->size(300)
+            ->margin(1)
+            ->generate($verificationUrl);
+
+        // Create temporary file
+        $filename = 'qr-' . $this->reference_no . '.svg';
+        $tempPath = storage_path('app/temp/' . $filename);
+        
+        // Ensure temp directory exists
+        if (!file_exists(dirname($tempPath))) {
+            mkdir(dirname($tempPath), 0755, true);
+        }
+
+        file_put_contents($tempPath, $qrCode);
+
+        // Store using Spatie Media Library
+        $this->addMedia($tempPath)
+            ->usingFileName($filename)
+            ->toMediaCollection('qr_code');
+
+        // Clean up temp file
+        if (file_exists($tempPath)) {
+            unlink($tempPath);
+        }
     }
 
     
