@@ -37,7 +37,7 @@
                     <th>Last Name + Suffix</th>
                     <th>{{ trans('cruds.directory.fields.first_name') }}</th>
                     <th>{{ trans('cruds.directory.fields.middle_name') }}</th>
-                    <th>{{ trans('cruds.directory.fields.barangay') }}</th>
+                    <th>Patient Name</th>
                     <th>{{ trans('cruds.directory.fields.comelec_status') }}</th>
                     <th>Latest FA Record</th>
                     <th>Payout Schedule</th>
@@ -374,7 +374,17 @@ function formatDateOnly(value) {
   defaultContent: ''
 },
 
-      { data: 'barangay_barangay_name', name: 'barangay.barangay_name' },
+      {
+        data: 'latest_fa_patient_name',
+        name: 'fa_last.patient_name',
+        render: function (v, type) {
+          if (type === 'display' || type === 'filter') {
+            return v ? toTitleCase(v) : '<span class="text-muted">—</span>';
+          }
+          return v || '';
+        },
+        defaultContent: ''
+      },
       { data: 'comelec_status', name: 'comelec_status' },
 
     // Latest FA (created_at from latest FA record)

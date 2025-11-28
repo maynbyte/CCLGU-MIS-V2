@@ -55,6 +55,7 @@ class DirectoryController extends Controller
                     DB::raw('fa_last.status as latest_fa_status'),
                     DB::raw('fa_last.date_claimed as latest_fa_date_claimed'),
                     DB::raw('fa_last.scheduled_fa as latest_fa_scheduled_fa'),
+                    DB::raw('fa_last.patient_name as latest_fa_patient_name'),
                 ]);
 
             // Create the DataTable ONCE from $query
