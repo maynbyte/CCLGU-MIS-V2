@@ -21,8 +21,93 @@
             @endcan
         </div>
 
+        @php
+            $photoUrl = null;
+            if (isset($financialAssistance->directory) && method_exists($financialAssistance->directory, 'getFirstMediaUrl')) {
+                $photoUrl = $financialAssistance->directory->getFirstMediaUrl('profile_picture') ?: null;
+            }
+            if (! $photoUrl && method_exists($financialAssistance, 'getFirstMediaUrl')) {
+                $photoUrl = $financialAssistance->getFirstMediaUrl('profile_picture') ?: null;
+            }
+            // Prefer media URL for QR if available. Some records may store QR as media
+            // rather than in the `qr_code` attribute; use getFirstMediaUrl to detect it.
+            $qrUrl = null;
+            if (method_exists($financialAssistance, 'getFirstMediaUrl')) {
+                $qrUrl = $financialAssistance->getFirstMediaUrl('qr_code') ?: null;
+            }
+        @endphp
+
         <div class="row">
-            <!-- Left Column -->
+            <!-- Left Column (Profile Picture + QR Code) -->
+            <div class="col-md-4">
+                <!-- Profile Picture Card -->
+                <div class="card mb-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0"><i class="fas fa-user-circle text-primary"></i> Profile Picture</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        @if($photoUrl)
+                            <img src="{{ $photoUrl }}" alt="Profile Picture" class="rounded-circle img-fluid mb-2" style="width:140px;height:140px;object-fit:cover;">
+                        @else
+                            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2" style="width:140px;height:140px;">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                @if($qrUrl)
+                <!-- QR Code Card -->
+                <div class="card mb-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0"><i class="fas fa-qrcode text-primary"></i> QR Code</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="p-3 bg-white border rounded mb-3" style="display: inline-block;">
+                            <img src="{{ $qrUrl }}"
+                                alt="QR Code"
+                                class="img-fluid"
+                                style="max-width: 250px;">
+                        </div>
+
+                        <p class="text-muted small mb-3">
+                            <i class="fas fa-info-circle"></i>
+                            Scan this QR code to view payout details
+                        </p>
+
+                        @if($financialAssistance->qr_token)
+                        <div class="d-grid gap-2">
+                            <a href="{{ route('admin.financial-assistances.printQrCode', $financialAssistance->id) }}"
+                                target="_blank"
+                                class="btn btn-warning btn-block mb-2">
+                                <i class="fas fa-print"></i> Print QR Code
+                            </a>
+                            <a href="{{ route('payout.verify', ['qr_token' => $financialAssistance->qr_token]) }}"
+                                target="_blank"
+                                class="btn btn-info btn-block">
+                                <i class="fas fa-external-link-alt"></i> Preview Verification Page
+                            </a>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @else
+                <!-- QR placeholder when no QR media exists -->
+                <div class="card mb-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0"><i class="fas fa-qrcode text-primary"></i> QR Code</h6>
+                    </div>
+                    <div class="card-body text-center text-muted small">
+                        <div class="p-3 bg-white border rounded mb-3" style="display: inline-block; width:250px; height:250px;">
+                            <i class="fas fa-qrcode fa-3x" style="line-height:250px"></i>
+                        </div>
+                        <p class="mb-1">QR code not available for this record.</p>
+                        <p class="mb-0">Run <code>$financialAssistance->generateQrCode()</code> (controller or tinker) to generate it.</p>
+                    </div>
+                </div>
+                @endif
+            </div>
+
+            <!-- Right Column (Basic Info / Details / Requirements) -->
             <div class="col-md-8">
                 <!-- Basic Information Card -->
                 <div class="card mb-3">
@@ -38,6 +123,10 @@
                                     <td><strong class="text-primary">{{ $financialAssistance->reference_no }}</strong></td>
                                 </tr>
                                 @endif
+                                <tr>
+                                    <th><i class="fas fa-procedures text-muted"></i> Patient Name</th>
+                                    <td><strong>{{ $financialAssistance->patient_name ?? 'N/A' }}</strong></td>
+                                </tr>
                                 <tr>
                                     <th style="width: 200px;"><i class="fas fa-user text-muted"></i> Claimant Name</th>
                                     <td><strong>{{ $financialAssistance->claimant_name ?? 'N/A' }}</strong></td>
@@ -72,6 +161,18 @@
                                         $statusColor = $statusColors[$financialAssistance->status] ?? 'secondary';
                                         @endphp
                                         <span class="badge badge-{{ $statusColor }} px-3 py-2">{{ $financialAssistance->status }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><i class="fas fa-paperclip text-muted"></i> Uploaded Requirements</th>
+                                    <td>
+                                        @if($financialAssistance->requirements->count() > 0)
+                                            @foreach($financialAssistance->requirements as $key => $req)
+                                                <a href="{{ $req->getUrl() }}" target="_blank">{{ $req->file_name ?? $req->name ?? ('File ' . ($key + 1)) }}</a>@if(!$loop->last), @endif<br>
+                                            @endforeach
+                                        @else
+                                            N/A
+                                        @endif
                                     </td>
                                 </tr>
                                 @if($financialAssistance->date_claimed)
@@ -141,46 +242,6 @@
                             </a>
                             @endforeach
                         </div>
-                    </div>
-                </div>
-                @endif
-            </div>
-
-            <!-- Right Column -->
-            <div class="col-md-4">
-                @if($financialAssistance->qr_code)
-                <!-- QR Code Card -->
-                <div class="card mb-3">
-                    <div class="card-header bg-light">
-                        <h6 class="mb-0"><i class="fas fa-qrcode text-primary"></i> QR Code</h6>
-                    </div>
-                    <div class="card-body text-center">
-                        <div class="p-3 bg-white border rounded mb-3" style="display: inline-block;">
-                            <img src="{{ $financialAssistance->getFirstMediaUrl('qr_code') }}"
-                                alt="QR Code"
-                                class="img-fluid"
-                                style="max-width: 250px;">
-                        </div>
-
-                        <p class="text-muted small mb-3">
-                            <i class="fas fa-info-circle"></i>
-                            Scan this QR code to view payout details
-                        </p>
-
-                        @if($financialAssistance->qr_token)
-                        <div class="d-grid gap-2">
-                            <a href="{{ route('admin.financial-assistances.printQrCode', $financialAssistance->id) }}"
-                                target="_blank"
-                                class="btn btn-warning btn-block mb-2">
-                                <i class="fas fa-print"></i> Print QR Code
-                            </a>
-                            <a href="{{ route('payout.verify', ['qr_token' => $financialAssistance->qr_token]) }}"
-                                target="_blank"
-                                class="btn btn-info btn-block">
-                                <i class="fas fa-external-link-alt"></i> Preview Verification Page
-                            </a>
-                        </div>
-                        @endif
                     </div>
                 </div>
                 @endif
