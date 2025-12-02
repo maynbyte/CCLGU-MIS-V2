@@ -168,7 +168,7 @@
     columns: [
 { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
-{ data: 'profile_picture', name: 'profile_picture', sortable: false, searchable: false },
+{ data: 'profile_picture', name: 'profile_picture', orderable: false, searchable: false },
 { data: 'last_name', name: 'last_name' },
 { data: 'first_name', name: 'first_name' },
 { data: 'middle_name', name: 'middle_name' },
@@ -196,7 +196,7 @@
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
-    order: [[ 2, 'desc' ]],
+    order: [[ 1, 'desc' ]],
     pageLength: 100,
   };
   let table = $('.datatable-Directory').DataTable(dtOverrideGlobals);

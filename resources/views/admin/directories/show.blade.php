@@ -198,7 +198,6 @@ $gender = \App\Models\Directory::GENDER_SELECT[$directory->gender] ?? $directory
 }
 $gender = $gender ?: 'Male';
 
-
 // Age (from birthday), empty if missing/invalid
 $age = '';
 if (!empty($directory->birthday)) {
@@ -208,7 +207,6 @@ $age = Carbon::parse($directory->birthday)->age;
 $age = ''; // keep empty on parse error
 }
 }
-
 
 // Nationality – fallback to 'Filipino'
 $nationality = $directory->nationality ?? 'Filipino';
@@ -234,7 +232,6 @@ $lifeStatus = 'N/A'; // show N/A if nothing set
 break;
 }
 
-
 // Address
 $streetNo = $directory->street_no ?? null;
 $street = $directory->street ?? null;
@@ -246,8 +243,6 @@ $address = $addrParts ? implode(', ', $addrParts) : '83 Mile Drive, Los Angeles,
 // Contact + Email
 $phone = $directory->contact_no ?? 'N/A';
 $email = $directory->email ?? 'N/A';
-
-
 
 // Birthdate display (keep template if not set)
 $birthdate = $directory->birthday ;
@@ -262,7 +257,6 @@ foreach ($directory->ngos as $ngo) {
 $ngos[] = trim($ngo->name);
 }
 }
-
 
 // COMELEC Status mapping
 $comelecStatusRaw = $directory->comelec_status ?? null;
@@ -286,7 +280,6 @@ $comelecStatus = 'N/A';
 break;
 }
 
-
 // Sectors
 $sectors = [];
 if ($directory->sectors && count($directory->sectors)) {
@@ -295,8 +288,6 @@ $sectors[] = trim($sector->name);
 }
 }
 
-
-    
     // helper to show dd/mm/YYYY while accepting strings or Carbon
     $fmt = function ($raw) {
         if (empty($raw)) return '';
@@ -305,7 +296,6 @@ $sectors[] = trim($sector->name);
             return Carbon::parse($raw)->format('d/m/Y');
         } catch (\Throwable $e) { return ''; }
     };
-
 
 // Notes – description + remarks, else template string
 $notes = trim(($directory->description ?? '').' '.($directory->remarks ?? ''));
@@ -434,7 +424,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
     </a>
 @endcan</li>
                     </ul>
-                </div><!-- /.card-header -->
+                </div>
 
                 <div class="card-body">
                     <div class="tab-content">
@@ -483,7 +473,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                 </div>
                             </div>
 
-                            {{-- BACKGROUND INFORMATION (template content retained) --}}
+                            {{-- BACKGROUND INFORMATION --}}
                             <div class="mb-4 pb-3">
                                 <div class="section-header">
                                     <h6><i class="fas fa-info-circle"></i> Background Information</h6>
@@ -515,7 +505,6 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
 
                             {{-- Family Composition--}}
                         
-
                             <div>
                                 <div class="section-header">
                                     <h6><i class="fas fa-user-friends"></i> Family Composition</h6>
@@ -553,11 +542,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                     </table>
                                 </div>
                             </div>
-
-
-                        </div> {{-- /GENERAL --}}
-
-                        {{-- Remaining tabs --}}
+                        </div>
                         <div class="tab-pane" id="tab-logs"></div>
                     </div>
                 </div><!-- /.card-body -->
