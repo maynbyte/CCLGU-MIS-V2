@@ -30,9 +30,6 @@
                     <th width="10">
                     </th>
                     <th>
-                        {{ trans('cruds.directory.fields.uid') }}
-                    </th>
-                    <th>
                         {{ trans('cruds.directory.fields.id') }}
                     </th> 
                       <th>
@@ -170,7 +167,6 @@
     ajax: "{{ route('admin.directories.index') }}",
     columns: [
 { data: 'placeholder', name: 'placeholder' },
-{ data: 'uid', name: 'uid' },
 { data: 'id', name: 'id' },
 { data: 'profile_picture', name: 'profile_picture', sortable: false, searchable: false },
 { data: 'last_name', name: 'last_name' },
