@@ -152,6 +152,75 @@
     .data-row:last-child {
         border-bottom: none;
     }
+
+    /* Print styles for ID card */
+    @media print {
+        body * { visibility: hidden; }
+        #print-id-section, #print-id-section * { visibility: visible; }
+        #print-id-section { position: absolute; left: 0; top: 0; width: 100%; }
+        .no-print { display: none !important; }
+    }
+
+    .id-card {
+        width: 680px;
+        height: 430px;
+        border-radius: 16px;
+        background: #fff url('/upload/ph-id-bg.png') center/cover no-repeat;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #e3e6ea;
+        margin: 0 auto;
+    }
+    .id-header {
+        position: absolute; left: 20px; top: 16px; right: 20px;
+        display: flex; align-items: flex-start; justify-content: space-between;
+        color: #1f2d3d;
+    }
+    .id-header .gov-title {
+        font-size: 16px; font-weight: 700; line-height: 1.2; flex: 1; text-align: center; margin-top: 2px;
+    }
+    .id-header .id-left img,
+    .id-header .id-right img {
+        width: 64px;
+        height: auto;
+        display: block;
+    }
+    .id-header .gov-title { flex: 1; text-align: center; }
+    /* ID body 3x3 grid layout */
+    .id-body { position: absolute; left: 20px; right: 20px; top: 80px; bottom: 20px; display: grid; grid-template-columns: 1fr 0.8fr 1fr; grid-template-rows: 1fr 0.8fr 1fr; gap: 10px; align-items: center; }
+
+    /* Large color profile on left column, middle row */
+    .grid-left-photo { grid-column: 1 / 2; grid-row: 2 / 3; display: flex; align-items: center; justify-content: center; }
+    .grid-left-photo .id-photo { width: 140px; height: 180px; border-radius: 8px; overflow: hidden; border: 2px solid #ddd; background: #f8f9fa; display: flex; align-items: center; justify-content: center; }
+    .id-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Main details occupy right two columns, middle row */
+    .grid-main-details { grid-column: 2 / 4; grid-row: 2 / 3; }
+    .grid-main-details .id-details { margin: 0; display: grid; grid-template-columns: 1fr; row-gap: 8px; }
+
+    /* Center cell: small B/W profile + small coat of arms */
+    .grid-center-icons { grid-column: 2 / 3; grid-row: 2 / 3; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .bw-photo { width: 48px; height: 60px; border: 1px solid #ccc; border-radius: 4px; overflow: hidden; filter: grayscale(100%); background: #f8f9fa; display: flex; align-items: center; justify-content: center; }
+    .bw-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .mini-logo { width: 40px; height: 40px; display: block; }
+    .id-row { display: flex; margin-bottom: 8px; }
+    .id-label { width: 200px; color: #6c757d; font-weight: 600; font-size: 10px; text-transform: uppercase; }
+    .id-value { color: #2c3e50; font-weight: 600; font-size: 16px; }
+    .id-left { display: flex; flex-direction: column; align-items: center; }
+    .id-left .id-uid-left { margin-top: 6px; }
+    .id-left .id-uid-text { font-weight: 700; letter-spacing: 2px; }
+    /* UID positioned below left logo but outside header grid/layout */
+    .id-uid-below-left {
+        position: absolute;
+        top: 96px; /* adjust as needed to sit below header */
+        left: 40px; /* align under left logo */
+        font-weight: 700;
+        letter-spacing: 2px;
+        background: rgba(255,255,255,0.0);
+        padding: 2px 6px;
+    }
+    .id-footer { position: absolute; left: 20px; right: 20px; bottom: 20px; color: #2c3e50; font-size: 13px; }
 </style>
 @endsection
 
@@ -416,6 +485,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
                         <li class="nav-item"><a class="nav-link active" href="#tab-general" data-toggle="tab"><i class="fas fa-user mr-1"></i> General Information</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab-print-id" data-toggle="tab"><i class="fas fa-id-card mr-1"></i> Print ID</a></li>
                         <li class="nav-item ml-auto">
 @can('directory_edit')
     <a href="{{ route('admin.directories.edit', $directory->id) }}" class="btn btn-primary btn-sm">
@@ -541,6 +611,23 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                     </table>
                                 </div>
                             </div>
+                        </div>
+                        {{-- PRINT ID TAB --}}
+                        <div class="tab-pane" id="tab-print-id">
+                            <div class="section-header d-flex align-items-center justify-content-between">
+                                <h6 class="mb-0"><i class="fas fa-id-card"></i> Print ID</h6>
+                                <div class="no-print">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="window.print()"><i class="fas fa-print mr-1"></i> Print</button>
+                                </div>
+                            </div>
+
+                                @include('admin.directories.partials.print_id', [
+                                    'directory' => $directory,
+                                    'photoUrl' => $photoUrl,
+                                    'templateAvatar' => $templateAvatar,
+                                    'address' => $address,
+                                    'fmt' => $fmt,
+                                ])
                         </div>
                         <div class="tab-pane" id="tab-logs"></div>
                     </div>
