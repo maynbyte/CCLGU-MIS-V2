@@ -4,6 +4,11 @@
 /public/hot
 /public/storage
 /storage/*.key
+/storage/media-library/
+/storage/tmp/uploads/
+/storage/app/public/requirements/
+/storage/app/public/profile_pictures/
+/storage/app/public/conversions/
 /vendor
 .env
 .env.backup

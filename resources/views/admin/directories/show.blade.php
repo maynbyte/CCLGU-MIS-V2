@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 
 @section('styles')
-{{-- Optional tiny tweaks (AdminLTE already brings Bootstrap & Font Awesome) --}}
 <style>
     .profile-user-img {
         width: 150px;
