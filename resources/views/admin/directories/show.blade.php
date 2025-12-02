@@ -426,11 +426,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
             <div class="card">
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
-                        <li class="nav-item"><a class="nav-link active" href="#tab-general" data-toggle="tab"><i class="fas fa-user mr-1"></i> General</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#tab-orders" data-toggle="tab"><i class="fas fa-file-alt mr-1"></i> Orders</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#tab-family" data-toggle="tab"><i class="fas fa-user-friends mr-1"></i> Family</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#tab-copays" data-toggle="tab"><i class="fas fa-dollar-sign mr-1"></i> Copays</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#tab-messages" data-toggle="tab"><i class="fas fa-comment mr-1"></i> Messages</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#tab-general" data-toggle="tab"><i class="fas fa-user mr-1"></i> General Information</a></li>
                         <li class="nav-item ml-auto">
 @can('directory_edit')
     <a href="{{ route('admin.directories.edit', $directory->id) }}" class="btn btn-primary btn-sm">
@@ -561,11 +557,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
 
                         </div> {{-- /GENERAL --}}
 
-                        {{-- Stub tabs to match your template; keep content empty for now --}}
-                        <div class="tab-pane" id="tab-orders"></div>
-                        <div class="tab-pane" id="tab-family"></div>
-                        <div class="tab-pane" id="tab-copays"></div>
-                        <div class="tab-pane" id="tab-messages"></div>
+                        {{-- Remaining tabs --}}
                         <div class="tab-pane" id="tab-logs"></div>
                     </div>
                 </div><!-- /.card-body -->
