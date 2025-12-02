@@ -82,6 +82,12 @@ class DirectoryController extends Controller
             });
 
             // Renderers (return strings)
+            $table->editColumn('uid', function ($row) {
+                $uid = $row->uid ?? '';
+                if ($uid === '') return '';
+                // Insert hyphen every 4 characters: 1234-5678-9012-3456
+                return preg_replace('/(.{4})(?=.)/', '$1-', $uid);
+            });
             $table->editColumn('id', fn($row) => $row->id ?: '');
             $table->editColumn('last_name', fn($row) => $row->last_name ?: '');
             $table->editColumn('first_name', fn($row) => $row->first_name ?: '');

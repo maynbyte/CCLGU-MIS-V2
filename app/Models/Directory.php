@@ -55,6 +55,7 @@ class Directory extends Model implements HasMedia
     ];
 
     protected $fillable = [
+        'uid',
         'last_name',
         'maiden_surname',
         'first_name',
@@ -195,5 +196,23 @@ class Directory extends Model implements HasMedia
 
     
 
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->uid)) {
+                $model->uid = static::generateUid();
+            }
+        });
+    }
+
+    public static function generateUid(): string
+    {
+        do {
+            $candidate = str_pad((string) random_int(0, 9999999999999999), 16, '0', STR_PAD_LEFT);
+        } while (static::where('uid', $candidate)->exists());
+        return $candidate;
+    }
 
 }

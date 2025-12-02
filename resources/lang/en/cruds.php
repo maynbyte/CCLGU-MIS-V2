@@ -411,6 +411,8 @@ return [
         'fields'         => [
             'id'                     => 'ID',
             'id_helper'              => ' ',
+            'uid'                    => 'UID',
+            'uid_helper'             => ' ',
             'last_name'              => 'Last Name',
             'last_name_helper'       => ' ',
             'first_name'             => 'First Name',
