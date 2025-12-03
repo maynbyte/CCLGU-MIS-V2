@@ -132,6 +132,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('directories/process-csv-import', 'DirectoryController@processCsvImport')->name('directories.processCsvImport');
     Route::post('directories/send-bulk-sms', 'DirectoryController@sendBulkSms')->name('directories.sendBulkSms');
     Route::resource('directories', 'DirectoryController');
+    // Set Date of Issue (AJAX from Print ID tab)
+    Route::post('directories/{directory}/set-issue-date', 'DirectoryController@setIssueDate')->name('directories.setIssueDate');
 
 
 

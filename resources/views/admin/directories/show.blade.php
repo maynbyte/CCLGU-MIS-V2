@@ -661,6 +661,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                     <button type="button" class="btn btn-primary btn-sm" onclick="printFront()"><i class="fas fa-print mr-1"></i> Print</button>
                                 </div>
                             </div>
+                            <input type="hidden" id="date_of_issue" name="date_of_issue" value="">
 
                                 @include('admin.directories.partials.print_id_front', [
                                     'directory' => $directory,
@@ -669,7 +670,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                     'address' => $address,
                                     'fmt' => $fmt,
                                 ])
-                                {{-- BACK PART PREVIEW (below front preview) --}}
+                                {{-- BACK PART PREVIEW --}}
                                 <div class="mt-3">
                                     <div class="section-header d-flex align-items-center justify-content-between">
                                         <h6 class="mb-0"><i class="fas fa-id-card"></i> Preview of Back  Part ID</h6>
@@ -703,9 +704,12 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
 <script>
     function printFront() {
         try {
-            document.body.classList.remove('print-back');
-            document.body.classList.add('print-front');
-            window.print();
+            // update Date of Issue on server, then print
+            updateIssueDate().then(() => {
+                document.body.classList.remove('print-back');
+                document.body.classList.add('print-front');
+                window.print();
+            });
         } finally {
             // cleanup after a short delay in case onafterprint isn't available
             setTimeout(() => document.body.classList.remove('print-front'), 1000);
@@ -714,9 +718,12 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
 
     function printBack() {
         try {
-            document.body.classList.remove('print-front');
-            document.body.classList.add('print-back');
-            window.print();
+            // update Date of Issue on server, then print
+            updateIssueDate().then(() => {
+                document.body.classList.remove('print-front');
+                document.body.classList.add('print-back');
+                window.print();
+            });
         } finally {
             setTimeout(() => document.body.classList.remove('print-back'), 1000);
         }
@@ -728,6 +735,49 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
             document.body.classList.remove('print-front');
             document.body.classList.remove('print-back');
         });
+    }
+
+    // Helper: set today's date in hidden input when Print ID tab is shown
+    (function initIssueDate() {
+        const input = document.getElementById('date_of_issue');
+        if (!input) return;
+        const today = () => {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        };
+        const setToday = () => { input.value = today(); };
+        // set immediately if tab already active
+        try {
+            const tabPane = document.getElementById('tab-print-id');
+            if (tabPane && tabPane.classList.contains('active')) setToday();
+            const tabLink = document.querySelector('a[href="#tab-print-id"]');
+            if (tabLink) {
+                tabLink.addEventListener('shown.bs.tab', setToday);
+            }
+        } catch (e) { setToday(); }
+    })();
+
+    // Helper: POST date_of_issue to server
+    async function updateIssueDate() {
+        const input = document.getElementById('date_of_issue');
+        const date = input ? input.value : '';
+        const url = "{{ route('admin.directories.setIssueDate', $directory->id) }}";
+        const token = "{{ csrf_token() }}";
+        try {
+            await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': token,
+                },
+                body: new URLSearchParams({ date_of_issue: date }).toString(),
+            });
+        } catch (e) {
+            // fail silently; printing proceeds
+        }
     }
 </script>
 @endsection

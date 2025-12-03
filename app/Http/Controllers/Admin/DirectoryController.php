@@ -291,6 +291,29 @@ class DirectoryController extends Controller
             ->with('message', 'Directory successfully created ✅');
     }
 
+    /**
+     * Set the Date of Issue for the given directory (used by Print ID tab before printing).
+     */
+    public function setIssueDate(Request $request, Directory $directory)
+    {
+        abort_if(Gate::denies('directory_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $date = $request->input('date_of_issue');
+        try {
+            // Accept Y-m-d input; default to today if missing/invalid
+            $date = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+        } catch (\Throwable $e) {
+            $date = Carbon::now()->format('Y-m-d');
+        }
+
+        $directory->update(['date_of_issue' => $date]);
+
+        return response()->json([
+            'status' => 'ok',
+            'date_of_issue' => $directory->date_of_issue,
+        ]);
+    }
+
 
     public function edit(Directory $directory)
     {
