@@ -55,10 +55,15 @@
             </div>
             </div>
         </div>
-        <div class="id-footer ml-5 mb-2">
+        @php $barangayName = optional($directory->barangay)->barangay_name ?? null; @endphp
+        <div class="id-footer ml-5 mb-3">
             <div class="id-label">Tirahan/Address</div>
-            <div class="id-value">{{ $address }}</div>
-            
+            <div class="id-value">
+                {{ $address }}, 
+                @if($barangayName)
+                {{ $barangayName }}
+                @endif
+            </div>
         </div>
     </div>
 </div>
