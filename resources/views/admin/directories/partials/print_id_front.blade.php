@@ -1,6 +1,5 @@
 <div id="print-id-section" class="mt-3">
     <style>
-        /* Scoped to this partial: display all id-value text in uppercase */
         #print-id-section .id-value { text-transform: uppercase; }
     </style>
     <div class="id-card d-flex p-3">
@@ -18,7 +17,6 @@
                 <img src="{{ asset('/upload/C1.png') }}" style="width:80px; height:auto;" alt="Cavite City Logo">
             </div>
         </div>
-        {{-- UID placed below left logo outside the header layout --}}
         @php
             $uidRaw = $directory->uid ?? '';
             $uidFmt = $uidRaw ? preg_replace('/(.{4})(?=.)/', '$1-', $uidRaw) : '';
@@ -26,7 +24,6 @@
         <div class="id-uid-below-left">{{ $uidFmt ?: '1234-5678-1234-5678' }}</div>
         <div style="width:100%; display:flex; justify-content:center; align-items:flex-start;">
             <div class="id-body ml-5" style="display:grid; grid-template-columns: 1fr 2fr; grid-template-rows: auto auto; gap:12px 24px; max-width:720px; width:100%; gap:80px;">
-            <!-- Left large colored profile photo -->
             <div class="grid-left-photo" style="grid-row: 1 / span 2; grid-column: 1; display:flex; align-items:flex-start; gap:10px;">
                 <div class="id-photo" style="flex:1 1 auto;">
                     <img src="{{ $photoUrl ?: $templateAvatar }}" alt="Photo" style="display:block; width:100%; height:auto;">

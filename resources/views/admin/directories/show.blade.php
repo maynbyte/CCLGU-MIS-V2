@@ -621,7 +621,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                 </div>
                             </div>
 
-                                @include('admin.directories.partials.print_id', [
+                                @include('admin.directories.partials.print_id_front', [
                                     'directory' => $directory,
                                     'photoUrl' => $photoUrl,
                                     'templateAvatar' => $templateAvatar,
