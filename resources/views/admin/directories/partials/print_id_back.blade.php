@@ -19,7 +19,7 @@
         } catch (\Throwable $e) { $qrUrl = null; }
     @endphp
 
-    <div class="id-card d-flex p-3" style="height:430px; display:flex; align-items:stretch; justify-content:center;">
+    <div class="id-card d-flex p-3" style="height:430px; display:flex; align-items:stretch; justify-content:center; background: linear-gradient(rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.94)), url('{{ asset('city_hall.jpg') }}') no-repeat center center; background-size: cover;">
         <div style="width:100%; display:grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: auto 1fr auto; gap:12px; padding:24px; box-sizing:border-box;">
             <!-- Header: Date of Issue -->
             <div class="mt-4 ml-4" style="grid-column: 1 / 2; grid-row: 1; color:#6c757d; font-size:12px; line-height:1.2;">

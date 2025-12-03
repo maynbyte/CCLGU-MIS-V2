@@ -2,7 +2,7 @@
     <style>
         #print-id-section .id-value { text-transform: uppercase; }
     </style>
-    <div class="id-card d-flex p-3">
+    <div class="id-card d-flex p-3" style="background: linear-gradient(rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.94)), url('{{ asset('city_hall.jpg') }}') no-repeat center center; background-size: cover;">
         <div class="id-header">
             <div class="id-left ml-5">
                     <img src="{{ asset('/cavite-city-seal.png') }}" alt="Cavite City Seal" style="width:72px; height:auto;">
@@ -14,7 +14,7 @@
                 <div style="font-size:12px; font-weight:500;">Cavite City Identification Card</div>
             </div>
             <div class="id-right mr-5">
-                <img src="{{ asset('/upload/C1.png') }}" style="width:80px; height:auto;" alt="Cavite City Logo">
+                <img src="{{ asset('/upload/C1.png') }}" style="width:95px; height:auto;" alt="Cavite City Logo">
             </div>
         </div>
         @php
