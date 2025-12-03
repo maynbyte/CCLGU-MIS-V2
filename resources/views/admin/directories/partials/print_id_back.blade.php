@@ -22,14 +22,14 @@
     <div class="id-card d-flex p-3" style="height:430px; display:flex; align-items:stretch; justify-content:center;">
         <div style="width:100%; display:grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: auto 1fr auto; gap:12px; padding:24px; box-sizing:border-box;">
             <!-- Header: Date of Issue -->
-            <div class="mt-4" style="grid-column: 1 / 2; grid-row: 1; color:#6c757d; font-size:12px; line-height:1.2;">
+            <div class="mt-4 ml-4" style="grid-column: 1 / 2; grid-row: 1; color:#6c757d; font-size:12px; line-height:1.2;">
                 <div style="font-size: 10px;">Araw ng pagkakaloob / Date of Issue</div>
                 <div style="font-weight:700; font-size: 12px; color:#2c3e50; text-transform:uppercase;">{{ $doi }}</div>
             </div>
 
             <!-- Right: QR Code -->
-            <div style="grid-column: 2 / 3; grid-row: 1 / 3; display:flex; align-items:center; justify-content:center;">
-                <div style="width:260px; height:260px; background:#fff; display:flex; align-items:center; justify-content:center; border:1px solid #e9ecef;">
+            <div style="grid-column: 2 / 3; grid-row: 1 / 4; display:flex; align-items:center; justify-content:center;">
+                <div style="width:300px; height:100%; max-height:100%; background:#fff; display:flex; align-items:center; justify-content:center; border:1px solid #e9ecef; padding:8px; box-sizing:border-box;">
                     @if($qrUrl)
                         <img src="{{ $qrUrl }}" alt="QR Code" style="width:100%; height:100%; object-fit:contain;">
                     @else
@@ -37,13 +37,13 @@
                             // Fallback: render QR inline (SVG) encoding UID as JSON
                             $payload = json_encode([ 'uid' => $directory->uid ]);
                         @endphp
-                        {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(240)->margin(0)->generate($payload) !!}
+                        {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(360)->margin(0)->generate($payload) !!}
                     @endif
                 </div>
             </div>
 
             <!-- Left: Details -->
-            <div style="grid-column: 1 / 2; grid-row: 2; align-self:start;">
+            <div class="ml-4" style="grid-column: 1 / 2; grid-row: 2; align-self:start;">
                 <div style="margin-bottom:8px;">
                     <div style="font-size:12px; color:#6c757d;">Kasarian / <span style="color:#6c757d;">Sex</span></div>
                     <div style="font-size:16px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $sex }}</div>
@@ -61,15 +61,10 @@
                     <div style="font-size:16px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $pob }}</div>
                 </div>
             </div>
-
-            <!-- Footer row -->
-            <div style="grid-column: 1 / 2; grid-row: 3; align-self:end; color:#6c757d; font-size:12px;">
-                If found, please return to the nearest PSA Office.<br>
-                <span style="color:#2c3e50;">www.psa.gov.ph</span>
-            </div>
-            <div style="grid-column: 2 / 3; grid-row: 3; align-self:end; justify-self:end; text-align:right;">
-                <div style="width:260px; height:28px; background:repeating-linear-gradient(90deg, rgba(0,0,0,0.85) 0 2px, transparent 2px 4px); margin-left:auto;"></div>
-                <div style="margin-top:6px; font-family:monospace; font-size:12px; color:#2c3e50;">{{ $uidFmt ?: (str_pad((string)($directory->id ?? 0), 12, '0', STR_PAD_LEFT)) }}</div>
+            <div style="grid-column: 1 / 2; grid-row: 3; align-self:end; display:flex; align-items:center; gap:8px;">
+                <img src="{{ asset('upload/unlad-cavite-logo.png') }}" alt="Unlad Cavite" style="height:50px; width:auto; object-fit:contain;">
+                <img src="{{ asset('upload/denver-chua-logo.png') }}" alt="Denver Chua" style="height:50px; width:auto; object-fit:contain;">
+                <img src="{{ asset('chuacares.png') }}" alt="Chua Cares" style="height:30px; width:auto; object-fit:contain;">
             </div>
         </div>
     </div>
