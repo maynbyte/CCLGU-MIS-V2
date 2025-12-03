@@ -155,9 +155,38 @@
 
     /* Print styles for ID card */
     @media print {
+        /* remove default page margins so we can pin the ID card to the very top */
+        @page { margin: 0; }
+        body { margin: 0; }
+
+        /* hide everything except the print preview */
         body * { visibility: hidden; }
+        /* show the front ID section and its children */
         #print-id-section, #print-id-section * { visibility: visible; }
-        #print-id-section { position: absolute; left: 0; top: 0; width: 100%; }
+
+        /* pin the front ID to the top-center of the physical page */
+        #print-id-section {
+            position: fixed;
+            left: 50%;
+            top: 8mm; /* small offset from the very edge for most printers */
+            transform: translateX(-50%);
+            width: 680px; /* match .id-card width so centering is exact */
+            margin: 0;
+            z-index: 9999;
+        }
+
+        /* print-only outline to make it look like an ID */
+        .id-card {
+            margin: 0;
+            width: 680px;
+            height: 430px;
+            box-shadow: none !important;
+            border: 3px solid rgba(0,0,0,0.18) !important;
+            border-radius: 14px !important;
+            background-clip: padding-box;
+        }
+
+        /* hide UI elements when printing */
         .no-print { display: none !important; }
     }
 
