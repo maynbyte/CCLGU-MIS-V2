@@ -153,24 +153,34 @@
         border-bottom: none;
     }
 
-    /* Print styles for ID card */
+    /* Print styles for ID card (separate front/back modes) */
     @media print {
         /* remove default page margins so we can pin the ID card to the very top */
         @page { margin: 0; }
         body { margin: 0; }
 
-        /* hide everything except the print preview */
-        body * { visibility: hidden; }
-        /* show the front ID section and its children */
-        #print-id-section, #print-id-section * { visibility: visible; }
-
-        /* pin the front ID to the top-center of the physical page */
-        #print-id-section {
+        /* Front-only print: hide everything except front section */
+        body.print-front * { visibility: hidden; }
+        body.print-front #print-id-section, body.print-front #print-id-section * { visibility: visible; }
+        body.print-front #print-id-section {
             position: fixed;
             left: 50%;
-            top: 8mm; /* small offset from the very edge for most printers */
+            top: 8mm;
             transform: translateX(-50%);
-            width: 680px; /* match .id-card width so centering is exact */
+            width: 680px;
+            margin: 0;
+            z-index: 9999;
+        }
+
+        /* Back-only print: hide everything except back section */
+        body.print-back * { visibility: hidden; }
+        body.print-back #print-id-back-section, body.print-back #print-id-back-section * { visibility: visible; }
+        body.print-back #print-id-back-section {
+            position: fixed;
+            left: 50%;
+            top: 8mm;
+            transform: translateX(-50%);
+            width: 680px;
             margin: 0;
             z-index: 9999;
         }
@@ -648,7 +658,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                             <div class="section-header d-flex align-items-center justify-content-between">
                                 <h6 class="mb-0"><i class="fas fa-id-card"></i> Preview of Front Part ID</h6>
                                 <div class="no-print">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="window.print()"><i class="fas fa-print mr-1"></i> Print</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="printFront()"><i class="fas fa-print mr-1"></i> Print</button>
                                 </div>
                             </div>
 
@@ -664,7 +674,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                     <div class="section-header d-flex align-items-center justify-content-between">
                                         <h6 class="mb-0"><i class="fas fa-id-card"></i> Preview of Back  Part ID</h6>
                                     <div class="no-print">
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()"><i class="fas fa-print mr-1"></i> Print</button>
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="printBack()"><i class="fas fa-print mr-1"></i> Print</button>
                                     </div>
                                 </div>
 
@@ -690,4 +700,34 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
         <i class="fas fa-arrow-left mr-2"></i>{{ trans('global.back_to_list') }}
     </a>
 </div>
+<script>
+    function printFront() {
+        try {
+            document.body.classList.remove('print-back');
+            document.body.classList.add('print-front');
+            window.print();
+        } finally {
+            // cleanup after a short delay in case onafterprint isn't available
+            setTimeout(() => document.body.classList.remove('print-front'), 1000);
+        }
+    }
+
+    function printBack() {
+        try {
+            document.body.classList.remove('print-front');
+            document.body.classList.add('print-back');
+            window.print();
+        } finally {
+            setTimeout(() => document.body.classList.remove('print-back'), 1000);
+        }
+    }
+
+    if (window.matchMedia) {
+        // attempt to clean up after print using the afterprint event
+        window.addEventListener('afterprint', function () {
+            document.body.classList.remove('print-front');
+            document.body.classList.remove('print-back');
+        });
+    }
+</script>
 @endsection
