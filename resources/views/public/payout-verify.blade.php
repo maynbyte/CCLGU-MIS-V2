@@ -434,7 +434,7 @@
             position: absolute;
             left: 0;
             top: 0;
-            height: 80px;
+            height: 90px;
             width: auto;
             object-fit: contain;
         }
@@ -443,7 +443,7 @@
             position: absolute;
             right: 0;
             top: 0;
-            height: 80px;
+            height: 100px;
             width: auto;
             object-fit: contain;
         }
@@ -458,8 +458,8 @@
         }
 
         .header-line {
-            font-size: 11px;
-            font-weight: 400;
+            font-size: 16px;
+            font-weight: 600;
             color: #333;
             margin: 0;
         }
@@ -495,7 +495,7 @@
             }
 
             .header-line {
-                font-size: 7px;
+                font-size: 10px;
             }
 
             .header-title {
@@ -521,7 +521,7 @@
             }
 
             .header-line {
-                font-size: 9px;
+                font-size: 14px;
             }
 
             .header-title {
