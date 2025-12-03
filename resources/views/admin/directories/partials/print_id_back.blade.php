@@ -33,7 +33,11 @@
                     @if($qrUrl)
                         <img src="{{ $qrUrl }}" alt="QR Code" style="width:100%; height:100%; object-fit:contain;">
                     @else
-                        <div style="text-align:center; color:#6c757d;">QR CODE</div>
+                        @php
+                            // Fallback: render QR inline (SVG) encoding UID as JSON
+                            $payload = json_encode([ 'uid' => $directory->uid ]);
+                        @endphp
+                        {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(240)->margin(0)->generate($payload) !!}
                     @endif
                 </div>
             </div>
