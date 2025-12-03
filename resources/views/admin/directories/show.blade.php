@@ -656,7 +656,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                         {{-- PRINT ID TAB --}}
                         <div class="tab-pane" id="tab-print-id">
                             <div class="section-header d-flex align-items-center justify-content-between">
-                                <h6 class="mb-0"><i class="fas fa-id-card"></i> Preview of Front Part ID</h6>
+                                <h6 class="mb-0"><i class="fas fa-id-card"></i> Preview of the ID</h6>
                                 <div class="no-print">
                                     <button type="button" class="btn btn-primary btn-sm" onclick="printFront()"><i class="fas fa-print mr-1"></i> Print</button>
                                 </div>
@@ -671,13 +671,6 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                     'fmt' => $fmt,
                                 ])
                                 {{-- BACK PART PREVIEW --}}
-                                <div class="mt-3">
-                                    <div class="section-header d-flex align-items-center justify-content-between">
-                                        <h6 class="mb-0"><i class="fas fa-id-card"></i> Preview of Back  Part ID</h6>
-                                    <div class="no-print">
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="printBack()"><i class="fas fa-print mr-1"></i> Print</button>
-                                    </div>
-                                </div>
 
                                     @include('admin.directories.partials.print_id_back', [
                                         'directory' => $directory,
@@ -686,7 +679,6 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                         'address' => $address,
                                         'fmt' => $fmt,
                                     ])
-                                </div>
                         </div>
                         <div class="tab-pane" id="tab-logs"></div>
                     </div>
