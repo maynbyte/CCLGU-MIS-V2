@@ -164,10 +164,22 @@ if ($oldBday) {
                                                         @endif
                                                         <span class="help-block">{{ trans('cruds.directory.fields.gender_helper') }}</span>
                                                     </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    {{-- Highest Education --}}
+                                                    {{-- Blood Type --}}
+                                                    <div class="col-md-2 mb-3">
+                                                        <label class="form-label font-weight-bold" for="blood_type">
+                                                            <i class="fas fa-tint text-muted mr-1"></i>Blood Type
+                                                        </label>
+                                                        <select class="form-control {{ $errors->has('blood_type') ? 'is-invalid' : '' }}" name="blood_type" id="blood_type">
+                                                            <option value disabled {{ old('blood_type', $directory->blood_type) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
+                                                            @foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $bt)
+                                                            <option value="{{ $bt }}" {{ old('blood_type', $directory->blood_type) == $bt ? 'selected' : '' }}>{{ $bt }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        @if($errors->has('blood_type'))
+                                                        <span class="text-danger">{{ $errors->first('blood_type') }}</span>
+                                                        @endif
+                                                    </div>
+                                                                                                        {{-- Highest Education --}}
                                                     <div class="col-md-3 mb-3">
                                                         <label class="form-label font-weight-bold"><i class="fas fa-graduation-cap text-muted mr-1"></i>{{ trans('cruds.directory.fields.highest_edu') }}</label>
                                                         <select class="form-control form-control-md {{ $errors->has('highest_edu') ? 'is-invalid' : '' }}" name="highest_edu" id="highest_edu">
@@ -226,7 +238,7 @@ if ($oldBday) {
                                                         @endif
                                                     </div>
                                                 </div>
-
+                                                    
                                                 <h6 class="text-muted mb-3 mt-2 font-weight-bold"><i class="fas fa-home mr-1"></i>Address Information</h6>
 
                                                 <div class="row mb-3">
