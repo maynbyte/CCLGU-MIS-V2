@@ -14,6 +14,7 @@ use App\Models\Ngo;
 use App\Models\SectorGroup;
 use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\FinancialAssistance;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -312,6 +314,35 @@ class DirectoryController extends Controller
             'status' => 'ok',
             'date_of_issue' => $directory->date_of_issue,
         ]);
+    }
+
+    /**
+     * Generate and attach a QR code to the directory encoding UID in JSON.
+     */
+    public function generateQr(Request $request, Directory $directory)
+    {
+        abort_if(Gate::denies('directory_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $payload = json_encode(['uid' => (string) ($directory->uid ?? '')]);
+        // Generate PNG bytes
+        $png = QrCode::format('png')->size(600)->margin(1)->generate($payload);
+
+        // Store temporarily and attach to media library
+        $tmpName = 'qr_'.$directory->id.'_'.time().'.png';
+        $tmpPath = storage_path('tmp/uploads/'.$tmpName);
+        if (!is_dir(dirname($tmpPath))) {
+            @mkdir(dirname($tmpPath), 0777, true);
+        }
+        file_put_contents($tmpPath, $png);
+
+        // Optionally clear previous QR codes to keep latest only
+        try {
+            $directory->clearMediaCollection('qr_code');
+        } catch (\Throwable $e) {}
+
+        $directory->addMedia($tmpPath)->usingFileName('qr_'.$directory->id.'.png')->toMediaCollection('qr_code');
+
+        return response()->json(['status' => 'ok']);
     }
 
 

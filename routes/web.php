@@ -134,6 +134,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('directories', 'DirectoryController');
     // Set Date of Issue (AJAX from Print ID tab)
     Route::post('directories/{directory}/set-issue-date', 'DirectoryController@setIssueDate')->name('directories.setIssueDate');
+    // Generate QR code with UID JSON
+    Route::post('directories/{directory}/generate-qr', 'DirectoryController@generateQr')->name('directories.generateQr');
 
 
 

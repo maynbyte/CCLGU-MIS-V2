@@ -705,7 +705,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
     function printFront() {
         try {
             // update Date of Issue on server, then print
-            updateIssueDate().then(() => {
+            Promise.all([updateIssueDate(), ensureQrCode()]).then(() => {
                 document.body.classList.remove('print-back');
                 document.body.classList.add('print-front');
                 window.print();
@@ -719,7 +719,7 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
     function printBack() {
         try {
             // update Date of Issue on server, then print
-            updateIssueDate().then(() => {
+            Promise.all([updateIssueDate(), ensureQrCode()]).then(() => {
                 document.body.classList.remove('print-front');
                 document.body.classList.add('print-back');
                 window.print();
@@ -778,6 +778,22 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
         } catch (e) {
             // fail silently; printing proceeds
         }
+    }
+
+    // Helper: request QR code generation before printing (encodes UID as JSON)
+    async function ensureQrCode() {
+        const url = "{{ route('admin.directories.generateQr', $directory->id) }}";
+        const token = "{{ csrf_token() }}";
+        try {
+            await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': token,
+                },
+                body: new URLSearchParams({}).toString(),
+            });
+        } catch (e) {}
     }
 </script>
 @endsection

@@ -22,9 +22,9 @@
     <div class="id-card d-flex p-3" style="height:430px; display:flex; align-items:stretch; justify-content:center;">
         <div style="width:100%; display:grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: auto 1fr auto; gap:12px; padding:24px; box-sizing:border-box;">
             <!-- Header: Date of Issue -->
-            <div style="grid-column: 1 / 2; grid-row: 1; color:#6c757d; font-size:12px; line-height:1.2;">
-                <div style="text-transform:uppercase;">Araw ng pagkakaloob / Date of Issue</div>
-                <div style="font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $doi }}</div>
+            <div class="mt-4" style="grid-column: 1 / 2; grid-row: 1; color:#6c757d; font-size:12px; line-height:1.2;">
+                <div style="font-size: 10px;">Araw ng pagkakaloob / Date of Issue</div>
+                <div style="font-weight:700; font-size: 12px; color:#2c3e50; text-transform:uppercase;">{{ $doi }}</div>
             </div>
 
             <!-- Right: QR Code -->
@@ -42,15 +42,15 @@
             <div style="grid-column: 1 / 2; grid-row: 2; align-self:start;">
                 <div style="margin-bottom:8px;">
                     <div style="font-size:12px; color:#6c757d;">Kasarian / <span style="color:#6c757d;">Sex</span></div>
-                    <div style="font-size:18px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $sex }}</div>
+                    <div style="font-size:16px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $sex }}</div>
                 </div>
                 <div style="margin-bottom:8px;">
                     <div style="font-size:12px; color:#6c757d;">Uri ng Dugo / <span style="color:#6c757d;">Blood Type</span></div>
-                    <div style="font-size:18px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $blood }}</div>
+                    <div style="font-size:16px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $blood }}</div>
                 </div>
                 <div style="margin-bottom:8px;">
                     <div style="font-size:12px; color:#6c757d;">Kalagayang Sibil / <span style="color:#6c757d;">Marital Status</span></div>
-                    <div style="font-size:18px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $civil }}</div>
+                    <div style="font-size:16px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $civil }}</div>
                 </div>
                 <div style="margin-bottom:8px;">
                     <div style="font-size:12px; color:#6c757d;">Lugar ng Kapanganakan / <span style="color:#6c757d;">Place of Birth</span></div>
