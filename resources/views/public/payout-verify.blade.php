@@ -12,11 +12,7 @@
 </head>
 
 <body class="hold-transition login-page">
-
-    {{-- Fixed background + overlay --}}
     <div class="auth-bg" aria-hidden="true"></div>
-
-    {{-- Fixed repeating landmark strip at the bottom --}}
     <div class="auth-landmark" aria-hidden="true"></div>
 
     <style>

@@ -64,7 +64,7 @@
             <div style="grid-column: 1 / 2; grid-row: 3; align-self:end; display:flex; align-items:center; gap:8px;">
                 <img src="{{ asset('upload/unlad-cavite-logo.png') }}" alt="Unlad Cavite" style="height:50px; width:auto; object-fit:contain;">
                 <img src="{{ asset('upload/denver-chua-logo.png') }}" alt="Denver Chua" style="height:50px; width:auto; object-fit:contain;">
-                <img src="{{ asset('chuacares.png') }}" alt="Chua Cares" style="height:30px; width:auto; object-fit:contain;">
+                <img src="{{ asset('chuacares.png') }}" alt="Chua Cares" style="height:55px; width:auto; object-fit:contain;">
             </div>
         </div>
     </div>
