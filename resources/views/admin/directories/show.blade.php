@@ -568,6 +568,10 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                         <span class="small-label"><i class="fas fa-envelope"></i> Email</span>
                                         <div class="font-weight-medium">{{ $email }}</div>
                                     </div>
+                                    <div class="col-md-3">
+                                        <span class="small-label"><i class="fas fa-tint"></i> Blood Type</span>
+                                        <div class="font-weight-medium">{{ $directory->blood_type ?? 'N/A' }}</div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -597,8 +601,6 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                                         <div class="font-weight-medium">{{ $directory->place_of_birth ?: 'N/A' }}</div>
                                     </div>
                                 </div>
-
-
                             </div>
 
                             {{-- Family Composition--}}
