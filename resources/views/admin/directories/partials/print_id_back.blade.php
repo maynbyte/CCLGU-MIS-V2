@@ -1,40 +1,71 @@
 <div id="print-id-back-section" class="mt-3">
+    @php
+        use Carbon\Carbon;
+        $sex = $directory->gender ?? null;
+        if ($sex) { $sex = \App\Models\Directory::GENDER_SELECT[$sex] ?? $sex; }
+        $sex = $sex ?: 'N/A';
+        $blood = $directory->blood_type ?? 'N/A';
+        $civil = $directory->civil_status ?? 'N/A';
+        if ($civil) { $civil = \App\Models\Directory::CIVIL_STATUS_SELECT[$civil] ?? $civil; }
+        $pob = $directory->place_of_birth ?? 'N/A';
+        $doi = $directory->date_of_issue ? Carbon::parse($directory->date_of_issue)->format('d F Y') : 'N/A';
+        $uidRaw = $directory->uid ?? '';
+        $uidFmt = $uidRaw ? preg_replace('/(.{4})(?=.)/', '$1-', $uidRaw) : '';
+        $qrUrl = null;
+        try {
+            if (method_exists($directory, 'getFirstMediaUrl')) {
+                $qrUrl = $directory->getFirstMediaUrl('qr_code');
+            }
+        } catch (\Throwable $e) { $qrUrl = null; }
+    @endphp
 
     <div class="id-card d-flex p-3" style="height:430px; display:flex; align-items:stretch; justify-content:center;">
-        <div style="width:100%; display:flex; gap:24px; padding:24px; box-sizing:border-box;">
-            <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
-                <div>
-                    <h5 style="margin:0 0 8px 0; font-weight:700;">Emergency Contact</h5>
-                    <div style="color:#495057; font-size:14px;">Name: {{ $directory->emergency_contact_name ?? 'N/A' }}</div>
-                    <div style="color:#495057; font-size:14px;">Phone: {{ $directory->emergency_contact_no ?? 'N/A' }}</div>
-                    <div style="margin-top:12px; color:#6c757d; font-size:13px;">Blood Type: {{ $directory->blood_type ?? 'N/A' }}</div>
-                </div>
-
-                <div style="margin-top:8px;">
-                    <div style="font-size:12px; color:#6c757d;">Authorized Signature</div>
-                    <div style="height:48px; border-bottom:2px dashed rgba(0,0,0,0.1); width:240px;"></div>
-                </div>
+        <div style="width:100%; display:grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: auto 1fr auto; gap:12px; padding:24px; box-sizing:border-box;">
+            <!-- Header: Date of Issue -->
+            <div style="grid-column: 1 / 2; grid-row: 1; color:#6c757d; font-size:12px; line-height:1.2;">
+                <div style="text-transform:uppercase;">Araw ng pagkakaloob / Date of Issue</div>
+                <div style="font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $doi }}</div>
             </div>
 
-            <div style="flex:0 0 240px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                @php
-                    $qrUrl = null;
-                    try {
-                        if (method_exists($directory, 'getFirstMediaUrl')) {
-                            $qrUrl = $directory->getFirstMediaUrl('qr_code');
-                        }
-                    } catch (\Throwable $e) { $qrUrl = null; }
-                @endphp
-
-                <div style="width:200px; height:200px; background:#fff; display:flex; align-items:center; justify-content:center; border:1px solid #e9ecef;">
+            <!-- Right: QR Code -->
+            <div style="grid-column: 2 / 3; grid-row: 1 / 3; display:flex; align-items:center; justify-content:center;">
+                <div style="width:260px; height:260px; background:#fff; display:flex; align-items:center; justify-content:center; border:1px solid #e9ecef;">
                     @if($qrUrl)
                         <img src="{{ $qrUrl }}" alt="QR Code" style="width:100%; height:100%; object-fit:contain;">
                     @else
                         <div style="text-align:center; color:#6c757d;">QR CODE</div>
                     @endif
                 </div>
+            </div>
 
-                <div style="margin-top:12px; font-size:12px; color:#6c757d; text-align:center;">Scan for verification</div>
+            <!-- Left: Details -->
+            <div style="grid-column: 1 / 2; grid-row: 2; align-self:start;">
+                <div style="margin-bottom:8px;">
+                    <div style="font-size:12px; color:#6c757d;">Kasarian / <span style="color:#6c757d;">Sex</span></div>
+                    <div style="font-size:18px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $sex }}</div>
+                </div>
+                <div style="margin-bottom:8px;">
+                    <div style="font-size:12px; color:#6c757d;">Uri ng Dugo / <span style="color:#6c757d;">Blood Type</span></div>
+                    <div style="font-size:18px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $blood }}</div>
+                </div>
+                <div style="margin-bottom:8px;">
+                    <div style="font-size:12px; color:#6c757d;">Kalagayang Sibil / <span style="color:#6c757d;">Marital Status</span></div>
+                    <div style="font-size:18px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $civil }}</div>
+                </div>
+                <div style="margin-bottom:8px;">
+                    <div style="font-size:12px; color:#6c757d;">Lugar ng Kapanganakan / <span style="color:#6c757d;">Place of Birth</span></div>
+                    <div style="font-size:16px; font-weight:700; color:#2c3e50; text-transform:uppercase;">{{ $pob }}</div>
+                </div>
+            </div>
+
+            <!-- Footer row -->
+            <div style="grid-column: 1 / 2; grid-row: 3; align-self:end; color:#6c757d; font-size:12px;">
+                If found, please return to the nearest PSA Office.<br>
+                <span style="color:#2c3e50;">www.psa.gov.ph</span>
+            </div>
+            <div style="grid-column: 2 / 3; grid-row: 3; align-self:end; justify-self:end; text-align:right;">
+                <div style="width:260px; height:28px; background:repeating-linear-gradient(90deg, rgba(0,0,0,0.85) 0 2px, transparent 2px 4px); margin-left:auto;"></div>
+                <div style="margin-top:6px; font-family:monospace; font-size:12px; color:#2c3e50;">{{ $uidFmt ?: (str_pad((string)($directory->id ?? 0), 12, '0', STR_PAD_LEFT)) }}</div>
             </div>
         </div>
     </div>
