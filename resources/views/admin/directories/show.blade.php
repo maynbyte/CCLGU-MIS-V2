@@ -185,6 +185,29 @@
             z-index: 9999;
         }
 
+        /* Both-sides print: show front and back on one sheet */
+        body.print-both * { visibility: hidden; }
+        body.print-both #print-id-section, body.print-both #print-id-section *,
+        body.print-both #print-id-back-section, body.print-both #print-id-back-section * { visibility: visible; }
+        body.print-both #print-id-section {
+            position: fixed;
+            left: 50%;
+            top: 8mm;
+            transform: translateX(-50%);
+            width: 680px;
+            margin: 0;
+            z-index: 9999;
+        }
+        body.print-both #print-id-back-section {
+            position: fixed;
+            left: 50%;
+            top: calc(8mm + 450px + 8mm); /* front height + gap */
+            transform: translateX(-50%);
+            width: 680px;
+            margin: 0;
+            z-index: 9999;
+        }
+
         /* print-only outline to make it look like an ID */
         .id-card {
             margin: 0;
@@ -655,10 +678,10 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
                         </div>
                         {{-- PRINT ID TAB --}}
                         <div class="tab-pane" id="tab-print-id">
-                            <div class="section-header d-flex align-items-center justify-content-between">
+                                <div class="section-header d-flex align-items-center justify-content-between">
                                 <h6 class="mb-0"><i class="fas fa-id-card"></i> Preview of the ID</h6>
-                                <div class="no-print">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="printFront()"><i class="fas fa-print mr-1"></i> Print</button>
+                                <div class="no-print btn-group">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="printBoth()"><i class="fas fa-file mr-1"></i> Print</button>
                                 </div>
                             </div>
                             <input type="hidden" id="date_of_issue" name="date_of_issue" value="">
@@ -721,11 +744,25 @@ $notes = $notes ?: 'Knee pain, Headache, Last time he looked sick';
         }
     }
 
+    function printBoth() {
+        try {
+            Promise.all([updateIssueDate(), ensureQrCode()]).then(() => {
+                document.body.classList.remove('print-front');
+                document.body.classList.remove('print-back');
+                document.body.classList.add('print-both');
+                window.print();
+            });
+        } finally {
+            setTimeout(() => document.body.classList.remove('print-both'), 1000);
+        }
+    }
+
     if (window.matchMedia) {
         // attempt to clean up after print using the afterprint event
         window.addEventListener('afterprint', function () {
             document.body.classList.remove('print-front');
             document.body.classList.remove('print-back');
+            document.body.classList.remove('print-both');
         });
     }
 
