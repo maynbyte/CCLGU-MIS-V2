@@ -56,6 +56,7 @@ class Directory extends Model implements HasMedia
 
     protected $fillable = [
         'uid',
+        'blood_type',
         'last_name',
         'maiden_surname',
         'first_name',
