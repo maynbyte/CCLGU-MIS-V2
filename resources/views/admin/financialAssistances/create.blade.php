@@ -944,6 +944,7 @@ $claimantIsPatient = (string) old(
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
+                                                        <th>Settings</th>
                                                         <th>Reference No.</th>
                                                         <th>Type of Assistance</th>
                                                         <th>Patient Name</th>
@@ -952,7 +953,6 @@ $claimantIsPatient = (string) old(
                                                         <th>Date Claimed</th>
                                                         <th>Status</th>
                                                         <th>Added By</th>
-                                                        <th>Settings</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -998,6 +998,22 @@ $claimantIsPatient = (string) old(
                                                     @endphp
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
+                                                        <td class="text-nowrap">
+                                                            <div class="d-flex flex-column gap-1" style="max-width: 220px;">
+                                                                <a href="{{ route('admin.financial-assistances.show', $fa->id) }}" class="btn btn-sm btn-success mb-1" title="View">View</a>
+                                                                <a href="{{ route('admin.financial-assistances.edit', $fa->id) }}" class="btn btn-sm btn-primary mb-1">Edit</a>
+                                                                <a href="{{ route('admin.financial-assistances.print', $fa->id) }}" target="_blank" class="btn btn-sm btn-secondary mb-1">Print</a>
+                                                                @can('financial_assistance_delete')
+                                                                <form action="{{ route('admin.financial-assistances.destroy', $fa->id) }}" method="POST" style="display:block;">
+                                                                    @csrf @method('DELETE')
+                                                                    <button type="submit" class="btn btn-sm btn-danger mb-1" style="width:100%;"
+                                                                        onclick="return confirm('Delete this financial assistance record? This cannot be undone.')">
+                                                                        Delete
+                                                                    </button>
+                                                                </form>
+                                                                @endcan
+                                                            </div>
+                                                        </td>
                                                         <td>{{ $fa->reference_no ?? '—' }}</td>
                                                         <td>{{ $fa->type_of_assistance ?: '—' }}</td>
                                                         <td>{{ $patientDisplay }}</td>
@@ -1013,22 +1029,6 @@ $claimantIsPatient = (string) old(
 
                                                         <td><span class="badge bg-{{ $badgeClass }}">{{ $status }}</span></td>
                                                         <td>{{ optional($fa->addedBy)->name ?? '—' }}</td>
-                                                        <td class="text-nowrap">
-                                                            <div class="d-flex flex-wrap gap-1" style="max-width: 200px;">
-                                                                <a href="{{ route('admin.financial-assistances.show', $fa->id) }}" class="btn btn-sm btn-success mb-1" title="View" style="flex: 1 0 45%;">View</a>
-                                                                <a href="{{ route('admin.financial-assistances.edit', $fa->id) }}" class="btn btn-sm btn-primary mb-1" style="flex: 1 0 45%;">Edit</a>
-                                                                <a href="{{ route('admin.financial-assistances.print', $fa->id) }}" target="_blank" class="btn btn-sm btn-secondary mb-1" style="flex: 1 0 45%;">Print</a>
-                                                                @can('financial_assistance_delete')
-                                                                <form action="{{ route('admin.financial-assistances.destroy', $fa->id) }}" method="POST" style="flex: 1 0 45%;">
-                                                                    @csrf @method('DELETE')
-                                                                    <button type="submit" class="btn btn-sm btn-danger w-100"
-                                                                        onclick="return confirm('Delete this financial assistance record? This cannot be undone.')">
-                                                                        Delete
-                                                                    </button>
-                                                                </form>
-                                                                @endcan
-                                                            </div>
-                                                        </td>
                                                     </tr>
                                                     @empty
                                                     <tr>
