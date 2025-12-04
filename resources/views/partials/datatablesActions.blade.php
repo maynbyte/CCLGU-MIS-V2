@@ -1,22 +1,21 @@
-@can($viewGate)
-    <a class="btn btn-xs btn-primary" href="{{ route('admin.' . $crudRoutePart . '.show', $row->id) }}">
-        {{ trans('global.view') }}
-    </a>
-@endcan
-@can($editGate)
-    <a class="btn btn-xs btn-info" href="{{ route('admin.' . $crudRoutePart . '.edit', $row->id) }}">
-        {{ trans('global.edit') }}
-    </a>
-@endcan
-@if($crudRoutePart === 'financial-assistances')
-    <a class="btn btn-xs btn-success" href="{{ route('admin.financial-assistances.printQrCode', $row->id) }}" target="_blank" title="Print QR Code">
-        <i class="fas fa-qrcode"></i> QR
-    </a>
-@endif
-@can($deleteGate)
-    <form action="{{ route('admin.' . $crudRoutePart . '.destroy', $row->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-        <input type="hidden" name="_method" value="DELETE">
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-    </form>
-@endcan
+<div class="d-flex flex-column" style="min-width:90px;">
+    @can($viewGate)
+        <a class="btn btn-sm btn-success mb-1 text-white w-100 text-center" href="{{ route('admin.' . $crudRoutePart . '.show', $row->id) }}" title="{{ trans('global.view') }}">
+            <span class="d-none d-md-inline">{{ trans('global.view') }}</span>
+        </a>
+    @endcan
+
+    @can($editGate)
+        <a class="btn btn-sm btn-primary mb-1 text-white w-100 text-center" href="{{ route('admin.' . $crudRoutePart . '.edit', $row->id) }}" title="{{ trans('global.edit') }}">
+            <span class="d-none d-md-inline">{{ trans('global.edit') }}</span>
+        </a>
+    @endcan
+
+    @can($deleteGate)
+        <form action="{{ route('admin.' . $crudRoutePart . '.destroy', $row->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: block;">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="submit" class="btn btn-sm btn-danger w-100" value="{{ trans('global.delete') }}">
+        </form>
+    @endcan
+</div>
