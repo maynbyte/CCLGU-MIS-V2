@@ -548,50 +548,56 @@ if ($oldBday) {
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label font-weight-bold"><i class="fas fa-vote-yea text-muted mr-1"></i>{{ trans('cruds.directory.fields.comelec_status') }}</label>
-                            <select class="form-control {{ $errors->has('comelec_status') ? 'is-invalid' : '' }}" name="comelec_status" id="comelec_status">
-                                <option value disabled {{ old('comelec_status', $directory->comelec_status) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
-                                @foreach(App\Models\Directory::COMELEC_STATUS_SELECT as $key => $label)
-                                <option value="{{ $key }}" {{ old('comelec_status', $directory->comelec_status) == (string) $key ? 'selected' : '' }}>{{ $label }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('comelec_status'))
-                            <span class="text-danger">{{ $errors->first('comelec_status') }}</span>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.directory.fields.comelec_status_helper') }}</span>
-                        </div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label font-weight-bold"><i class="fas fa-vote-yea text-muted mr-1"></i>{{ trans('cruds.directory.fields.comelec_status') }}</label>
+                                    <select class="form-control {{ $errors->has('comelec_status') ? 'is-invalid' : '' }}" name="comelec_status" id="comelec_status">
+                                        <option value disabled {{ old('comelec_status', $directory->comelec_status) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
+                                        @foreach(App\Models\Directory::COMELEC_STATUS_SELECT as $key => $label)
+                                        <option value="{{ $key }}" {{ old('comelec_status', $directory->comelec_status) == (string) $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if($errors->has('comelec_status'))
+                                    <span class="text-danger">{{ $errors->first('comelec_status') }}</span>
+                                    @endif
+                                    <span class="help-block">{{ trans('cruds.directory.fields.comelec_status_helper') }}</span>
+                                </div>
 
-                        <div class="form-group">
-                            <label class="form-label font-weight-bold"><i class="fas fa-heartbeat text-muted mr-1"></i>{{ trans('cruds.directory.fields.life_status') }}</label>
-                            <select class="form-control {{ $errors->has('life_status') ? 'is-invalid' : '' }}" name="life_status" id="life_status">
-                                <option value disabled {{ old('life_status', $directory->life_status) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
-                                @foreach(App\Models\Directory::LIFE_STATUS_SELECT as $key => $label)
-                                <option value="{{ $key }}" {{ old('life_status', $directory->life_status) == (string) $key ? 'selected' : '' }}>{{ $label }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('life_status'))
-                            <span class="text-danger">{{ $errors->first('life_status') }}</span>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.directory.fields.life_status_helper') }}</span>
-                        </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label font-weight-bold"><i class="fas fa-heartbeat text-muted mr-1"></i>{{ trans('cruds.directory.fields.life_status') }}</label>
+                                    <select class="form-control {{ $errors->has('life_status') ? 'is-invalid' : '' }}" name="life_status" id="life_status">
+                                        <option value disabled {{ old('life_status', $directory->life_status) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
+                                        @foreach(App\Models\Directory::LIFE_STATUS_SELECT as $key => $label)
+                                        <option value="{{ $key }}" {{ old('life_status', $directory->life_status) == (string) $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if($errors->has('life_status'))
+                                    <span class="text-danger">{{ $errors->first('life_status') }}</span>
+                                    @endif
+                                    <span class="help-block">{{ trans('cruds.directory.fields.life_status_helper') }}</span>
+                                </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label class="form-label font-weight-bold" for="description"><i class="fas fa-file-alt text-muted mr-1"></i>{{ trans('cruds.directory.fields.description') }}</label>
-                            <textarea class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" name="description" id="description">{{ old('description', $directory->description) }}</textarea>
-                            @if($errors->has('description'))
-                            <span class="text-danger">{{ $errors->first('description') }}</span>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.directory.fields.description_helper') }}</span>
-                        </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label font-weight-bold" for="description"><i class="fas fa-file-alt text-muted mr-1"></i>{{ trans('cruds.directory.fields.description') }}</label>
+                                    <textarea class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" name="description" id="description" rows="3">{{ old('description', $directory->description) }}</textarea>
+                                    @if($errors->has('description'))
+                                    <span class="text-danger">{{ $errors->first('description') }}</span>
+                                    @endif
+                                    <span class="help-block">{{ trans('cruds.directory.fields.description_helper') }}</span>
+                                </div>
 
-                        <div class="form-group">
-                            <label class="form-label font-weight-bold" for="remarks"><i class="fas fa-sticky-note text-muted mr-1"></i>{{ trans('cruds.directory.fields.remarks') }}</label>
-                            <input class="form-control {{ $errors->has('remarks') ? 'is-invalid' : '' }}" type="text" name="remarks" id="remarks" value="{{ old('remarks', $directory->remarks) }}">
-                            @if($errors->has('remarks'))
-                            <span class="text-danger">{{ $errors->first('remarks') }}</span>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.directory.fields.remarks_helper') }}</span>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label font-weight-bold" for="remarks"><i class="fas fa-sticky-note text-muted mr-1"></i>{{ trans('cruds.directory.fields.remarks') }}</label>
+                                    <input class="form-control {{ $errors->has('remarks') ? 'is-invalid' : '' }}" type="text" name="remarks" id="remarks" value="{{ old('remarks', $directory->remarks) }}">
+                                    @if($errors->has('remarks'))
+                                    <span class="text-danger">{{ $errors->first('remarks') }}</span>
+                                    @endif
+                                    <span class="help-block">{{ trans('cruds.directory.fields.remarks_helper') }}</span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group mt-4">
