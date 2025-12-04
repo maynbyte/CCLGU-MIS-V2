@@ -9,16 +9,11 @@
         <div class="card-tools ml-auto">
             @can('directory_create')
             <div class="btn btn-sm" role="group" aria-label="Directory actions">
-                <a class="btn btn-success" href="{{ route('admin.directories.create') }}" data-toggle="tooltip" title="Add new directory">
-                    <i class="fas fa-plus"></i>
-                    <span class="d-none d-sm-inline ml-1">{{ trans('global.add') }} {{ trans('cruds.directory.title_singular') }}</span>
-                </a>
-                <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal" data-toggle="tooltip" title="Import from CSV">
-                    <i class="fas fa-file-csv"></i>
-                    <span class="d-none d-sm-inline ml-1">{{ trans('global.app_csvImport') }}</span>
-                </button>
+              <a class="btn btn-success" href="{{ route('admin.directories.create') }}" data-toggle="tooltip" title="Add new directory">
+                <i class="fas fa-plus"></i>
+                <span class="d-none d-sm-inline ml-1">{{ trans('global.add') }} {{ trans('cruds.directory.title_singular') }}</span>
+              </a>
             </div>
-            @include('csvImport.modal', ['model' => 'Directory', 'route' => 'admin.directories.parseCsvImport'])
             @endcan
         </div>
     </div>
