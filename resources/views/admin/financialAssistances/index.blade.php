@@ -366,7 +366,7 @@ function formatDateOnly(value) {
         searchable: false,
         render: function (data, type, row, meta) {
           let url = "{{ route('admin.financial-assistances.create') }}?directory_id=" + data;
-          return '<a class="btn btn-sm btn-primary" href="' + url + '">View</a>';
+          return '<a class="btn btn-sm btn-primary px-3" style="min-width:86px;" href="' + url + '">View</a>';
         }
       }
     ],
