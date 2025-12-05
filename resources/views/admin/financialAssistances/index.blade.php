@@ -48,6 +48,8 @@
 
 @include('admin.financialAssistances.partials.print_payout_modal')
 
+@include('admin.financialAssistances.partials.advanced_search_modal')
+
 <!-- Send SMS Modal -->
 <div class="modal fade" id="sendSmsModal" tabindex="-1" role="dialog" aria-labelledby="sendSmsModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -97,6 +99,8 @@
 @parent
 <script>
 $(function () {
+  // Show DataTables errors in the browser console for debugging
+  $.fn.dataTable.ext.errMode = 'console';
   // Rebuild buttons so Edit/Delete are beside Deselect all
   let dtButtons = []
 
@@ -184,6 +188,17 @@ $(function () {
     action: function (e, dt) { $('#printPayoutModal').modal('show'); }
   });
   dtButtons.push({ extend: 'colvis', text: '<i class="fas fa-columns"></i> Columns', className: 'btn btn-outline-secondary btn-sm' });
+
+  // Advanced Search
+  dtButtons.push({
+    text: '<i class="fas fa-search"></i> Advanced Search',
+    className: 'btn btn-outline-secondary btn-sm',
+    action: function () { 
+      console.log('Advanced Search button clicked');
+      initAdvancedSearch();
+      $('#advancedSearchModal').modal('show'); 
+    }
+  });
 
 
   // Put this once (e.g., in your ccmis-directory.js)
@@ -532,6 +547,141 @@ function formatDateOnly(value) {
 
   // Enable Bootstrap tooltips for header actions
   $('[data-toggle="tooltip"]').tooltip();
+
+  // Initialize Advanced Search DataTable (guarded)
+  var advInit = false;
+  function initAdvancedSearch() {
+    if (advInit) { console.log('Advanced Search already initialized'); return; }
+    advInit = true;
+    console.log('Initializing Advanced Search DataTable');
+    try {
+        // Ensure table header matches expected columns to avoid aDataSort errors
+        var thCount = $('#advancedSearchTable thead th').length;
+        console.log('Advanced Search table thead th count:', thCount);
+        if (thCount === 0) {
+          console.error('Advanced Search table has no header cells, aborting init');
+          advInit = false;
+          return;
+        }
+
+        // If table already initialized, destroy it first
+        if ($.fn.dataTable.isDataTable('#advancedSearchTable')) {
+          console.log('Destroying existing Advanced Search DataTable instance');
+          $('#advancedSearchTable').DataTable().clear().destroy();
+        }
+
+        // Define preferred column keys in order and trim to the actual header count
+        // We add a client-side 'settings' column right after 'id' to render a View button
+        var preferredKeys = ['id','settings','claimant_name','patient_name','type_of_assistance','date_claimed','status'];
+        var useKeys = preferredKeys.slice(0, thCount);
+        var viewPrefix = "{{ url('admin/financial-assistances') }}";
+        var cols = useKeys.map(function(k){
+          if (k === 'settings') {
+            return {
+              data: null,
+              orderable: false,
+              searchable: false,
+              render: function(data, type, row) {
+                var id = row.id || '';
+                var href = viewPrefix + '/' + id;
+                return '<a class="btn btn-sm btn-primary px-3 py-1" href="' + href + '">View</a>';
+              }
+            };
+          }
+          return { data: k, name: k, defaultContent: '' };
+        });
+
+        $('#advancedSearchTable').DataTable({
+          dom: 'Bfrtip',
+          buttons: [
+            {
+                text: '<input type="checkbox" id="adv_chk_claimant" style="pointer-events:none;margin-right:6px;"> Claimant Name',
+                className: 'btn btn-sm btn-outline-secondary',
+                action: function (e, dt, node, config) {
+                  var $chk = $(node).find('input');
+                  $chk.prop('checked', !$chk.prop('checked'));
+                  // compute column index by header text to stay resilient to column order
+                  var claimantIdx = $('#advancedSearchTable thead th').filter(function(i,el){ return $(el).text().trim().toLowerCase().indexOf('claimant') !== -1; }).first().index();
+                  var patientIdx = $('#advancedSearchTable thead th').filter(function(i,el){ return $(el).text().trim().toLowerCase().indexOf('patient') !== -1; }).first().index();
+                  if (claimantIdx === -1) { console.warn('Claimant column not found'); return; }
+                  // get current global search value
+                  var searchVal = dt.search().trim();
+                  function esc(v){ return v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+                  var otherChecked = $('#adv_chk_patient').prop('checked');
+                  if ($chk.prop('checked')) {
+                    if (!searchVal) { alert('Please enter a search term in the Search box'); $chk.prop('checked', false); return; }
+                    // if both checked, require both columns equal the search value
+                    if (otherChecked && patientIdx !== -1) {
+                      // case-insensitive substring match using PCRE inline modifier
+                      dt.column(claimantIdx).search('(?i).*' + esc(searchVal) + '.*', true, false);
+                      dt.column(patientIdx).search('(?i).*' + esc(searchVal) + '.*', true, false);
+                      dt.draw();
+                    } else {
+                      // only claimant filter
+                      dt.column(claimantIdx).search('(?i).*' + esc(searchVal) + '.*', true, false).draw();
+                    }
+                  } else {
+                    // unchecked: clear claimant filter
+                    dt.column(claimantIdx).search('');
+                    // if other is checked, reapply its exact filter if searchVal present
+                    if (otherChecked && patientIdx !== -1) {
+                      if (!searchVal) { dt.column(patientIdx).search(''); dt.draw(); return; }
+                      dt.column(patientIdx).search('(?i).*' + esc(searchVal) + '.*', true, false).draw();
+                    } else {
+                      dt.draw();
+                    }
+                  }
+                }
+              },
+            {
+              text: '<input type="checkbox" id="adv_chk_patient" style="pointer-events:none;margin-right:6px;"> Patient Name',
+              className: 'btn btn-sm btn-outline-secondary',
+              action: function (e, dt, node, config) {
+                var $chk = $(node).find('input');
+                $chk.prop('checked', !$chk.prop('checked'));
+                var claimantIdx = $('#advancedSearchTable thead th').filter(function(i,el){ return $(el).text().trim().toLowerCase().indexOf('claimant') !== -1; }).first().index();
+                var patientIdx = $('#advancedSearchTable thead th').filter(function(i,el){ return $(el).text().trim().toLowerCase().indexOf('patient') !== -1; }).first().index();
+                if (patientIdx === -1) { console.warn('Patient column not found'); return; }
+                var searchVal = dt.search().trim();
+                function esc(v){ return v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+                var otherChecked = $('#adv_chk_claimant').prop('checked');
+                if ($chk.prop('checked')) {
+                  if (!searchVal) { alert('Please enter a search term in the Search box'); $chk.prop('checked', false); return; }
+                  if (otherChecked && claimantIdx !== -1) {
+                    // case-insensitive substring match using PCRE inline modifier
+                    dt.column(claimantIdx).search('(?i).*' + esc(searchVal) + '.*', true, false);
+                    dt.column(patientIdx).search('(?i).*' + esc(searchVal) + '.*', true, false);
+                    dt.draw();
+                  } else {
+                    dt.column(patientIdx).search('(?i).*' + esc(searchVal) + '.*', true, false).draw();
+                  }
+                } else {
+                  dt.column(patientIdx).search('');
+                  if (otherChecked && claimantIdx !== -1) {
+                    if (!searchVal) { dt.column(claimantIdx).search(''); dt.draw(); return; }
+                    dt.column(claimantIdx).search('(?i).*' + esc(searchVal) + '.*', true, false).draw();
+                  } else {
+                    dt.draw();
+                  }
+                }
+              }
+            }
+          ],
+          processing: true,
+          serverSide: true,
+          ajax: "{{ route('admin.financial-assistances.index') }}?ajax=1",
+          columns: cols,
+          pageLength: 10,
+          order: [[ 0, 'desc' ]]
+        });
+    } catch (e) {
+      console.error('Failed to initialize Advanced Search DataTable', e);
+      advInit = false;
+    }
+  }
+
+  // Also attempt init when modal shown (redundant guard)
+  $('#advancedSearchModal').on('shown.bs.modal', function(){ initAdvancedSearch(); });
 });
 </script>
 @endsection
