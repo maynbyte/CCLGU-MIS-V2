@@ -1,4 +1,4 @@
-<!-- Bulk Edit Modal (extracted to partial) -->
+<!-- Bulk Edit Modal -->
 <div class="modal fade" id="bulkEditModal" tabindex="-1" role="dialog" aria-labelledby="bulkEditModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

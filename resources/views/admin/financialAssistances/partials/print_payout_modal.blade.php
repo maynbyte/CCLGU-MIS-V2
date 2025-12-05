@@ -1,4 +1,4 @@
-<!-- Print Payout Modal (extracted to partial) -->
+<!-- Print Payout Modal -->
 <div class="modal fade" id="printPayoutModal" tabindex="-1" role="dialog" aria-labelledby="printPayoutModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
