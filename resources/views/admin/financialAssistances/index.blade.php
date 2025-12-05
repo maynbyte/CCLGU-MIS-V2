@@ -603,6 +603,21 @@ function formatDateOnly(value) {
             };
           }
 
+          // Render date_claimed as date-only for display
+          if (k === 'date_claimed') {
+            return {
+              data: 'date_claimed',
+              name: 'date_claimed',
+              defaultContent: '',
+              render: function(data, type, row, meta) {
+                if (type === 'display' || type === 'filter') {
+                  return formatDateOnly(data);
+                }
+                return data || '';
+              }
+            };
+          }
+
           return { data: k, name: k, defaultContent: '' };
         });
 
