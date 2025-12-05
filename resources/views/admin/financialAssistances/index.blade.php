@@ -584,7 +584,7 @@ function formatDateOnly(value) {
               render: function(data, type, row) {
                 var id = row.id || '';
                 var href = viewPrefix + '/' + id;
-                return '<a class="btn btn-sm btn-primary px-3 py-1" href="' + href + '">View</a>';
+                return '<a class="btn btn-sm btn-primary px-3 py-1" href="' + href + '" target="_blank" rel="noopener noreferrer">View</a>';
               }
             };
           }
