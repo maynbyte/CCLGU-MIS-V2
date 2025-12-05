@@ -138,7 +138,7 @@
 
                                 
                                 <tr>
-                                    <th><i class="fas fa-clock text-muted"></i> {{ trans('cruds.financialAssistance.fields.scheduled_fa') }}</th>
+                                    <th><i class="fas fa-clock text-muted"></i> Scheduled Payout</th>
                                     <td>{{ $financialAssistance->scheduled_fa ? \Carbon\Carbon::parse($financialAssistance->scheduled_fa)->format('F d, Y g:i A') : 'N/A' }}</td>
                                 </tr>
                                 <tr>
