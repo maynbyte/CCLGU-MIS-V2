@@ -588,6 +588,21 @@ function formatDateOnly(value) {
               }
             };
           }
+          // Render the 'id' column as a 1-based row number for display, but keep raw id for ordering
+          if (k === 'id') {
+            return {
+              data: 'id',
+              name: 'id',
+              defaultContent: '',
+              render: function(data, type, row, meta) {
+                if (type === 'display' || type === 'filter') {
+                  return meta.row + meta.settings._iDisplayStart + 1;
+                }
+                return data;
+              }
+            };
+          }
+
           return { data: k, name: k, defaultContent: '' };
         });
 
