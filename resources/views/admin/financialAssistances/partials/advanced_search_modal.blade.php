@@ -51,7 +51,7 @@
           }
   /* Increase width and shift the dialog to the right */
   #advancedSearchModal .modal-dialog {
-    max-width: 1050px;
+    max-width: 1025px;
     margin-left: auto;
   }
   #advancedSearchModal .modal-body {

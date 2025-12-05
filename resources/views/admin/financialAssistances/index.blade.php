@@ -666,6 +666,24 @@ function formatDateOnly(value) {
                 }
               }
             }
+            ,{
+              text: '<i class="fas fa-sync-alt"></i> Clear',
+              className: 'btn btn-sm btn-outline-secondary',
+              action: function(e, dt, node, config) {
+                // uncheck both checkboxes and clear their column searches
+                try {
+                  $('#adv_chk_claimant').prop('checked', false);
+                  $('#adv_chk_patient').prop('checked', false);
+                  var claimantIdx = $('#advancedSearchTable thead th').filter(function(i,el){ return $(el).text().trim().toLowerCase().indexOf('claimant') !== -1; }).first().index();
+                  var patientIdx = $('#advancedSearchTable thead th').filter(function(i,el){ return $(el).text().trim().toLowerCase().indexOf('patient') !== -1; }).first().index();
+                  if (claimantIdx !== -1) dt.column(claimantIdx).search('');
+                  if (patientIdx !== -1) dt.column(patientIdx).search('');
+                  dt.draw();
+                } catch (err) {
+                  console.error('Failed to clear advanced search filters', err);
+                }
+              }
+            }
           ],
           processing: true,
           serverSide: true,
