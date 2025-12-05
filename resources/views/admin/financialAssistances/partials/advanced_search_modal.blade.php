@@ -2,11 +2,11 @@
 <div class="modal fade" id="advancedSearchModal" tabindex="-1" role="dialog" aria-labelledby="advancedSearchModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl ml-auto" role="document">
     <div class="modal-content">
-      <div class="modal-header p-1 align-items-start" role="banner">
-        <div class="d-flex align-items-start">
-          <div class="mr-3 mt-1 text-primary"><i class="fas fa-search fa-lg"></i></div>
+      <div class="modal-header align-items-center" role="banner">
+        <div class="d-flex align-items-center">
+          <div class="mr-3 text-primary"><i class="fas fa-search fa-lg"></i></div>
           <div>
-            <h5 class="modal-title mb-1" id="advancedSearchModalLabel">Advanced Search</h5>
+            <h5 class="modal-title mb-0" id="advancedSearchModalLabel">Advanced Search</h5>
             <div class="text-muted small">Search and filter Financial Assistance records with advanced options.</div>
           </div>
         </div>
@@ -62,8 +62,7 @@
   #advancedSearchModal .modal-header {
     background: #fbfbfc;
     border-bottom: 1px solid #e9ecef;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding: 0.75rem 1.25rem;
   }
   #advancedSearchModal .modal-title {
     font-weight: 600;
