@@ -414,12 +414,34 @@ function formatDateOnly(value) {
         return;
       }
 
-      // Open print preview in new window with the selected date
+      // Get selected assistance types
+      var selectedTypes = [];
+      $('.assistance-type-checkbox:checked').each(function(){
+        selectedTypes.push($(this).val());
+      });
+
+      if (selectedTypes.length === 0) {
+        alert('Please select at least one type of assistance');
+        return;
+      }
+
+      // Build URL with date and types
       var printUrl = "{{ route('admin.financial-assistances.printPayout') }}" + "?date=" + payoutDate;
+      selectedTypes.forEach(function(type){
+        printUrl += "&types[]=" + encodeURIComponent(type);
+      });
+
       window.open(printUrl, '_blank');
-      
+
       $('#printPayoutModal').modal('hide');
       $('#print_payout_date').val('');
+      // Reset checkboxes to unchecked by default
+      $('.assistance-type-checkbox').prop('checked', false);
+  });
+
+  // Ensure modal opens with all types unchecked (default)
+  $('#printPayoutModal').on('show.bs.modal', function () {
+    $('.assistance-type-checkbox').prop('checked', false);
   });
 
   // SMS character counter

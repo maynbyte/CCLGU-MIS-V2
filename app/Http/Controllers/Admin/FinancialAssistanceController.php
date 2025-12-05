@@ -373,16 +373,27 @@ class FinancialAssistanceController extends Controller
                 ->with('error', 'Payout date is required.');
         }
 
+        // Optional: filter by selected types (passed as types[] in the query)
+        $types = $request->query('types', []);
+        if (!is_array($types)) {
+            // If single value provided, make it an array
+            $types = [$types];
+        }
+
         // Get all latest FA IDs that match the payout date
         $latestFaIds = FinancialAssistance::selectRaw('MAX(id) as latest_id')
             ->groupBy('directory_id')
             ->havingRaw('MAX(id) IN (SELECT id FROM financial_assistances WHERE DATE(scheduled_fa) = ?)', [$payoutDate])
             ->pluck('latest_id');
 
-        // Get directories whose latest FA is in the matching list
+        // Get directories whose latest FA matches the payout date (and types if provided)
         $directories = Directory::with(['barangay', 'latestFinancialAssistance'])
-            ->whereHas('latestFinancialAssistance', function ($query) use ($payoutDate) {
+            ->whereHas('latestFinancialAssistance', function ($query) use ($payoutDate, $types) {
                 $query->whereDate('scheduled_fa', $payoutDate);
+                if (!empty($types)) {
+                    // filter by type_of_assistance on the latest FA
+                    $query->whereIn('type_of_assistance', $types);
+                }
             })
             ->orderBy('barangay_id')
             ->orderBy('last_name')
