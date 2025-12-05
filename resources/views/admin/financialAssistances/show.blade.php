@@ -136,14 +136,7 @@
                                     <td><strong>{{ $financialAssistance->claimant_contact_no ?? 'N/A' }}</strong></td>
                                 </tr>
 
-                                <tr>
-                                    <th><i class="fas fa-calendar text-muted"></i> {{ trans('cruds.financialAssistance.fields.date_interviewed') }}</th>
-                                    <td>{{ $financialAssistance->date_interviewed ? \Carbon\Carbon::parse($financialAssistance->date_interviewed)->format('F d, Y') : 'N/A' }}</td>
-                                </tr>
-                                <tr>
-                                    <th><i class="fas fa-money-bill-wave text-muted"></i> {{ trans('cruds.financialAssistance.fields.amount') }}</th>
-                                    <td><strong class="text-success">₱{{ number_format($financialAssistance->amount ?? 0, 2) }}</strong></td>
-                                </tr>
+                                
                                 <tr>
                                     <th><i class="fas fa-clock text-muted"></i> {{ trans('cruds.financialAssistance.fields.scheduled_fa') }}</th>
                                     <td>{{ $financialAssistance->scheduled_fa ? \Carbon\Carbon::parse($financialAssistance->scheduled_fa)->format('F d, Y g:i A') : 'N/A' }}</td>
